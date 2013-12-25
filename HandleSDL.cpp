@@ -351,7 +351,7 @@ bool  HandleSDL::handleEvents()
           m_win->keyReleaseEvent(event.key.keysym.sym);
           break;
         case SDL_MOUSEMOTION:
-          if (!m_win->isPaused()) {
+          if (!m_win->isPaused() && !m_win->isPlayingTetris()) {
               if (event.motion.x >= screenWidth - MOUSE_MARGIN || event.motion.x <= MOUSE_MARGIN ||
                   event.motion.y >= screenHeight - MOUSE_MARGIN || event.motion.y <= MOUSE_MARGIN)
                 SDL_WarpMouseInWindow(screen, screenWidth / 2, screenHeight / 2);

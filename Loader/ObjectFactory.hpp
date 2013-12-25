@@ -1,10 +1,11 @@
 #ifndef OBJECTFACTORY_HPP
 #define OBJECTFACTORY_HPP
 
-#include <string>
 #include <tuple>
 
 class myGLWidget;
+template<typename T, class... Args>
+class SubObjectFactory;
 
 template<std::size_t... X>
 struct index_tuple{};
@@ -39,6 +40,12 @@ class ObjectFactory
 public:
   virtual myGLWidget  *createObject() = 0;
   virtual ~ObjectFactory(){}
+
+  template<typename T, class... Args>
+  static ObjectFactory  *createNewObject(Args... a)
+  {
+    return new SubObjectFactory<T, Args...>(a...);
+  }
 };
 
 template<typename T, class... Args>

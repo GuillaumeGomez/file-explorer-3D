@@ -136,67 +136,31 @@ int GraphicHandler::loadIconFile(const char *s)
     extension = extension.substr(p);
   std::vector<std::string> tmp = Utility::split<std::string>(s, "/");
 
-  std::string fullname = "./textures/" + std::string(tmp[tmp.size() - 1]) + ".bmp";
+  std::string filename = tmp[tmp.size() - 1];
+  //std::string fullname = "./textures/" + std::string(tmp[tmp.size() - 1]) + ".bmp";
 
   GLuint  glID(0);
   int     width, height, bitsPerPixel;
 
   if (extension != ".exe")
-   glID = tex_container->get(extension);
+    glID = tex_container->get(extension);
+  else
+    glID = tex_container->get(filename);
 
   if (glID > 0)
     return glID;
 
-  HBITMAP data = Utils::getIconFromFileType(s, &width, &height, &bitsPerPixel);
-
-  /*PICTDESC desc = { sizeof(PICTDESC) };
-  desc.picType = PICTYPE_ICON;
-  desc.icon.hicon = data;
-  IPicture* pPicture = 0;
-  HRESULT hr = OleCreatePictureIndirect(&desc, IID_IPicture, FALSE, (void**)&pPicture);
-  if (FAILED(hr))
-    return hr;
-
-  // Create a stream and save the image
-  IStream* pStream = 0;
-  CreateStreamOnHGlobal(0, TRUE, &pStream);
-  LONG cbSize = 0;
-  hr = pPicture->SaveAsFile(pStream, TRUE, &cbSize);
-
-  // Write the stream content to the file
-  if (!FAILED(hr)) {
-      HGLOBAL hBuf = 0;
-      GetHGlobalFromStream(pStream, &hBuf);
-      void* buffer = GlobalLock(hBuf);
-      HANDLE hFile = CreateFile(Utils::string2wstring(fullname).c_str(), GENERIC_WRITE, 0, 0, CREATE_ALWAYS, 0, 0);
-      if (!hFile)
-        hr = HRESULT_FROM_WIN32(GetLastError());
-      else {
-          DWORD written = 0;
-          WriteFile(hFile, buffer, cbSize, &written, 0);
-          CloseHandle(hFile);
-        }
-      GlobalUnlock(buffer);
-    }
-  // Cleanup
-  pStream->Release();
-  pPicture->Release();
-
-  if (!FAILED(hr))
-    glID = loadTexture(fullname, false);
-
-  //on supprime cette merde
-  remove(fullname.c_str());*/
+  HBITMAP data = Utils::getIconFromFileType(filename.c_str(), &width, &height, &bitsPerPixel);
 
   if (!data)
     return 0;
-  fullname = (extension != ".exe" ? extension : fullname);
+  //fullname = (extension != ".exe" ? extension : fullname);
   //if (!Utils::saveBMP(fullname.c_str(), data))
     //return 0;
   //DeleteObject(data);
   //glID = loadTexture(fullname, false);
   //remove(fullname.c_str());
-  int size;
+  int size(0);
   char  *datas = Utils::getBitmapDatas(data, &size);
   glID = loadTextureFromMemory(datas, size, extension.c_str());
   delete[] datas;

@@ -95,7 +95,7 @@ void Camera::look()
 
   this->lookAt();
 
-  //m_skybox->paintGL(m_phi, m_theta);
+  m_skybox->paintGL(m_phi, m_theta);
 }
 
 void Camera::mouseMoveEvent(int x, int y)

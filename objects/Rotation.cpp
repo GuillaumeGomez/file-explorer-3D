@@ -5,6 +5,11 @@ Rotation::Rotation(float rot, float speed, float x, float y, float z)
 {
 }
 
+Rotation::Rotation(Rotation const &r)
+  : m_rotation(r.m_rotation), m_acSpeed(r.m_acSpeed), m_rotX(r.m_rotX), m_rotY(r.m_rotY), m_rotZ(r.m_rotZ)
+{
+}
+
 float Rotation::getSpeed() const
 {
   return m_acSpeed;

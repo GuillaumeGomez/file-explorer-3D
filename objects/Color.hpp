@@ -12,6 +12,7 @@ public:
   void  setRed(float);
   void  setGreen(float);
   void  setBlue(float);
+  bool  operator==(Color const&) const;
 
 protected:
   float m_red;

@@ -33,3 +33,8 @@ void  Color::setBlue(float b)
 {
   m_blue = b;
 }
+
+bool  Color::operator==(Color const &c) const
+{
+  return c.m_red == m_red && c.m_blue == m_blue && c.m_green == m_green;
+}

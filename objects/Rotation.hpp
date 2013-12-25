@@ -7,6 +7,7 @@ class Rotation
 {
 public:
   Rotation(float rot = 0.f, float speed = 0.f, float x = 0.f, float y = 0.f, float z = 0.f);
+  Rotation(Rotation const&);
   virtual ~Rotation(){}
   float getRotation();
   void  setRotation(float);

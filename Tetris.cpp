@@ -28,8 +28,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[0].rot[3][2], "    ", 4);
   memcpy(m_pieces[0].rot[3][3], "    ", 4);
   m_pieces[0].color = BLUE;
-  m_pieces[0].tex_coord[0] = 0.f;
-  m_pieces[0].tex_coord[1] = 1.f / 8.f;
+  m_pieces[0].tex_coord[0] = 1.f / 8.f;
+  m_pieces[0].tex_coord[1] = 1.f / 8.f * 2.f;
 
   memcpy(m_pieces[1].rot[0][0], " 2  ", 4);
   memcpy(m_pieces[1].rot[0][1], " 2  ", 4);
@@ -48,8 +48,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[1].rot[3][2], "    ", 4);
   memcpy(m_pieces[1].rot[3][3], "    ", 4);
   m_pieces[1].color = RED;
-  m_pieces[1].tex_coord[0] = 1.f / 8.f;
-  m_pieces[1].tex_coord[1] = 1.f / 8.f * 2.f;
+  m_pieces[1].tex_coord[0] = 1.f / 8.f * 2.f;
+  m_pieces[1].tex_coord[1] = 1.f / 8.f * 3.f;
 
   memcpy(m_pieces[2].rot[0][0], " 3  ", 4);
   memcpy(m_pieces[2].rot[0][1], "333 ", 4);
@@ -68,8 +68,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[2].rot[3][2], " 3  ", 4);
   memcpy(m_pieces[2].rot[3][3], "    ", 4);
   m_pieces[2].color = WHITE;
-  m_pieces[2].tex_coord[0] = 1.f / 8.f * 2.f;
-  m_pieces[2].tex_coord[1] = 1.f / 8.f * 3.f;
+  m_pieces[2].tex_coord[0] = 1.f / 8.f * 3.f;
+  m_pieces[2].tex_coord[1] = 1.f / 8.f * 4.f;
 
   memcpy(m_pieces[3].rot[0][0], " 44 ", 4);
   memcpy(m_pieces[3].rot[0][1], "44  ", 4);
@@ -88,8 +88,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[3].rot[3][2], "  4 ", 4);
   memcpy(m_pieces[3].rot[3][3], "    ", 4);
   m_pieces[3].color = ORANGE;
-  m_pieces[3].tex_coord[0] = 1.f / 8.f * 3.f;
-  m_pieces[3].tex_coord[1] = 1.f / 8.f * 4.f;
+  m_pieces[3].tex_coord[0] = 1.f / 8.f * 4.f;
+  m_pieces[3].tex_coord[1] = 1.f / 8.f * 5.f;
 
   memcpy(m_pieces[4].rot[0][0], "55  ", 4);
   memcpy(m_pieces[4].rot[0][1], " 55 ", 4);
@@ -108,8 +108,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[4].rot[3][2], " 5  ", 4);
   memcpy(m_pieces[4].rot[3][3], "    ", 4);
   m_pieces[4].color = YELLOW;
-  m_pieces[4].tex_coord[0] = 1.f / 8.f * 4.f;
-  m_pieces[4].tex_coord[1] = 1.f / 8.f * 5.f;
+  m_pieces[4].tex_coord[0] = 1.f / 8.f * 5.f;
+  m_pieces[4].tex_coord[1] = 1.f / 8.f * 6.f;
 
   memcpy(m_pieces[5].rot[0][0], "6   ", 4);
   memcpy(m_pieces[5].rot[0][1], "6   ", 4);
@@ -128,8 +128,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[5].rot[3][2], "    ", 4);
   memcpy(m_pieces[5].rot[3][3], "    ", 4);
   m_pieces[5].color = GREEN;
-  m_pieces[5].tex_coord[0] = 1.f / 8.f * 5.f;
-  m_pieces[5].tex_coord[1] = 1.f / 8.f * 6.f;
+  m_pieces[5].tex_coord[0] = 1.f / 8.f * 6.f;
+  m_pieces[5].tex_coord[1] = 1.f / 8.f * 7.f;
 
   memcpy(m_pieces[6].rot[0][0], " 7   ", 4);
   memcpy(m_pieces[6].rot[0][1], " 7   ", 4);
@@ -148,14 +148,14 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[6].rot[3][2], "    ", 4);
   memcpy(m_pieces[6].rot[3][3], "    ", 4);
   m_pieces[6].color = PURPLE;
-  m_pieces[6].tex_coord[0] = 1.f / 8.f * 6.f;
-  m_pieces[6].tex_coord[1] = 1.f / 8.f * 7.f;
+  m_pieces[6].tex_coord[0] = 1.f / 8.f * 7.f;
+  m_pieces[6].tex_coord[1] = 1.f / 8.f * 8.f;
 
   m_shader = new Shader;
   m_texts.push_back(new Object::Text("0", RED, -0.99f, 0.65f));
   m_texts.push_back(new Object::Text("0", RED, -0.99f, 0.25f));
   m_texts.push_back(new Object::Text("1", RED, -0.99f, -0.15f));
-  //m_texts.push_back(new Object::Text("", RED, 0.f, 0.f));
+  m_texts.push_back(new Object::Text("", RED, 0.f, 0.f));
   m_texts.push_back(new Object::Text("Score :", RED, -0.99f, 0.8f));
   m_texts.push_back(new Object::Text("Lines :", RED, -0.99f, 0.4f));
   m_texts.push_back(new Object::Text("Level :", RED, -0.99f, 0.f));
@@ -179,6 +179,134 @@ Tetris::~Tetris()
   for (auto it = m_texts.begin(); it != m_texts.end(); ++it) {
       delete *it;
     }
+}
+
+void  createGrid(std::vector<GLfloat> &tex, std::vector<GLfloat> &vec)
+{
+  //tetris 'grid'
+  //left
+  vec.push_back(-0.52f);
+  vec.push_back(0.92f);
+  tex.push_back(0.01f);
+  tex.push_back(0.99f);
+
+  vec.push_back(-0.5f);
+  vec.push_back(0.92f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.99f);
+
+  vec.push_back(-0.5f);
+  vec.push_back(-0.92f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.51f);
+
+  vec.push_back(-0.5f);
+  vec.push_back(-0.92f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.51f);
+
+  vec.push_back(-0.52f);
+  vec.push_back(-0.92f);
+  tex.push_back(0.01f);
+  tex.push_back(0.51f);
+
+  vec.push_back(-0.52f);
+  vec.push_back(0.92f);
+  tex.push_back(0.01f);
+  tex.push_back(0.99f);
+
+  //right
+  vec.push_back(0.5f);
+  vec.push_back(0.92f);
+  tex.push_back(0.01f);
+  tex.push_back(0.99f);
+
+  vec.push_back(0.52f);
+  vec.push_back(0.92f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.99f);
+
+  vec.push_back(0.52f);
+  vec.push_back(-0.92f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.51f);
+
+  vec.push_back(0.52f);
+  vec.push_back(-0.92f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.51f);
+
+  vec.push_back(0.5f);
+  vec.push_back(-0.92f);
+  tex.push_back(0.01f);
+  tex.push_back(0.51f);
+
+  vec.push_back(0.5f);
+  vec.push_back(0.92f);
+  tex.push_back(0.01f);
+  tex.push_back(0.99f);
+
+  //up
+  vec.push_back(-0.52f);
+  vec.push_back(0.92f);
+  tex.push_back(0.01f);
+  tex.push_back(0.99f);
+
+  vec.push_back(-0.52f);
+  vec.push_back(0.9f);
+  tex.push_back(0.01f);
+  tex.push_back(0.51f);
+
+  vec.push_back(0.52f);
+  vec.push_back(0.9f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.51f);
+
+  vec.push_back(0.52f);
+  vec.push_back(0.9f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.5f);
+
+  vec.push_back(0.52f);
+  vec.push_back(0.92f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.99f);
+
+  vec.push_back(-0.52f);
+  vec.push_back(0.92f);
+  tex.push_back(0.01f);
+  tex.push_back(0.99f);
+
+  //down
+  vec.push_back(-0.52f);
+  vec.push_back(-0.9f);
+  tex.push_back(0.01f);
+  tex.push_back(0.99f);
+
+  vec.push_back(-0.52f);
+  vec.push_back(-0.92f);
+  tex.push_back(0.01f);
+  tex.push_back(0.51f);
+
+  vec.push_back(0.52f);
+  vec.push_back(-0.92f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.51f);
+
+  vec.push_back(0.52f);
+  vec.push_back(-0.92f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.5f);
+
+  vec.push_back(0.52f);
+  vec.push_back(-0.9f);
+  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.99f);
+
+  vec.push_back(-0.52f);
+  vec.push_back(-0.9f);
+  tex.push_back(0.01f);
+  tex.push_back(0.99f);
 }
 
 void  Tetris::initializeGL()
@@ -224,36 +352,7 @@ void  Tetris::initializeGL()
       exit(-1);
     }
 
-  //tetris 'grid'
-  m_vertices.push_back(-0.5f);
-  m_vertices.push_back(0.9f);
-  m_textures.push_back(1.f / 8.f - 0.01f);
-  m_textures.push_back(0.52f);
-
-  m_vertices.push_back(-0.5f);
-  m_vertices.push_back(-0.9f);
-  m_textures.push_back(1.f / 8.f - 0.01f);
-  m_textures.push_back(0.98f);
-
-  m_vertices.push_back(0.5f);
-  m_vertices.push_back(-0.9f);
-  m_textures.push_back(0.01f);
-  m_textures.push_back(0.98f);
-
-  m_vertices.push_back(0.5f);
-  m_vertices.push_back(-0.9f);
-  m_textures.push_back(0.01f);
-  m_textures.push_back(0.98f);
-
-  m_vertices.push_back(0.5f);
-  m_vertices.push_back(0.9f);
-  m_textures.push_back(0.01f);
-  m_textures.push_back(0.52f);
-
-  m_vertices.push_back(-0.51f);
-  m_vertices.push_back(0.91f);
-  m_textures.push_back(1.f / 8.f - 0.01f);
-  m_textures.push_back(0.52f);
+  createGrid(m_textures, m_vertices);
 
   const float tmp_space = 22 / 1.8f;
 
@@ -317,13 +416,13 @@ void  Tetris::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
   glBindVertexArray(m_vaoID);
 
   glEnable(GL_TEXTURE_2D);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   m_texture.bind();
   glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
   m_texture.unbind();
 
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   for (auto it = m_texts.begin(); it != m_texts.end(); ++it) {
       (*it)->paintGL(view_matrix, proj_matrix);
     }
@@ -393,7 +492,7 @@ void    Tetris::update(const float &n)
 void  Tetris::setColor(int x, int y, PieceDatas *c)
 {
   //int res = y * 180 + x * 18 + 18;
-  int res = y * 120 + x * 12 + 12;
+  int res = y * 120 + x * 12 + 48;
 
   /*for (int i = 0; i < 6; ++i) {
       m_couleurs[res] = c.red();
@@ -404,40 +503,40 @@ void  Tetris::setColor(int x, int y, PieceDatas *c)
 
   if (c) {
       m_textures[res] = c->tex_coord[0]; //up left
-      m_textures[res + 1] = 0.f;
+      m_textures[res + 1] = 1.f;
 
       m_textures[res + 2] = c->tex_coord[1]; //up right
-      m_textures[res + 3] = 0.5f;
+      m_textures[res + 3] = 1.f;
 
       m_textures[res + 4] = c->tex_coord[0]; //down left
-      m_textures[res + 5] = 1.f;
-
-      m_textures[res + 6] = c->tex_coord[1]; //up right
-      m_textures[res + 7] = 0.5f;
-
-      m_textures[res + 8] = c->tex_coord[0]; //down left
-      m_textures[res + 9] = 1.f;
-
-      m_textures[res + 10] = c->tex_coord[1]; //down right
-      m_textures[res + 11] = 1.f;
-    } else {
-      m_textures[res] = 0.f; //up left
-      m_textures[res + 1] = 0.f;
-
-      m_textures[res + 2] = 1.f / 8.f; //up right
-      m_textures[res + 3] = 0.f;
-
-      m_textures[res + 4] = 0.f; //down left
       m_textures[res + 5] = 0.5f;
 
-      m_textures[res + 6] = 1.f / 8.f; //up right
-      m_textures[res + 7] = 0.f;
+      m_textures[res + 6] = c->tex_coord[1]; //up right
+      m_textures[res + 7] = 1.f;
 
-      m_textures[res + 8] = 0.f; //down left
+      m_textures[res + 8] = c->tex_coord[0]; //down left
       m_textures[res + 9] = 0.5f;
 
-      m_textures[res + 10] = 1.f / 8.f; //down right
+      m_textures[res + 10] = c->tex_coord[1]; //down right
       m_textures[res + 11] = 0.5f;
+    } else {
+      m_textures[res] = 0.f; //up left
+      m_textures[res + 1] = 0.48f;
+
+      m_textures[res + 2] = 1.f / 8.f - 0.02f; //up right
+      m_textures[res + 3] = 0.48f;
+
+      m_textures[res + 4] = 0.f; //down left
+      m_textures[res + 5] = 0.f;
+
+      m_textures[res + 6] = 1.f / 8.f - 0.02f; //up right
+      m_textures[res + 7] = 0.48f;
+
+      m_textures[res + 8] = 0.f; //down left
+      m_textures[res + 9] = 0.f;
+
+      m_textures[res + 10] = 1.f / 8.f - 0.02f; //down right
+      m_textures[res + 11] = 0.48f;
     }
 }
 
@@ -459,7 +558,7 @@ void  Tetris::createNewPiece()
       ++m_score;
       m_texts[SCORE]->setText(Utility::toString<int>(m_score));
     }
-  m_piece.id = rand() % 7;
+  m_piece.id = (int)(7.0 * rand() / (RAND_MAX + 1.0));
   m_piece.rot = 0;
   m_piece.x = 3;
   m_piece.y = 0;
@@ -555,7 +654,8 @@ bool  Tetris::canMove()
 
 void  Tetris::keyPressEvent(int key)
 {
-  int tmp;
+  int tmp, tmp2;
+  bool  done = false;
 
   if (m_end) {
       m_end = false;
@@ -590,9 +690,20 @@ void  Tetris::keyPressEvent(int key)
 
       if (++m_piece.rot > 3)
         m_piece.rot = 0;
-      if (!canMove())
-        m_piece.rot = tmp;
-      else {
+      done = true;
+      if (!canMove()) {
+          tmp2 = m_piece.x;
+          m_piece.x++;
+          if (!canMove()) {
+              m_piece.x = tmp2 - 1;
+              if (!canMove()) {
+                  m_piece.x = tmp2;
+                  m_piece.rot = tmp;
+                  done = false;
+                }
+            }
+        }
+      if (done) {
           deleteTmpPiece();
           copyInMap();
         }
@@ -607,6 +718,7 @@ void  Tetris::keyPressEvent(int key)
           deleteTmpPiece();
           copyInMap();
         }
+      m_elapsed = m_speeds[m_level];
       break;
     case SDLK_SPACE:
       tmp = 0;

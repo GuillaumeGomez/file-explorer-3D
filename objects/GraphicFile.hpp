@@ -15,9 +15,10 @@ namespace Object
     virtual void    initializeGL();
     virtual void    initializeGLNoList();
     virtual void    paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
-    virtual void    pick(int&);
+    virtual void    pick(int&, const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
     virtual void    update(const float &);
     std::string const &getFileName() const;
+    virtual void    setSelected(bool);
 
   private:
     Rotation    tmpRotation;
@@ -25,6 +26,7 @@ namespace Object
     GLuint      text;
     Shader      *m_shader_color;
     GLint       m_uniLoc_projection2, m_uniLoc_modelView2;
+    std::vector<GLfloat>  m_tmpColor;
   };
 }
 

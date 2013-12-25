@@ -91,7 +91,8 @@ SOURCES += main.cpp \
     Texture.cpp \
     FrameBuffer.cpp \
     objects/Button.cpp \
-    DataHandler.cpp
+    DataHandler.cpp \
+    Tetris.cpp \
 
 HEADERS += \
     MyWindow.hpp \
@@ -116,7 +117,6 @@ HEADERS += \
     Loader/LoadingMenu.hpp \
     String_utils.hpp \
     HandleError.hpp \
-    test.hpp \
     objects/Room.hpp \
     Utils/Utils.hpp \
     Utils/Directory.hpp \
@@ -136,4 +136,5 @@ HEADERS += \
     Texture.hpp \
     FrameBuffer.hpp \
     objects/Button.hpp \
-    DataHandler.hpp
+    DataHandler.hpp \
+    Tetris.hpp \
