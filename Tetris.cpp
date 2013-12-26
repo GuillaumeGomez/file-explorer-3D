@@ -417,12 +417,13 @@ void  Tetris::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
 
   glEnable(GL_TEXTURE_2D);
 
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   m_texture.bind();
   glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
   m_texture.unbind();
 
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   for (auto it = m_texts.begin(); it != m_texts.end(); ++it) {
       (*it)->paintGL(view_matrix, proj_matrix);
     }
@@ -433,17 +434,17 @@ void  Tetris::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
 void    Tetris::update(const float &n)
 {
   if (!m_end) {
-      Color b = BLACK;
       m_elapsed -= n;
       if (m_elapsed <= 0.f) {
           if (m_piece.id >= 0) {
               m_piece.y++;
-              if (!canMove()) {
+              if (!canMove(m_piece)) {
                   m_piece.y--;
                   createNewPiece();
                 } else {
                   deleteTmpPiece();
-                  copyInMap();
+                  copyInMap(m_ghost, 20);
+                  copyInMap(m_piece);
                 }
             } else {
               createNewPiece();
@@ -476,6 +477,15 @@ void    Tetris::update(const float &n)
                 case '7' + 10:
                   setColor(x, y, &m_pieces[map[y][x] - '1' - 10]);
                   break;
+                case '1' + 20:
+                case '2' + 20:
+                case '3' + 20:
+                case '4' + 20:
+                case '5' + 20:
+                case '6' + 20:
+                case '7' + 20:
+                  setColor(x, y, &m_pieces[map[y][x] - '1' - 20], true);
+                  break;
                 default:
                   break;
                 }
@@ -489,7 +499,7 @@ void    Tetris::update(const float &n)
     }
 }
 
-void  Tetris::setColor(int x, int y, PieceDatas *c)
+void  Tetris::setColor(int x, int y, PieceDatas *c, bool ghost)
 {
   //int res = y * 180 + x * 18 + 18;
   int res = y * 120 + x * 12 + 48;
@@ -503,22 +513,22 @@ void  Tetris::setColor(int x, int y, PieceDatas *c)
 
   if (c) {
       m_textures[res] = c->tex_coord[0]; //up left
-      m_textures[res + 1] = 1.f;
+      m_textures[res + 1] = ghost ? 0.5f : 1.f;
 
       m_textures[res + 2] = c->tex_coord[1]; //up right
-      m_textures[res + 3] = 1.f;
+      m_textures[res + 3] = ghost ? 0.5f : 1.f;
 
       m_textures[res + 4] = c->tex_coord[0]; //down left
-      m_textures[res + 5] = 0.5f;
+      m_textures[res + 5] = ghost ? 0.f : 0.5f;
 
       m_textures[res + 6] = c->tex_coord[1]; //up right
-      m_textures[res + 7] = 1.f;
+      m_textures[res + 7] = ghost ? 0.5f : 1.f;
 
       m_textures[res + 8] = c->tex_coord[0]; //down left
-      m_textures[res + 9] = 0.5f;
+      m_textures[res + 9] = ghost ? 0.f : 0.5f;
 
       m_textures[res + 10] = c->tex_coord[1]; //down right
-      m_textures[res + 11] = 0.5f;
+      m_textures[res + 11] = ghost ? 0.f : 0.5f;
     } else {
       m_textures[res] = 0.f; //up left
       m_textures[res + 1] = 0.48f;
@@ -562,26 +572,37 @@ void  Tetris::createNewPiece()
   m_piece.rot = 0;
   m_piece.x = 3;
   m_piece.y = 0;
-  if (!canMove()) {
+  if (!canMove(m_piece)) {
       m_end = true;
       m_texts[TETRIS_MSG]->setText("Defeat !\nPress any key to restart");
     } else {
-      copyInMap();
+      copyInMap(m_piece);
     }
+  m_ghost.id = m_piece.id;
+  moveGhost();
+}
+
+void  Tetris::moveGhost()
+{
+  m_ghost.rot = m_piece.rot;
+  m_ghost.x = m_piece.x;
+  m_ghost.y = m_piece.y;
+  while (canMove(m_ghost)) {
+      ++m_ghost.y;
+    }
+  --m_ghost.y;
+  copyInMap(m_ghost, 20);
 }
 
 void  Tetris::deleteTmpPiece()
 {
   if (m_piece.id < 0)
     return;
-  int tot(0);
 
-  for (int y = 0; y < 22 && tot < 4; ++y) {
+  for (int y = 0; y < 22; ++y) {
       for (int x = 0; x < 10; ++x) {
           if (map[y][x] > '7') {
               map[y][x] = 0;
-              if (++tot > 3)
-                break;
             }
         }
     }
@@ -619,32 +640,32 @@ int  Tetris::definitivePaste()
   return line;
 }
 
-void  Tetris::copyInMap()
+void  Tetris::copyInMap(Piece &p, int val)
 {
-  if (m_piece.id < 0)
+  if (p.id < 0)
     return;
-  for (int y = 0; y + m_piece.y < m_piece.y + 4 && y + m_piece.y < 22; ++y) {
-      for (int x = 0; x + m_piece.x < m_piece.x + 4 && x + m_piece.x < 10; ++x) {
-          if (m_pieces[m_piece.id].rot[m_piece.rot][y][x] != ' ')
-            map[m_piece.y + y][m_piece.x + x] = m_pieces[m_piece.id].rot[m_piece.rot][y][x] + 10;
+  for (int y = 0; y + p.y < p.y + 4 && y + p.y < 22; ++y) {
+      for (int x = 0; x + p.x < p.x + 4 && x + p.x < 10; ++x) {
+          if (m_pieces[p.id].rot[p.rot][y][x] != ' ')
+            map[p.y + y][p.x + x] = m_pieces[p.id].rot[p.rot][y][x] + val;
         }
     }
   m_hasNew = true;
 }
 
-bool  Tetris::canMove()
+bool  Tetris::canMove(Piece &p)
 {
-  if (m_piece.id < 0)
+  if (p.id < 0)
     return false;
   for (int y = 0; y < 4; ++y) {
       for (int x = 0; x < 4; ++x) {
-          if (m_pieces[m_piece.id].rot[m_piece.rot][y][x] != ' ') {
-              if (x + m_piece.x > 9 || x + m_piece.x < 0)
+          if (m_pieces[p.id].rot[p.rot][y][x] != ' ') {
+              if (x + p.x > 9 || x + p.x < 0)
                 return false;
-              if (y + m_piece.y > 21 || y + m_piece.y < 0)
+              if (y + p.y > 21 || y + p.y < 0)
                 return false;
-              if (map[m_piece.y + y][m_piece.x + x] != 0 &&
-                  map[m_piece.y + y][m_piece.x + x] <= '8')
+              if (map[p.y + y][p.x + x] != 0 &&
+                  map[p.y + y][p.x + x] <= '8')
                 return false;
             }
         }
@@ -667,22 +688,24 @@ void  Tetris::keyPressEvent(int key)
       tmp = m_piece.x;
 
       ++m_piece.x;
-      if (!canMove())
+      if (!canMove(m_piece))
         m_piece.x = tmp;
       else {
           deleteTmpPiece();
-          copyInMap();
+          moveGhost();
+          copyInMap(m_piece);
         }
       break;
     case SDLK_LEFT:
       tmp = m_piece.x;
 
       --m_piece.x;
-      if (!canMove())
+      if (!canMove(m_piece))
         m_piece.x = tmp;
       else {
           deleteTmpPiece();
-          copyInMap();
+          moveGhost();
+          copyInMap(m_piece);
         }
       break;
     case SDLK_UP:
@@ -691,12 +714,12 @@ void  Tetris::keyPressEvent(int key)
       if (++m_piece.rot > 3)
         m_piece.rot = 0;
       done = true;
-      if (!canMove()) {
+      if (!canMove(m_piece)) {
           tmp2 = m_piece.x;
           m_piece.x++;
-          if (!canMove()) {
+          if (!canMove(m_piece)) {
               m_piece.x = tmp2 - 1;
-              if (!canMove()) {
+              if (!canMove(m_piece)) {
                   m_piece.x = tmp2;
                   m_piece.rot = tmp;
                   done = false;
@@ -705,18 +728,20 @@ void  Tetris::keyPressEvent(int key)
         }
       if (done) {
           deleteTmpPiece();
-          copyInMap();
+          moveGhost();
+          copyInMap(m_piece);
         }
       break;
     case SDLK_DOWN:
       tmp = m_piece.y;
 
       ++m_piece.y;
-      if (!canMove())
+      if (!canMove(m_piece))
         m_piece.y = tmp;
       else {
           deleteTmpPiece();
-          copyInMap();
+          copyInMap(m_ghost, 20);
+          copyInMap(m_piece);
         }
       m_elapsed = m_speeds[m_level];
       break;
@@ -725,7 +750,7 @@ void  Tetris::keyPressEvent(int key)
       do {
           ++m_piece.y;
           ++tmp;
-        } while (canMove());
+        } while (canMove(m_piece));
       --m_piece.y;
       m_score += tmp;
       m_elapsed = 0.f;

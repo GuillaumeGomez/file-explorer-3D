@@ -41,13 +41,14 @@ public:
   void  keyReleaseEvent(int key);
 
 private:
-  bool  canMove();
+  bool  canMove(Piece &p);
   void  createNewPiece();
-  void  setColor(int x, int y, PieceDatas *color);
-  void  copyInMap();
+  void  setColor(int x, int y, PieceDatas *color, bool ghost = false);
+  void  copyInMap(Piece &p, int val = 10);
   void  deleteTmpPiece();
   int   definitivePaste();
   void  restart();
+  void  moveGhost();
 
   int         m_level;
   int         m_score;
@@ -60,6 +61,7 @@ private:
   int         m_levels[11];
   PieceDatas  m_pieces[7];
   Piece       m_piece;
+  Piece       m_ghost;
   std::vector<Object::Text*>  m_texts;
 };
 
