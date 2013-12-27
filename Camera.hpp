@@ -43,6 +43,7 @@ public:
   static glm::mat4 const &get2DProjectionMatrix();
   static glm::vec3       &getVecPosition();
   static float const     &getDistanceView();
+  static float const     &getRatio();
 
 private:
   void  vectorsFromAngles();
@@ -65,12 +66,12 @@ private:
   Vector3D    m_left;
   float       tmp1;
   float       tmp2;
-  float       m_ratio;
   int         m_curX;
   int         m_curY;
   HandleMutex *m_mutex;
 
   static float       distanceView;
+  static float       m_ratio;
   static glm::vec3   m_vecPos;
   static glm::mat4   m_view;
   static glm::mat4   m_proj;

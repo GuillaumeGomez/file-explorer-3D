@@ -6,7 +6,7 @@
 
 Color myGLWidget::pick_color = Color(0.f, 0.f, 0.f);
 
-//TODO faire un mecanisme qui permettra d'eviter les doublons
+//TODO create a way to avoid double values
 Color &myGLWidget::getStaticPickColor()
 {
   static float  add_value(1.f / 255.f);
@@ -36,8 +36,7 @@ Color &myGLWidget::getStaticPickColor()
 }
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot)
-  : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()),
-    tex_width(0), tex_height(0), m_glObject(0), m_selected(false),
+  : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false)
 {
@@ -46,8 +45,7 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot)
 }
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, Color co)
-  : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(co),
-    tex_width(0), tex_height(0), m_glObject(0), m_selected(false),
+  : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(co), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false)
 {
@@ -56,8 +54,7 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, Color co)
 }
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
-  : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()),
-    tex_width(0), tex_height(0), m_glObject(0), m_selected(false),
+  : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false), m_texture(tex)
 {
@@ -67,8 +64,6 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
 
 myGLWidget::~myGLWidget()
 {
-  if (m_glObject > 0)
-    glDeleteLists(m_glObject, 1);
   if (m_shader)
     delete m_shader;
   if (m_vboID)

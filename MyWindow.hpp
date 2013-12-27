@@ -93,6 +93,8 @@ private:
   myGLWidget          *m_disp;
   FrameBuffer         *m_fbo;
   Tetris              *m_tetris;
+  int                 mouseX;
+  int                 mouseY;
 
   static GraphicHandler      *sdl;
 };

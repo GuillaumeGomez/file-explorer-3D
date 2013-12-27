@@ -12,8 +12,8 @@ Wall::Wall(Vector3D v, Rotation r, std::string tex, float width, float height) :
 
 void Wall::initializeGL()
 {
-  m_glObject = glGenLists(1);
-  glNewList(m_glObject, GL_COMPILE);
+  //m_glObject = glGenLists(1);
+  //glNewList(m_glObject, GL_COMPILE);
   this->initializeGLNoList();
   glEndList();
 }
@@ -99,6 +99,6 @@ void  Wall::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix)
   glPushMatrix();
   glTranslatef(m_pos.x(), m_pos.y(), m_pos.z());
   glRotatef(m_rot.getRotation(), m_rot.getRotX(), m_rot.getRotY(), 0.0f);
-  glCallList(m_glObject);
+  //glCallList(m_glObject);
   glPopMatrix();
 }

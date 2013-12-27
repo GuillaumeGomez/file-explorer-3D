@@ -85,9 +85,6 @@ protected:
   Vector3D                m_pos;
   Rotation                m_rot;
   Color                   m_color;
-  int                     tex_width;
-  int                     tex_height;
-  GLuint                  m_glObject;
   bool                    m_selected;
   bool                    m_pickAllow;
   MyWindow                *mainWindow;
@@ -103,17 +100,16 @@ protected:
   Color                   m_pickingColor;
   GLint                   m_uniLoc_modelView;
   GLint                   m_uniLoc_projection;
-
-  std::vector<GLfloat>  m_vertices;
-  std::vector<GLfloat>  m_couleurs;
-  std::vector<GLfloat>  m_textures;
-
   Color                 m_primaryColor;
   Shader                *m_primaryShader;
   GLint                 m_primaryLoc_modelView;
   GLint                 m_primaryLoc_projection;
   GLuint                m_primary_vboID;
   GLuint                m_primary_vaoID;
+
+  std::vector<GLfloat>  m_vertices;
+  std::vector<GLfloat>  m_couleurs;
+  std::vector<GLfloat>  m_textures;
 
   static Color  pick_color;
   static Color  &getStaticPickColor();

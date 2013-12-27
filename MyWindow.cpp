@@ -156,12 +156,10 @@ void  MyWindow::repeatKey()
 
 void  MyWindow::update()
 {
-  //glEnable(GL_DEPTH_TEST);
   //glEnable(GL_COLOR_MATERIAL);
 
   if (!m_tetrisMode)
     picking();
-  //glEnable(GL_TEXTURE_2D);
   float tmp = sdl->getElapsedTime();
   if (tmp != 0.f) {
       if (m_tetrisMode) {
@@ -176,7 +174,6 @@ void  MyWindow::update()
     }
 
   this->clearScreen();
-  //glColor3f(0.f, 0.f, 0.f);
 
   if (m_tetrisMode) {
       glDepthMask(GL_FALSE);
@@ -186,7 +183,6 @@ void  MyWindow::update()
       m_camera->look();
       this->paintGL();
     }
-  //glDisable(GL_TEXTURE_2D);
   //glDisable(GL_COLOR_MATERIAL);
 }
 
@@ -401,6 +397,8 @@ bool  MyWindow::isPlayingTetris() const
 void  MyWindow::mouseMoveEvent(int x, int y)
 {
   m_camera->mouseMoveEvent(x, y);
+  mouseX = x;
+  mouseY = y;
 }
 
 void  MyWindow::setPause(bool b)
@@ -436,43 +434,19 @@ GraphicHandler *MyWindow::getLib()
 
 void  MyWindow::picking()
 {
-  //GLuint  buffer[512];
-  //GLint   hits;
-  //GLint   viewport[4];
-  glm::vec4 viewport;
-
-  //glGetIntegerv(GL_VIEWPORT, viewport);
-  //glSelectBuffer(512, buffer);
-  //glRenderMode(GL_SELECT);
-
-  //glInitNames();
-  //glPushName(0);
-
-  for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it){
+  for (WinList::iterator it = m_pickObjects.begin(); it != m_pickObjects.end(); ++it){
       (*it)->setSelected(false);
     }
 
-  /*glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
-  glLoadIdentity();*/
-
-  //glm::mat4 pickMat = glm::pickMatrix(glm::vec2(m_camera->mouseX(), (GLdouble)(viewport[3] - m_camera->mouseY())), glm::vec2(1.f, 1.f), viewport);
   glm::mat4 pickMat = Camera::getViewMatrix();
-
-  //gluPickMatrix((GLdouble)m_camera->mouseX(), (GLdouble)(viewport[3] - m_camera->mouseY()), 1.0f, 1.0f, viewport);
-  glm::mat4 perspectiveMat = glm::perspective(70.f, 1.f, 0.1f, 75.f);
-  //gluPerspective(70.0f, (GLfloat) (viewport[2]-viewport[0])/(GLfloat) (viewport[3]-viewport[1]), 0.1f, 75.f);
-  //glMatrixMode(GL_MODELVIEW);
-  //glLoadIdentity();
-  //m_camera->lookAt();
-  //DrawTargets();
+  glm::mat4 perspectiveMat = glm::perspective(70.f, Camera::getRatio(), 0.1f, 35.f);
 
   m_fbo->bind();
   glEnable(GL_TEXTURE_2D);
   paintGL2(pickMat, perspectiveMat);
   glDisable(GL_TEXTURE_2D);
   unsigned char pixel[3];
-  glReadPixels(0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
+  glReadPixels(mouseX, mouseY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
   m_fbo->unbind();
   m_disp->setTexture(m_fbo->getTextureID(0));
 
@@ -484,42 +458,6 @@ void  MyWindow::picking()
           break;
         }
     }
-  //glMatrixMode(GL_PROJECTION);
-  //glPopMatrix();
-  //glMatrixMode(GL_MODELVIEW);
-
-  /*if ((hits = glRenderMode(GL_RENDER)) > 0){
-      int choose = buffer[3];
-      int depth = buffer[1];
-
-      for (int loop = 1; loop < hits; loop++)
-        {
-          // If This Object Is Closer To Us Than The One We Have Selected
-          if (buffer[loop * 4 + 1] < GLuint(depth))
-            {
-              choose = buffer[loop * 4 + 3]; // Select The Closer Object
-              depth = buffer[loop * 4 + 1]; // Store How Far Away It Is
-            }
-        }
-
-      for (WinList::iterator it = m_pickObjects.begin(); it != m_pickObjects.end(); ++it){
-          if (choose >= (*it)->objectSize()){
-              choose -= (*it)->objectSize();
-            }
-          else{
-              if ((*it)->objectSize() > 1){
-                  (*it)->hasBeenPicked(choose);
-                }
-              else{
-                  (*it)->setSelected(true);
-                }
-              break;
-            }
-        }
-      /*if (choose < objectList.size()){
-          objectList[choose]->setSelected(true);
-        }*/
-  //}
 }
 
 void  MyWindow::setDisplaySentence(std::string s)

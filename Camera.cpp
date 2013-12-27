@@ -28,6 +28,7 @@ glm::mat4 Camera::m_proj;
 glm::mat4 Camera::m_2Dproj;
 glm::vec3 Camera::m_vecPos;
 float     Camera::distanceView = 1000.f;
+float     Camera::m_ratio = 1.f;
 
 Camera::Camera()
   : m_speed(0.1f), m_sensivity(0.2f), m_phi(-24.f), m_theta(-120.f), m_position(0.f, 1.f, 0.f),
@@ -280,4 +281,9 @@ glm::mat4 const &Camera::getProjectionMatrix()
 glm::mat4 const &Camera::get2DProjectionMatrix()
 {
   return m_2Dproj;
+}
+
+float const &Camera::getRatio()
+{
+  return m_ratio;
 }

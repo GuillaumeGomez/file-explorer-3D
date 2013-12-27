@@ -191,7 +191,7 @@ void  GraphicFile::initializeGL()
   for (unsigned int i(0); i < sizeof(tmpCol) / sizeof(tmpCol[0]); ++i) {
       m_couleurs.push_back(tmpCol[i]);
     }
-  for (unsigned int i(0); i < m_couleurs.size(); i += 3) {
+  while (m_tmpColor.size() < m_couleurs.size()) {
       m_tmpColor.push_back(m_pickingColor.red());
       m_tmpColor.push_back(m_pickingColor.green());
       m_tmpColor.push_back(m_pickingColor.blue());
@@ -210,7 +210,6 @@ void  GraphicFile::pick(int &x, const glm::mat4& view_matrix, const glm::mat4& p
 {
   if (isPickingAllowed()) {
       Rotation tmp(tmpRotation);
-      //glLoadName(x++);
       myGLWidget::pick(x, view_matrix, proj_matrix);
       tmpRotation = tmp;
     }
@@ -271,7 +270,8 @@ void  GraphicFile::setSelected(bool b)
   if (b == m_selected)
     return;
   if (b)
-    this->updateVertexBufferObject(&m_tmpColor[0], m_tmpColor.size() * sizeof(m_tmpColor[0]), 0);
+    this->updateVertexBufferObject(&m_tmpColor[0], m_colorsSize, m_verticesSize + m_texturesSize);
   else
-    this->updateVertexBufferObject(&m_couleurs[0], m_couleurs.size() * sizeof(m_couleurs[0]), 0);
+    this->updateVertexBufferObject(&m_couleurs[0], m_colorsSize, m_verticesSize + m_texturesSize);
+  m_selected = b;
 }
