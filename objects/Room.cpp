@@ -206,14 +206,14 @@ unsigned int  Room::nbObjects() const
     return files.size() + 1;
 }
 
-void  Room::pick(int &x, const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
+void  Room::pick(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 {
     glPushMatrix();
     glTranslatef(m_pos.x(), m_pos.y(), m_pos.z());
     glRotatef(m_rot.getRotation() + 180.f, m_rot.getRotX(), m_rot.getRotY() + 1.f, 0.0f);
     for (std::vector<myGLWidget*>::iterator it = files.begin(); it != files.end(); ++it){
         (*it)->setSelected(false);
-        (*it)->pick(x, view_matrix, proj_matrix);
+        (*it)->pick(view_matrix, proj_matrix);
     }
     glPopMatrix();
 }

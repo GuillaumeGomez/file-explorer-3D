@@ -188,7 +188,7 @@ bool  myGLWidget::hasBeenPicked(int c)
   return false;
 }
 
-void  myGLWidget::pick(int &x, const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix)
+void  myGLWidget::pick(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix)
 {
   if (!m_pickAllow)
     return;

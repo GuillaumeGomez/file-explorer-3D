@@ -60,7 +60,7 @@ public:
   virtual void    resize(int width, int height);
   virtual void    setSelected(bool);
   bool            isSelected() const;
-  virtual void    pick(int&, const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
+  virtual void    pick(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
   void            setPickingAllowed(bool);
   bool            isPickingAllowed();
   virtual bool    hasBeenPicked(int);

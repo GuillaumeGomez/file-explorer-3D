@@ -364,13 +364,8 @@ void MyWindow::paintGL()
 
 void  MyWindow::paintGL2(const glm::mat4 &view, const glm::mat4 &pers)
 {
-  int loop(0);
-
-  //const glm::mat4 view_mat = Camera::getViewMatrix();
-  //const glm::mat4 proj_mat = Camera::getProjectionMatrix();
-
   for (WinList::iterator it = m_pickObjects.begin(); it != m_pickObjects.end(); ++it){
-      (*it)->pick(loop, view, pers);
+      (*it)->pick(view, pers);
       //(*it)->paintGL(view, pers);
     }
 }
@@ -434,25 +429,22 @@ GraphicHandler *MyWindow::getLib()
 
 void  MyWindow::picking()
 {
-  for (WinList::iterator it = m_pickObjects.begin(); it != m_pickObjects.end(); ++it){
-      (*it)->setSelected(false);
-    }
-
   glm::mat4 pickMat = Camera::getViewMatrix();
   glm::mat4 perspectiveMat = glm::perspective(70.f, Camera::getRatio(), 0.1f, 35.f);
 
   m_fbo->bind();
-  glEnable(GL_TEXTURE_2D);
+  //glEnable(GL_TEXTURE_2D);
   paintGL2(pickMat, perspectiveMat);
-  glDisable(GL_TEXTURE_2D);
+  //glDisable(GL_TEXTURE_2D);
   unsigned char pixel[3];
-  glReadPixels(mouseX, mouseY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
+  glReadPixels(mouseX, sdl->height() - mouseY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
   m_fbo->unbind();
   m_disp->setTexture(m_fbo->getTextureID(0));
 
   Color comp(pixel[0] / 255.f, pixel[1] / 255.f, pixel[2] / 255.f);
 
   for (WinList::iterator it = m_pickObjects.begin(); it != m_pickObjects.end(); ++it){
+      (*it)->setSelected(false);
       if ((*it)->getPrimaryColor() == comp) {
           (*it)->setSelected(true);
           break;

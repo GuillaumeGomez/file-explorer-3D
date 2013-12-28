@@ -6,9 +6,9 @@ class Color
 public:
   Color(float red = 1.f, float green = 1.f, float blue = 1.f);
   virtual ~Color(){}
-  float &red();
-  float &green();
-  float &blue();
+  float const &red() const;
+  float const &green() const;
+  float const &blue() const;
   void  setRed(float);
   void  setGreen(float);
   void  setBlue(float);
@@ -18,6 +18,9 @@ protected:
   float m_red;
   float m_green;
   float m_blue;
+  int   m_ired;
+  int   m_igreen;
+  int   m_iblue;
 };
 
 #define RED     Color(1.f, 0.f, 0.f)
