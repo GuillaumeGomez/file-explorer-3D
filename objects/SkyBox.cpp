@@ -11,35 +11,20 @@
 using namespace std;
 using namespace Object;
 
-SkyBox::SkyBox(float size) : Cube(Vector3D(0.f, 0.f, 0.f), Rotation(), Color(), size)
+SkyBox::SkyBox() : Cube(Vector3D(0.f, 0.f, 0.f), Rotation(), Color(), 1.f)
 {
     m_hasTexture = true;
-    m_shader = new Shader;
-    m_pointsNumber = 0;
-
-    /*textures[0] = HandleSDL::loadTexture("./textures/skybox/west.jpg", true, true);
-  textures[1] = HandleSDL::loadTexture("./textures/skybox/sky.jpg", true, true);
-  textures[2] = HandleSDL::loadTexture("./textures/skybox/east.jpg", true, true);
-  textures[3] = HandleSDL::loadTexture("./textures/skybox/ground.jpg", true, true);
-  textures[4] = HandleSDL::loadTexture("./textures/skybox/north.jpg", true, true);
-  textures[5] = HandleSDL::loadTexture("./textures/skybox/south.jpg", true, true);*/
+    cube_map_texture_ID = 0;
+    vertex = 0;
+    PVM = 0;
 
     glGenTextures(1, &cube_map_texture_ID);
 
     glEnable(GL_TEXTURE_CUBE_MAP_ARB);
     glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, cube_map_texture_ID);
 
-#ifdef WIN32
     std::string tex[] = {"./textures/skybox/west.jpg", "./textures/skybox/east.jpg", "./textures/skybox/ground.jpg",
                          "./textures/skybox/sky.jpg", "./textures/skybox/north.jpg", "./textures/skybox/south.jpg"};
-#else
-    std::string tex[] = {"/windows/Users/imperio/Projects/My_World_SDL/My_World_SDL/My_World_SDL/textures/skybox/west.jpg",
-                         "/windows/Users/imperio/Projects/My_World_SDL/My_World_SDL/My_World_SDL/textures/skybox/east.jpg",
-                         "/windows/Users/imperio/Projects/My_World_SDL/My_World_SDL/My_World_SDL/textures/skybox/ground.jpg",
-                         "/windows/Users/imperio/Projects/My_World_SDL/My_World_SDL/My_World_SDL/textures/skybox/sky.jpg",
-                         "/windows/Users/imperio/Projects/My_World_SDL/My_World_SDL/My_World_SDL/textures/skybox/north.jpg",
-                         "/windows/Users/imperio/Projects/My_World_SDL/My_World_SDL/My_World_SDL/textures/skybox/south.jpg"};
-#endif
     MyWindow::createSkyBoxTextures(tex);
     glDisable(GL_TEXTURE_CUBE_MAP_ARB);
 }

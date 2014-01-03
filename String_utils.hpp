@@ -181,21 +181,21 @@ namespace Utility
   
   template<typename T>
   std::string replace(T &s, std::string const &toReplace,
-             std::string const &replacement)
+                      std::string const &replacement)
   {
     return replace<T>(s, toReplace.c_str(), replacement.c_str());
   }
   
   template<typename T>
   std::string replace(T &s, const char *toReplace,
-             std::string const &replacement)
+                      std::string const &replacement)
   {
     return replace<T>(s, toReplace, replacement.c_str());
   }
   
   template<typename T>
   std::string replace(T &s, std::string const &toReplace,
-             const char *replacement)
+                      const char *replacement)
   {
     return replace<T>(s, toReplace.c_str(), replacement);
   }

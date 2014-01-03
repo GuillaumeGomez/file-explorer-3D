@@ -140,7 +140,6 @@ int GraphicHandler::loadIconFile(const char *s)
   //std::string fullname = "./textures/" + std::string(tmp[tmp.size() - 1]) + ".bmp";
 
   GLuint  glID(0);
-  int     width, height, bitsPerPixel;
 
   if (extension != ".exe")
     glID = tex_container->get(extension);
@@ -150,6 +149,8 @@ int GraphicHandler::loadIconFile(const char *s)
   if (glID > 0)
     return glID;
 
+#ifdef WIN32
+  int     width, height, bitsPerPixel;
   HBITMAP data = Utils::getIconFromFileType(filename.c_str(), &width, &height, &bitsPerPixel);
 
   if (!data)
@@ -164,5 +165,8 @@ int GraphicHandler::loadIconFile(const char *s)
   char  *datas = Utils::getBitmapDatas(data, &size);
   glID = loadTextureFromMemory(datas, size, extension.c_str());
   delete[] datas;
+#else
+  //add code for linux's icons here
+#endif
   return glID;
 }

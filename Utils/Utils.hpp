@@ -39,6 +39,7 @@ namespace Utils
 #endif
 }
 
+#ifdef WIN32
 // These next two structs represent how the icon information is stored
 // in an ICO file.
 typedef struct
@@ -68,3 +69,4 @@ typedef struct{
   unsigned char            icXOR[1];      // DIB bits for XOR mask
   unsigned char            icAND[1];      // DIB bits for AND mask
 } ICONIMAGE, *LPICONIMAGE;
+#endif

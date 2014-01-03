@@ -63,10 +63,14 @@ public:
   bool  start(thread_func, void*);
   void  stop();
   bool  isRunning();
-  bool  wait(unsigned long ms);
+  bool  wait(unsigned long ms = 0);
+
+  /*never call it from outside*/
+  void          run();
 
 private:
-  pthread_t m_thread;
+  pthread_t     m_thread;
+  HandleMutex   *m_mutex;
 };
 #endif
 

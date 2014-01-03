@@ -19,21 +19,14 @@ using namespace Object;
 
 Loader::Loader(MyWindow *w) : m_win(w)
 {
-  objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, Color, float>(Vector3D(-30.f, 10.f, 100.f), Rotation(45.f, 0.f, 0.f, 0.f), Color(0.9f, 0.1f, 0.1f), 20.f));
-  //objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, Color, float>(Vector3D(-30.f, 10.f, 100.f), Rotation(45.f, 0.f, 0.f, 0.f), Color(0.9f, 0.1f, 0.1f), 20.f));
-  objList.push_back(ObjectFactory::createNewObject<Cylinder, Vector3D, Rotation, const char*, float, float>(Vector3D(), Rotation(), "./textures/box.jpg", 10.f, 80.f));
   objList.push_back(ObjectFactory::createNewObject<Plane, Vector3D, Rotation, const char*, float, float>(Vector3D(), Rotation(90.f, 0.f, 0.f, 1.f), "./textures/metal.jpg", 10.f, 80.f));
-#ifndef WIN32
-  objList.push_back(ObjectCreator::sphere(Vector3D(0.f, -70.f, 100.f), Rotation(0.f, 10.f, 1.f, 1.f, 0.f), "/windows/Users/imperio/Projects/My_World_SDL/My_World_SDL/My_World_SDL/textures/burn.jpg", 20));
-  objList.push_back(ObjectCreator::cube(Vector3D(-60.f, 10.f, 100.f), Rotation(45.f, 0.f, 1.f, 0.f), "/windows/Users/imperio/Projects/My_World_SDL/My_World_SDL/My_World_SDL//textures/grass.jpg", 10));
-  objList.push_back(ObjectCreator::cube(Vector3D(0.f, 10.f, 100.f), Rotation(45.f, 0.7f, 1.f, 0.f), "/windows/Users/imperio/Projects/My_World_SDL/My_World_SDL/My_World_SDL//textures/grass.jpg", 20));
-#else
+  objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, Color, float>(Vector3D(-30.f, 10.f, 100.f), Rotation(45.f, 0.f, 0.f, 0.f), Color(0.9f, 0.1f, 0.1f), 20.f));
+  objList.push_back(ObjectFactory::createNewObject<Cylinder, Vector3D, Rotation, const char*, float, float>(Vector3D(), Rotation(), "./textures/box.jpg", 10.f, 80.f));
   objList.push_back(ObjectFactory::createNewObject<Sphere, Vector3D, Rotation, Color, float>(Vector3D(0.f, -20.f, 100.f), Rotation(), Color(0.9f, 0.18f, 0.7f), 20.f));
   objList.push_back(ObjectFactory::createNewObject<Sphere, Vector3D, Rotation, const char*, float>(Vector3D(0.f, -70.f, 100.f), Rotation(0.f, 10.f, 1.f, 1.f, 0.f), "./textures/burn.jpg", 20.f));
   objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, const char*, float>(Vector3D(-60.f, 10.f, 100.f), Rotation(45.f, 0.f, 1.f, 0.f), "./textures/grass.jpg", 10.f));
   objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, const char*, float>(Vector3D(0.f, 10.f, 100.f), Rotation(45.f, 7.f, 1.f, 0.f), "./textures/box.jpg", 20.f));
   objList.push_back(ObjectFactory::createNewObject<Rectangle, Vector3D, Rotation, const char*, float, float, float>(Vector3D(-4.f, -3.f, -4.f), Rotation(170.f, 0.f, 1.f, 1.f), "./textures/grass.jpg", 2.f, 3.f, 1.f));
-#endif
 
   const int MAX(30);
   for (int i = 0; i< MAX; ++i)

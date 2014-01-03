@@ -44,8 +44,8 @@ OBJECTS_DIR   = release
 ####### Files
 
 SOURCES       = glew.c \
-		HandleSDL.cpp \
 		main.cpp \
+		HandleSDL.cpp \
 		MyWindow.cpp \
 		Camera.cpp \
 		myGLWidget.cpp \
@@ -87,8 +87,8 @@ SOURCES       = glew.c \
 		DataHandler.cpp \
 		Tetris.cpp 
 OBJECTS       = release/glew.o \
-		release/HandleSDL.o \
 		release/main.o \
+		release/HandleSDL.o \
 		release/MyWindow.o \
 		release/Camera.o \
 		release/myGLWidget.o \
@@ -169,7 +169,7 @@ dist:
 	$(ZIP) My_World_SDL.zip $(SOURCES) $(DIST) My_World_SDL.pro ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\spec_pre.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\qdevice.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\device_config.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\common\shell-win32.conf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\qconfig.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axbase.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axbase_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axcontainer.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axcontainer_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axserver.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axserver_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_bluetooth.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_bluetooth_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_bootstrap_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_clucene_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_concurrent.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_concurrent_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_core.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_core_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_declarative.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_declarative_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_designer.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_designer_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_designercomponents_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_gui.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_gui_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_help.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_help_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimedia.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimedia_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimediawidgets.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimediawidgets_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_network.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_network_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_nfc.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_nfc_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_opengl.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_opengl_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_openglextensions.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_openglextensions_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_platformsupport_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_positioning.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_positioning_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_printsupport.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_printsupport_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qml.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qml_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qmldevtools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qmltest.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qmltest_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_quick.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_quick_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_quickparticles_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_script.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_script_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_scripttools.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_scripttools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sensors.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sensors_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_serialport.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_serialport_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sql.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sql_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_svg.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_svg_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_testlib.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_testlib_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_uitools.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_uitools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkit.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkit_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkitwidgets.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkitwidgets_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_widgets.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_widgets_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_winextras.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_winextras_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xml.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xml_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xmlpatterns.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xmlpatterns_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\qt_functions.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\qt_config.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\win32-g++\qmake.conf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\spec_post.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\exclusive_builds.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\default_pre.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\win32\default_pre.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\resolve_config.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\exclusive_builds_post.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\default_post.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\build_pass.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\c++11.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\qml_debug.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\declarative_debug.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\win32\rtti.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\warn_on.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\win32\windows.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\testcase_targets.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\exceptions.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\yacc.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\lex.prf My_World_SDL.pro  YACCSOURCES YACCSOURCES LEXSOURCES 
 
 clean: compiler_clean 
-	-$(DEL_FILE) release\glew.o release\HandleSDL.o release\main.o release\MyWindow.o release\Camera.o release\myGLWidget.o release\Vector3D.o release\Color.o release\Cube.o release\Cylinder.o release\KeyHandler.o release\Loader.o release\Plane.o release\Rectangle.o release\Rotation.o release\SkyBox.o release\Sphere.o release\HandleThread.o release\HandleMutex.o release\MyMutexLocker.o release\MyException.o release\LoadingMenu.o release\HandleError.o release\Room.o release\Utils.o release\Directory.o release\Door.o release\Text.o release\HandleFile.o release\HandleFpsCount.o release\TextureHandler.o release\Wall.o release\GraphicHandler.o release\GraphicFile.o release\VertexBuffer.o release\Shader.o release\Box.o release\VertexContainer.o release\Texture.o release\FrameBuffer.o release\Button.o release\DataHandler.o release\Tetris.o
+	-$(DEL_FILE) release\glew.o release\main.o release\HandleSDL.o release\MyWindow.o release\Camera.o release\myGLWidget.o release\Vector3D.o release\Color.o release\Cube.o release\Cylinder.o release\KeyHandler.o release\Loader.o release\Plane.o release\Rectangle.o release\Rotation.o release\SkyBox.o release\Sphere.o release\HandleThread.o release\HandleMutex.o release\MyMutexLocker.o release\MyException.o release\LoadingMenu.o release\HandleError.o release\Room.o release\Utils.o release\Directory.o release\Door.o release\Text.o release\HandleFile.o release\HandleFpsCount.o release\TextureHandler.o release\Wall.o release\GraphicHandler.o release\GraphicFile.o release\VertexBuffer.o release\Shader.o release\Box.o release\VertexContainer.o release\Texture.o release\FrameBuffer.o release\Button.o release\DataHandler.o release\Tetris.o
 
 distclean: clean
 	-$(DEL_FILE) $(DESTDIR_TARGET)
@@ -193,6 +193,123 @@ release/glew.o: glew.c include/GL/glew.h \
 		include/GL/wglew.h \
 		include/GL/glxew.h
 	$(CC) -c $(CFLAGS) $(INCPATH) -o release\glew.o glew.c
+
+release/main.o: main.cpp MyWindow.hpp \
+		include/GL/glew.h \
+		glm/glm.hpp \
+		glm/core/_fixes.hpp \
+		glm/core/setup.hpp \
+		glm/core/_detail.hpp \
+		glm/core/_vectorize.hpp \
+		glm/core/type.hpp \
+		glm/core/type_half.hpp \
+		glm/core/type_half.inl \
+		glm/core/type_float.hpp \
+		glm/core/type_int.hpp \
+		glm/core/type_gentype.hpp \
+		glm/core/type_size.hpp \
+		glm/core/type_vec1.hpp \
+		glm/core/type_vec.hpp \
+		glm/core/_swizzle.hpp \
+		glm/core/_swizzle_func.hpp \
+		glm/core/type_vec1.inl \
+		glm/core/type_vec2.hpp \
+		glm/core/type_vec2.inl \
+		glm/core/type_vec3.hpp \
+		glm/core/type_vec3.inl \
+		glm/core/type_vec4.hpp \
+		glm/core/type_vec4.inl \
+		glm/core/type_mat2x2.hpp \
+		glm/core/type_mat.hpp \
+		glm/core/type_mat2x2.inl \
+		glm/core/type_mat2x3.hpp \
+		glm/core/type_mat2x3.inl \
+		glm/core/type_mat2x4.hpp \
+		glm/core/type_mat2x4.inl \
+		glm/core/type_mat3x2.hpp \
+		glm/core/type_mat3x2.inl \
+		glm/core/type_mat3x3.hpp \
+		glm/core/type_mat3x3.inl \
+		glm/core/type_mat3x4.hpp \
+		glm/core/type_mat3x4.inl \
+		glm/core/type_mat4x2.hpp \
+		glm/core/type_mat4x2.inl \
+		glm/core/type_mat4x3.hpp \
+		glm/core/type_mat4x3.inl \
+		glm/core/type_mat4x4.hpp \
+		glm/core/type_mat4x4.inl \
+		glm/core/func_trigonometric.hpp \
+		glm/core/func_trigonometric.inl \
+		glm/core/func_exponential.hpp \
+		glm/core/func_exponential.inl \
+		glm/core/func_common.hpp \
+		glm/core/func_common.inl \
+		glm/core/func_packing.hpp \
+		glm/core/func_packing.inl \
+		glm/core/func_geometric.hpp \
+		glm/core/func_geometric.inl \
+		glm/core/func_matrix.hpp \
+		glm/core/func_matrix.inl \
+		glm/core/func_vector_relational.hpp \
+		glm/core/func_vector_relational.inl \
+		glm/core/func_integer.hpp \
+		glm/core/func_integer.inl \
+		glm/core/func_noise.hpp \
+		glm/core/func_noise.inl \
+		objects/Color.hpp \
+		objects/Vector3D.hpp \
+		objects/VertexBuffer.hpp \
+		Utils/HandleFile.hpp \
+		Texture.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
+		HandleError.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main.o main.cpp
 
 release/HandleSDL.o: HandleSDL.cpp HandleSDL.hpp \
 		SDL2/SDL/SDL.h \
@@ -243,6 +360,7 @@ release/HandleSDL.o: HandleSDL.cpp HandleSDL.hpp \
 		objects/TextureHandler.hpp \
 		objects/Color.hpp \
 		GraphicHandler.hpp \
+		Texture.hpp \
 		MyWindow.hpp \
 		glm/glm.hpp \
 		glm/core/_fixes.hpp \
@@ -312,75 +430,6 @@ release/HandleSDL.o: HandleSDL.cpp HandleSDL.hpp \
 		SDL2/SDL/SDL_image.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\HandleSDL.o HandleSDL.cpp
 
-release/main.o: main.cpp MyWindow.hpp \
-		include/GL/glew.h \
-		glm/glm.hpp \
-		glm/core/_fixes.hpp \
-		glm/core/setup.hpp \
-		glm/core/_detail.hpp \
-		glm/core/_vectorize.hpp \
-		glm/core/type.hpp \
-		glm/core/type_half.hpp \
-		glm/core/type_half.inl \
-		glm/core/type_float.hpp \
-		glm/core/type_int.hpp \
-		glm/core/type_gentype.hpp \
-		glm/core/type_size.hpp \
-		glm/core/type_vec1.hpp \
-		glm/core/type_vec.hpp \
-		glm/core/_swizzle.hpp \
-		glm/core/_swizzle_func.hpp \
-		glm/core/type_vec1.inl \
-		glm/core/type_vec2.hpp \
-		glm/core/type_vec2.inl \
-		glm/core/type_vec3.hpp \
-		glm/core/type_vec3.inl \
-		glm/core/type_vec4.hpp \
-		glm/core/type_vec4.inl \
-		glm/core/type_mat2x2.hpp \
-		glm/core/type_mat.hpp \
-		glm/core/type_mat2x2.inl \
-		glm/core/type_mat2x3.hpp \
-		glm/core/type_mat2x3.inl \
-		glm/core/type_mat2x4.hpp \
-		glm/core/type_mat2x4.inl \
-		glm/core/type_mat3x2.hpp \
-		glm/core/type_mat3x2.inl \
-		glm/core/type_mat3x3.hpp \
-		glm/core/type_mat3x3.inl \
-		glm/core/type_mat3x4.hpp \
-		glm/core/type_mat3x4.inl \
-		glm/core/type_mat4x2.hpp \
-		glm/core/type_mat4x2.inl \
-		glm/core/type_mat4x3.hpp \
-		glm/core/type_mat4x3.inl \
-		glm/core/type_mat4x4.hpp \
-		glm/core/type_mat4x4.inl \
-		glm/core/func_trigonometric.hpp \
-		glm/core/func_trigonometric.inl \
-		glm/core/func_exponential.hpp \
-		glm/core/func_exponential.inl \
-		glm/core/func_common.hpp \
-		glm/core/func_common.inl \
-		glm/core/func_packing.hpp \
-		glm/core/func_packing.inl \
-		glm/core/func_geometric.hpp \
-		glm/core/func_geometric.inl \
-		glm/core/func_matrix.hpp \
-		glm/core/func_matrix.inl \
-		glm/core/func_vector_relational.hpp \
-		glm/core/func_vector_relational.inl \
-		glm/core/func_integer.hpp \
-		glm/core/func_integer.inl \
-		glm/core/func_noise.hpp \
-		glm/core/func_noise.inl \
-		objects/Color.hpp \
-		objects/Vector3D.hpp \
-		objects/VertexBuffer.hpp \
-		Utils/HandleFile.hpp \
-		HandleError.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main.o main.cpp
-
 release/MyWindow.o: MyWindow.cpp MyWindow.hpp \
 		include/GL/glew.h \
 		glm/glm.hpp \
@@ -447,40 +496,7 @@ release/MyWindow.o: MyWindow.cpp MyWindow.hpp \
 		objects/Vector3D.hpp \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
-		myGLWidget.hpp \
-		objects/Rotation.hpp \
 		Texture.hpp \
-		shaders/Shader.hpp \
-		glm/gtc/matrix_transform.hpp \
-		glm/gtc/matrix_transform.inl \
-		glm/gtc/type_ptr.hpp \
-		glm/gtc/half_float.hpp \
-		glm/gtc/half_float.inl \
-		glm/gtc/quaternion.hpp \
-		glm/gtc/constants.hpp \
-		glm/gtc/constants.inl \
-		glm/gtc/quaternion.inl \
-		glm/gtc/type_ptr.inl \
-		Camera.hpp \
-		KeyHandler.hpp \
-		GraphicHandler.hpp \
-		objects/TextureHandler.hpp \
-		Utils/HandleThread.hpp \
-		objects/Wall.hpp \
-		objects/Plane.hpp \
-		objects/Button.hpp \
-		objects/Rectangle.hpp \
-		objects/GraphicFile.hpp \
-		objects/Cube.hpp \
-		FrameBuffer.hpp \
-		Loader/Loader.hpp \
-		HandleError.hpp \
-		Utils/Utils.hpp \
-		objects/Text.hpp \
-		HandleFpsCount.hpp \
-		String_utils.hpp \
-		Utils/MyException.hpp \
-		Tetris.hpp \
 		HandleSDL.hpp \
 		SDL2/SDL/SDL.h \
 		SDL2/SDL/SDL_main.h \
@@ -526,7 +542,39 @@ release/MyWindow.o: MyWindow.cpp MyWindow.hpp \
 		SDL2/SDL/SDL_version.h \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
-		HandleSFML.hpp
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
+		myGLWidget.hpp \
+		objects/Rotation.hpp \
+		shaders/Shader.hpp \
+		glm/gtc/matrix_transform.hpp \
+		glm/gtc/matrix_transform.inl \
+		glm/gtc/type_ptr.hpp \
+		glm/gtc/half_float.hpp \
+		glm/gtc/half_float.inl \
+		glm/gtc/quaternion.hpp \
+		glm/gtc/constants.hpp \
+		glm/gtc/constants.inl \
+		glm/gtc/quaternion.inl \
+		glm/gtc/type_ptr.inl \
+		Camera.hpp \
+		KeyHandler.hpp \
+		Utils/HandleThread.hpp \
+		objects/Wall.hpp \
+		objects/Plane.hpp \
+		objects/Button.hpp \
+		objects/Rectangle.hpp \
+		objects/GraphicFile.hpp \
+		objects/Cube.hpp \
+		FrameBuffer.hpp \
+		Loader/Loader.hpp \
+		HandleError.hpp \
+		Utils/Utils.hpp \
+		objects/Text.hpp \
+		HandleFpsCount.hpp \
+		String_utils.hpp \
+		Utils/MyException.hpp \
+		Tetris.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\MyWindow.o MyWindow.cpp
 
 release/Camera.o: Camera.cpp objects/SkyBox.hpp \
@@ -601,23 +649,7 @@ release/Camera.o: Camera.cpp objects/SkyBox.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
-		shaders/Shader.hpp \
-		glm/gtc/matrix_transform.hpp \
-		glm/gtc/matrix_transform.inl \
-		glm/gtc/type_ptr.hpp \
-		glm/gtc/half_float.hpp \
-		glm/gtc/half_float.inl \
-		glm/gtc/quaternion.hpp \
-		glm/gtc/constants.hpp \
-		glm/gtc/constants.inl \
-		glm/gtc/quaternion.inl \
-		glm/gtc/type_ptr.inl \
-		Camera.hpp \
-		Utils/HandleMutex.hpp \
-		Utils/MyMutexLocker.hpp \
-		GraphicHandler.hpp \
-		objects/TextureHandler.hpp \
-		String_utils.hpp \
+		HandleSDL.hpp \
 		SDL2/SDL/SDL.h \
 		SDL2/SDL/SDL_main.h \
 		SDL2/SDL/SDL_stdinc.h \
@@ -660,10 +692,26 @@ release/Camera.o: Camera.cpp objects/SkyBox.hpp \
 		SDL2/SDL/SDL_system.h \
 		SDL2/SDL/SDL_timer.h \
 		SDL2/SDL/SDL_version.h \
-		objects/Text.hpp \
-		HandleSDL.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
+		shaders/Shader.hpp \
+		glm/gtc/matrix_transform.hpp \
+		glm/gtc/matrix_transform.inl \
+		glm/gtc/type_ptr.hpp \
+		glm/gtc/half_float.hpp \
+		glm/gtc/half_float.inl \
+		glm/gtc/quaternion.hpp \
+		glm/gtc/constants.hpp \
+		glm/gtc/constants.inl \
+		glm/gtc/quaternion.inl \
+		glm/gtc/type_ptr.inl \
+		Camera.hpp \
+		Utils/HandleMutex.hpp \
+		Utils/MyMutexLocker.hpp \
+		String_utils.hpp \
+		objects/Text.hpp \
 		HandleSFML.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\Camera.o Camera.cpp
 
@@ -736,6 +784,53 @@ release/myGLWidget.o: myGLWidget.cpp myGLWidget.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -829,6 +924,53 @@ release/Cube.o: objects/Cube.cpp objects/Cube.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -912,6 +1054,53 @@ release/Cylinder.o: objects/Cylinder.cpp objects/Cylinder.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1000,9 +1189,56 @@ release/Loader.o: Loader/Loader.cpp Loader/Loader.hpp \
 		objects/Vector3D.hpp \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		Texture.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		myGLWidget.hpp \
 		objects/Rotation.hpp \
-		Texture.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1015,8 +1251,6 @@ release/Loader.o: Loader/Loader.cpp Loader/Loader.hpp \
 		glm/gtc/quaternion.inl \
 		glm/gtc/type_ptr.inl \
 		Loader/LoadingMenu.hpp \
-		GraphicHandler.hpp \
-		objects/TextureHandler.hpp \
 		objects/GraphicFile.hpp \
 		objects/Rectangle.hpp \
 		objects/Room.hpp \
@@ -1097,6 +1331,53 @@ release/Plane.o: objects/Plane.cpp objects/Plane.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1182,18 +1463,6 @@ release/Rectangle.o: objects/Rectangle.cpp objects/Rectangle.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
-		shaders/Shader.hpp \
-		glm/gtc/matrix_transform.hpp \
-		glm/gtc/matrix_transform.inl \
-		glm/gtc/type_ptr.hpp \
-		glm/gtc/half_float.hpp \
-		glm/gtc/half_float.inl \
-		glm/gtc/quaternion.hpp \
-		glm/gtc/constants.hpp \
-		glm/gtc/constants.inl \
-		glm/gtc/quaternion.inl \
-		glm/gtc/type_ptr.inl \
-		String_utils.hpp \
 		HandleSDL.hpp \
 		SDL2/SDL/SDL.h \
 		SDL2/SDL/SDL_main.h \
@@ -1241,6 +1510,18 @@ release/Rectangle.o: objects/Rectangle.cpp objects/Rectangle.hpp \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
 		GraphicHandler.hpp \
+		shaders/Shader.hpp \
+		glm/gtc/matrix_transform.hpp \
+		glm/gtc/matrix_transform.inl \
+		glm/gtc/type_ptr.hpp \
+		glm/gtc/half_float.hpp \
+		glm/gtc/half_float.inl \
+		glm/gtc/quaternion.hpp \
+		glm/gtc/constants.hpp \
+		glm/gtc/constants.inl \
+		glm/gtc/quaternion.inl \
+		glm/gtc/type_ptr.inl \
+		String_utils.hpp \
 		HandleError.hpp \
 		Camera.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\Rectangle.o objects\Rectangle.cpp
@@ -1321,6 +1602,53 @@ release/SkyBox.o: objects/SkyBox.cpp objects/SkyBox.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1407,6 +1735,53 @@ release/Sphere.o: objects/Sphere.cpp objects/Sphere.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1440,6 +1815,7 @@ release/MyException.o: Utils/MyException.cpp Utils/MyException.hpp
 
 release/LoadingMenu.o: Loader/LoadingMenu.cpp Loader/LoadingMenu.hpp \
 		include/GL/glew.h \
+		Texture.hpp \
 		String_utils.hpp \
 		MyWindow.hpp \
 		glm/glm.hpp \
@@ -1506,12 +1882,56 @@ release/LoadingMenu.o: Loader/LoadingMenu.cpp Loader/LoadingMenu.hpp \
 		objects/Vector3D.hpp \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
-		GraphicHandler.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		objects/Plane.hpp \
 		myGLWidget.hpp \
 		objects/Rotation.hpp \
-		Texture.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1593,7 +2013,55 @@ release/HandleError.o: HandleError.cpp HandleError.hpp \
 		objects/Color.hpp \
 		objects/Vector3D.hpp \
 		objects/VertexBuffer.hpp \
-		Utils/HandleFile.hpp
+		Utils/HandleFile.hpp \
+		Texture.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\HandleError.o HandleError.cpp
 
 release/Room.o: objects/Room.cpp objects/Room.hpp \
@@ -1666,6 +2134,53 @@ release/Room.o: objects/Room.cpp objects/Room.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1766,6 +2281,53 @@ release/Door.o: objects/Door.cpp objects/Door.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1850,6 +2412,53 @@ release/Text.o: objects/Text.cpp objects/Text.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1947,6 +2556,53 @@ release/Wall.o: objects/Wall.cpp objects/Wall.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1964,6 +2620,7 @@ release/GraphicHandler.o: GraphicHandler.cpp GraphicHandler.hpp \
 		include/GL/glew.h \
 		objects/TextureHandler.hpp \
 		objects/Color.hpp \
+		Texture.hpp \
 		MyWindow.hpp \
 		glm/glm.hpp \
 		glm/core/_fixes.hpp \
@@ -2028,6 +2685,51 @@ release/GraphicHandler.o: GraphicHandler.cpp GraphicHandler.hpp \
 		objects/Vector3D.hpp \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
 		HandleError.hpp \
 		Utils/Utils.hpp \
 		String_utils.hpp
@@ -2104,6 +2806,53 @@ release/GraphicFile.o: objects/GraphicFile.cpp objects/GraphicFile.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -2188,6 +2937,54 @@ release/VertexBuffer.o: objects/VertexBuffer.cpp objects/VertexBuffer.hpp \
 		objects/Color.hpp \
 		objects/Vector3D.hpp \
 		Utils/HandleFile.hpp \
+		Texture.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
 		glm/gtc/type_ptr.hpp \
@@ -2201,7 +2998,6 @@ release/VertexBuffer.o: objects/VertexBuffer.cpp objects/VertexBuffer.hpp \
 		Camera.hpp \
 		myGLWidget.hpp \
 		objects/Rotation.hpp \
-		Texture.hpp \
 		shaders/Shader.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\VertexBuffer.o objects\VertexBuffer.cpp
 
@@ -2280,6 +3076,53 @@ release/Box.o: objects/Box.cpp objects/Box.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -2365,7 +3208,54 @@ release/Texture.o: Texture.cpp Texture.hpp \
 		objects/Color.hpp \
 		objects/Vector3D.hpp \
 		objects/VertexBuffer.hpp \
-		Utils/HandleFile.hpp
+		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\Texture.o Texture.cpp
 
 release/FrameBuffer.o: FrameBuffer.cpp FrameBuffer.hpp \
@@ -2556,6 +3446,53 @@ release/Button.o: objects/Button.cpp objects/Plane.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -2644,6 +3581,53 @@ release/DataHandler.o: DataHandler.cpp DataHandler.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -2727,20 +3711,6 @@ release/Tetris.o: Tetris.cpp Tetris.hpp \
 		glm/core/func_noise.inl \
 		objects/VertexBuffer.hpp \
 		Utils/HandleFile.hpp \
-		shaders/Shader.hpp \
-		glm/gtc/matrix_transform.hpp \
-		glm/gtc/matrix_transform.inl \
-		glm/gtc/type_ptr.hpp \
-		glm/gtc/half_float.hpp \
-		glm/gtc/half_float.inl \
-		glm/gtc/quaternion.hpp \
-		glm/gtc/constants.hpp \
-		glm/gtc/constants.inl \
-		glm/gtc/quaternion.inl \
-		glm/gtc/type_ptr.inl \
-		HandleError.hpp \
-		objects/Text.hpp \
-		String_utils.hpp \
 		HandleSDL.hpp \
 		SDL2/SDL/SDL.h \
 		SDL2/SDL/SDL_main.h \
@@ -2787,7 +3757,21 @@ release/Tetris.o: Tetris.cpp Tetris.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp
+		GraphicHandler.hpp \
+		shaders/Shader.hpp \
+		glm/gtc/matrix_transform.hpp \
+		glm/gtc/matrix_transform.inl \
+		glm/gtc/type_ptr.hpp \
+		glm/gtc/half_float.hpp \
+		glm/gtc/half_float.inl \
+		glm/gtc/quaternion.hpp \
+		glm/gtc/constants.hpp \
+		glm/gtc/constants.inl \
+		glm/gtc/quaternion.inl \
+		glm/gtc/type_ptr.inl \
+		HandleError.hpp \
+		objects/Text.hpp \
+		String_utils.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\Tetris.o Tetris.cpp
 
 ####### Install

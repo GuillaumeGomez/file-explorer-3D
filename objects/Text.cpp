@@ -12,18 +12,12 @@ using namespace Object;
 Text::Text(string text, Color c, float x, float y, float font_size)
   : myGLWidget(Vector3D(x, y, 0.f), Rotation(), c), m_text(text), m_font_size(font_size)
 {
-  GLuint  tex(0);
-
   if (m_text.length() > 0) {
-      MyWindow::createTextTexture(m_text.c_str(), &tex, 0, c);
-      this->setTexture(tex);
+      MyWindow::createTextTexture(m_text.c_str(), &m_texture, c);
     } else {
       m_hasTexture = true;
     }
-  //m_texture.setTextureID(tex);
-
   m_size = 0.017f * m_text.length();
-
   m_shader = new Shader;
   m_render2D = true;
 }
@@ -31,18 +25,12 @@ Text::Text(string text, Color c, float x, float y, float font_size)
 Text::Text(const char *text, Color c, float x, float y, float font_size)
   : myGLWidget(Vector3D(x, y, 0.f), Rotation(), c), m_text(text ? text : ""), m_font_size(font_size)
 {
-  GLuint  tex(0);
-
   if (m_text.length() > 0) {
-      MyWindow::createTextTexture(m_text.c_str(), &tex, 0, c);
-      this->setTexture(tex);
+      MyWindow::createTextTexture(m_text.c_str(), &m_texture, c);
     } else {
       m_hasTexture = true;
     }
-  //m_texture.setTextureID(tex);
-
   m_size = 0.017f * m_text.length();
-
   m_shader = new Shader;
   m_render2D = true;
 }
@@ -50,48 +38,69 @@ Text::Text(const char *text, Color c, float x, float y, float font_size)
 Text::Text(string text, Color c, Vector3D v, Rotation r, float font_size)
   : myGLWidget(v, r, c), m_text(text), m_font_size(font_size)
 {
-  GLuint  tex(0);
-
   if (m_text.length() > 0) {
-      MyWindow::createTextTexture(m_text.c_str(), &tex, 0, c);
-      this->setTexture(tex);
+      MyWindow::createTextTexture(m_text.c_str(), &m_texture, c);
     } else {
       m_hasTexture = true;
     }
-  //m_texture.setTextureID(tex);
-
   m_size = 5 * m_text.length();
-
   m_shader = new Shader;
 }
 
 Text::Text(const char *text, Color c, Vector3D v, Rotation r, float font_size)
   : myGLWidget(v, r, c), m_text(text ? text : ""), m_font_size(font_size)
 {
-  GLuint  tex(0);
-
   if (m_text.length() > 0) {
-      MyWindow::createTextTexture(m_text.c_str(), &tex, 0, c);
-      this->setTexture(tex);
+      MyWindow::createTextTexture(m_text.c_str(), &m_texture, c);
     } else {
       m_hasTexture = true;
     }
-  //m_texture.setTextureID(tex);
-
   m_size = 5 * m_text.length();
-
   m_shader = new Shader;
 }
 
 
-Text::Text(GLuint tex_id, float text_length, Vector3D v, Rotation r, float font_size)
+Text::Text(GLuint tex_id, std::string text, Vector3D v, Rotation r, float font_size)
+  : myGLWidget(v, r, Color()), m_text(text), m_font_size(font_size)
+{
+  this->setTexture(tex_id);
+  m_size = m_text.length() * 5;
+  m_shader = new Shader;
+}
+
+Text::Text(GLuint tex_id, float length, Vector3D v, Rotation r, float font_size)
   : myGLWidget(v, r, Color()), m_text(""), m_font_size(font_size)
 {
   this->setTexture(tex_id);
-  //m_texture.setTextureID(tex_id);
+  m_size = length;
+  m_shader = new Shader;
+}
 
-  m_size = text_length;
+Text::Text(Texture s, std::string text, Vector3D v, Rotation r, float font_size)
+  : myGLWidget(v, r, s), m_text(text), m_font_size(font_size)
+{
+  m_size = m_text.length() * 5;
+  m_shader = new Shader;
+}
 
+Text::Text(Texture s, float length, Vector3D v, Rotation r, float font_size)
+  : myGLWidget(v, r, s), m_text(""), m_font_size(font_size)
+{
+  m_size = length;
+  m_shader = new Shader;
+}
+
+Text::Text(Texture s, std::string text, float x, float y, float font_size)
+  : myGLWidget(Vector3D(x, y, 0.f), Rotation(), s), m_text(text), m_font_size(font_size)
+{
+  m_size = m_text.length() * 5;
+  m_shader = new Shader;
+}
+
+Text::Text(Texture s, float length, float x, float y, float font_size)
+  : myGLWidget(Vector3D(x, y, 0.f), Rotation(), s), m_text(""), m_font_size(font_size)
+{
+  m_size = length;
   m_shader = new Shader;
 }
 
@@ -242,12 +251,10 @@ void    Text::initializeGLNoList()
 
 void    Text::setText(const char *s)
 {
-  if (s && s != m_text) {
-      GLuint tex(0);
+  if (s && m_text != s) {
 
       m_texture.destroy();
-      MyWindow::createTextTexture(s, &tex, 0, this->getColor());
-      this->setTexture(tex);
+      MyWindow::createTextTexture(s, &m_texture, this->getColor());
       m_text = s;
       //m_texture.setTextureID(tex);
 

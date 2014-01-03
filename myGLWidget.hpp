@@ -36,6 +36,7 @@ public:
   explicit myGLWidget(Vector3D, Rotation);
   explicit myGLWidget(Vector3D, Rotation, Color);
   explicit myGLWidget(Vector3D, Rotation, const std::string texture);
+  explicit myGLWidget(Vector3D, Rotation, Texture tex);
   virtual ~myGLWidget();
   virtual void    initializeGL() = 0;
   virtual void    paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix) = 0;
@@ -47,7 +48,8 @@ public:
   virtual void    update(float const&);
   bool            hasTexture() const;
   void            setTexture(const std::string);
-  void            setTexture(GLuint);
+  virtual void            setTexture(GLuint);
+  void            setTexture(Texture const &);
   GLuint          getTextureId() const;
   void            setColor(Color);
   Color const     &getColor() const;

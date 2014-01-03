@@ -9,9 +9,15 @@ public:
   float const &red() const;
   float const &green() const;
   float const &blue() const;
+  int         ired() const;
+  int         igreen() const;
+  int         iblue() const;
   void  setRed(float);
+  void  setRed(int);
   void  setGreen(float);
+  void  setGreen(int);
   void  setBlue(float);
+  void  setBlue(int);
   bool  operator==(Color const&) const;
 
 protected:

@@ -4,24 +4,28 @@ CONFIG -= qt
 
 INCLUDEPATH += objects/
 CONFIG += c++11
-DEFINES += WIN32
+
+QMAKE_CXXFLAGS += -std=c++0x \
 
 unix {
-    INCLUDEPATH += SFML/
+    #INCLUDEPATH += SFML/
+    INCLUDEPATH += include/
+    INCLUDEPATH += SDL2/
 
-    #LIBS += -lGLU -lSDL -lSDL_gfx -lSDL_image -lSDL_ttf -lGLEW -lm -lpthread \
-    LIBS += -lGL -lGLU -lGLEW -lsfml-graphics2 -lsfml-window2 -lsfml-system2 -lm -lpthread
+    LIBS += -lGLU -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_ttf -lGLEW -lm -lpthread \
+    #LIBS += -lGL -lGLU -lGLEW -lsfml-graphics2 -lsfml-window2 -lsfml-system2 -lm -lpthread
 
-    SOURCES += HandleSFML.cpp \
+    #SOURCES += HandleSFML.cpp \
 
-    HEADERS += HandleSFML.hpp \
+    #HEADERS += HandleSFML.hpp \
 }
 
 win32 {
+    DEFINES += WIN32
     INCLUDEPATH += SDL2/
     INCLUDEPATH += include/
     SOURCES +=  glew.c \
-                HandleSDL.cpp \
+                #HandleSDL.cpp \
 
     DEFINES += GLEW_STATIC _USE_MATH_DEFINES
 
@@ -48,10 +52,11 @@ win32 {
             -lopengl32 \
             -lglu32 \
 
-    HEADERS += HandleSDL.hpp \
+    #HEADERS += HandleSDL.hpp \
 }
 
 SOURCES += main.cpp \
+    HandleSDL.cpp \
     MyWindow.cpp \
     Camera.cpp \
     myGLWidget.cpp \
@@ -95,6 +100,7 @@ SOURCES += main.cpp \
     Tetris.cpp \
 
 HEADERS += \
+    HandleSDL.hpp \
     MyWindow.hpp \
     Camera.hpp \
     myGLWidget.hpp \

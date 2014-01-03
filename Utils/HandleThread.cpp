@@ -88,16 +88,33 @@ void    HandleThread::run()
 }
 #else
 
-HandleThread::HandleThread() : AHandleThread(), m_thread(-1)
+HandleThread::HandleThread() : AHandleThread(), m_thread(0), m_mutex(new HandleMutex)
 {
 }
 
-HandleThread::HandleThread(thread_func f, void *a) : AHandleThread(f, a), m_thread(-1)
+HandleThread::HandleThread(thread_func f, void *a) : AHandleThread(f, a), m_thread(0), m_mutex(new HandleMutex)
 {
 }
 
 HandleThread::~HandleThread()
 {
+  stop();
+  wait();
+}
+
+static void *my_thread_func(void *arg)
+{
+  HandleThread *t = static_cast<HandleThread*>(arg);
+
+  t->run();
+  t->stop();
+  return 0;
+}
+
+void  HandleThread::run()
+{
+  m_mutex->lock();
+  (*m_func)(m_arg);
 }
 
 bool  HandleThread::start()
@@ -105,7 +122,8 @@ bool  HandleThread::start()
   if (!m_func || !m_arg)
     return false;
   this->stop();
-  return pthread_create(&m_thread, 0, m_func, m_arg) == 0;
+  this->wait();
+  return pthread_create(&m_thread, 0, my_thread_func, (void*)this) == 0;
 }
 
 bool  HandleThread::start(thread_func f, void *a)
@@ -117,20 +135,29 @@ bool  HandleThread::start(thread_func f, void *a)
 
 void  HandleThread::stop()
 {
-    if (m_thread != -1)
-        pthread_cancel(m_thread);
-    m_thread = -1;
+  if (!m_mutex->trylock())
+    pthread_cancel(m_thread);
+  else
+    m_mutex->unlock();
 }
 
 bool  HandleThread::isRunning()
 {
-  return true;
+  bool b = m_mutex->trylock();
+
+  if (b)
+    m_mutex->unlock();
+  return !b;
 }
 
 bool HandleThread::wait(unsigned long ms)
 {
-  (void)ms;
-  return !pthread_join(m_thread, 0);
+  if (!m_mutex->trylock()){
+      (void)ms;
+      return !pthread_join(m_thread, 0);
+    }
+  else
+    m_mutex->unlock();
 }
 
 #endif

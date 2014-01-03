@@ -13,7 +13,12 @@ namespace Object
     Text(const char *text, Color = Color(), float x = 0.f, float y = 0.f, float font_size = 0.2f);
     Text(std::string text, Color = Color(), Vector3D = Vector3D(), Rotation = Rotation(), float font_size = 0.2f);
     Text(const char *text, Color = Color(), Vector3D = Vector3D(), Rotation = Rotation(), float font_size = 0.2f);
-    Text(GLuint tex_id, float text_length, Vector3D v, Rotation r, float font_size = 0.2f);
+    Text(GLuint tex_id, std::string text, Vector3D v, Rotation r, float font_size = 0.2f);
+    Text(GLuint tex_id, float length, Vector3D v, Rotation r, float font_size = 0.2f);
+    Text(Texture s, std::string text, Vector3D v, Rotation = Rotation(), float font_size = 0.2f);
+    Text(Texture s, float length, Vector3D v, Rotation = Rotation(), float font_size = 0.2f);
+    Text(Texture s, std::string text, float x = 0.f, float y = 0.f, float font_size = 0.2f);
+    Text(Texture s, float length, float x = 0.f, float y = 0.f, float font_size = 0.2f);
     virtual ~Text();
     virtual void    initializeGL();
     virtual void    initializeGLNoList();

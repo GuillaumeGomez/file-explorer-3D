@@ -23,12 +23,6 @@
 
 #include <iostream>
 
-#ifdef WIN32
-#include "HandleSDL.hpp"
-#else
-#include "HandleSFML.hpp"
-#endif
-
 using namespace std;
 
 GraphicHandler  *MyWindow::sdl = 0;
@@ -51,6 +45,7 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
   m_fps = 0;
   m_fbo = 0;
   m_tetris = 0;
+  m_disp = 0;
   (void)antiali;
   try {
     if (!sdl)
@@ -97,6 +92,8 @@ MyWindow::~MyWindow()
     delete this->m_fps;
   if (this->m_camera)
     delete this->m_camera;
+  if (m_tetris)
+    delete m_tetris;
   if (m_fbo)
     delete this->m_fbo;
   for (unsigned int i(0); i < 5; ++i){
@@ -110,6 +107,8 @@ MyWindow::~MyWindow()
       delete (*_2D_objectList.begin());
       _2D_objectList.erase(_2D_objectList.begin());
     }
+  if (this->m_disp)
+    delete m_disp;
   if (this->m_key)
     delete this->m_key;
   if (this->sdl)
@@ -301,7 +300,6 @@ void MyWindow::initializeGL()
   tmp->initializeGL();
   this->addObject(tmp, true);
   tmp = new Object::GraphicFile(Vector3D(0.f, 2.f, -6.f), Rotation(), GREEN, "./GraphicHandler.cpp");
-  tmp->setMainWindow(this);
   tmp->setPickingAllowed(true);
   tmp->initializeGL();
   this->addObject(tmp);
@@ -430,7 +428,7 @@ GraphicHandler *MyWindow::getLib()
 void  MyWindow::picking()
 {
   glm::mat4 pickMat = Camera::getViewMatrix();
-  glm::mat4 perspectiveMat = glm::perspective(70.f, Camera::getRatio(), 0.1f, 35.f);
+  glm::mat4 perspectiveMat = glm::perspective(70.f, Camera::getRatio(), 0.1f, 20.f);
 
   m_fbo->bind();
   //glEnable(GL_TEXTURE_2D);
@@ -480,9 +478,9 @@ GLuint  MyWindow::loadTexture(const char *s, bool useMipMap, GLuint *width, GLui
   return sdl->loadTexture(s, useMipMap, width, height);
 }
 
-void MyWindow::createTextTexture(const char* text, GLuint *texture, int i, Color c)
+Texture *MyWindow::createTextTexture(const char* text, Texture *texture, Color c)
 {
-  return sdl->createTextTexture(text, texture, i, c);
+  return sdl->createTextTexture(text, texture, c);
 }
 
 void MyWindow::createSkyBoxTextures(std::string textures[6])

@@ -576,10 +576,10 @@ void  Tetris::createNewPiece()
       m_end = true;
       m_texts[TETRIS_MSG]->setText("Defeat !\nPress any key to restart");
     } else {
+      m_ghost.id = m_piece.id;
+      moveGhost();
       copyInMap(m_piece);
     }
-  m_ghost.id = m_piece.id;
-  moveGhost();
 }
 
 void  Tetris::moveGhost()
@@ -646,8 +646,10 @@ void  Tetris::copyInMap(Piece &p, int val)
     return;
   for (int y = 0; y + p.y < p.y + 4 && y + p.y < 22; ++y) {
       for (int x = 0; x + p.x < p.x + 4 && x + p.x < 10; ++x) {
-          if (m_pieces[p.id].rot[p.rot][y][x] != ' ')
-            map[p.y + y][p.x + x] = m_pieces[p.id].rot[p.rot][y][x] + val;
+          if (m_pieces[p.id].rot[p.rot][y][x] != ' ') {
+              if (val < 19 || (val > 19 && (map[p.y + y][p.x + x] > 19 || map[p.y + y][p.x + x] == 0)))
+                map[p.y + y][p.x + x] = m_pieces[p.id].rot[p.rot][y][x] + val;
+            }
         }
     }
   m_hasNew = true;
@@ -673,14 +675,32 @@ bool  Tetris::canMove(Piece &p)
   return true;
 }
 
+void  Tetris::restart()
+{
+  m_end = false;
+  m_texts[TETRIS_MSG]->setText("");
+
+  for (int y = 0; y < 22; ++y)
+    for (int x = 0; x < 10; ++x) {
+        this->setColor(x, y, 0);
+        map[y][x] = 0;
+      }
+  m_piece.id = -1;
+  m_level = 1;
+  m_score = 0;
+  m_texts[LVL]->setText(Utility::toString<int>(m_level));
+  m_texts[SCORE]->setText(Utility::toString<int>(m_score));
+  createNewPiece();
+  m_hasNew = true;
+}
+
 void  Tetris::keyPressEvent(int key)
 {
   int tmp, tmp2;
   bool  done = false;
 
   if (m_end) {
-      m_end = false;
-      m_texts[TETRIS_MSG]->setText("");
+      this->restart();
       return;
     }
   switch (key) {

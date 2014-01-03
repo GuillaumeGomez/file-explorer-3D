@@ -8,8 +8,9 @@ class Texture
 {
 public:
   Texture(GLuint id = 0);
-  Texture(std::string);
-  Texture(GLuint largeur, GLuint hauteur, GLenum format, GLenum formatInterne, bool textureVide);
+  Texture(std::string imageFile);
+  Texture(Texture const &t);
+  Texture(GLuint width, GLuint height, GLenum format, GLenum internFormat, bool emptyTexture);
   virtual ~Texture();
   bool              load();
   bool              hasBeenLoaded() const;
@@ -24,17 +25,19 @@ public:
   void              destroy();
   void              setRepeat(bool);
   bool              isRepeating() const;
+  void              setSize(GLuint width, GLuint height);
+  void              operator=(Texture const&);
 
   static void       bind(GLuint);
 
 private:
   GLuint      m_id;
   std::string m_textureName;
-  GLuint      m_largeur;
-  GLuint      m_hauteur;
+  GLuint      m_width;
+  GLuint      m_height;
   GLenum      m_format;
-  GLenum      m_formatInterne;
-  bool        m_textureVide;
+  GLenum      m_internFormat;
+  bool        m_emptyTexture;
   bool        m_repeat;
 };
 

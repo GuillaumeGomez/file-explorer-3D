@@ -1,5 +1,3 @@
-#ifdef WIN32
-
 #include "HandleSDL.hpp"
 #include "MyWindow.hpp"
 #include "HandleError.hpp"
@@ -18,6 +16,8 @@ TTF_Font    *HandleSDL::m_font = 0;
 
 SDL_Surface *flipSurface(SDL_Surface * surface)
 {
+  if (!surface)
+    return 0;
   int current_line,pitch;
   SDL_Surface * fliped_surface = SDL_CreateRGBSurface(SDL_SWSURFACE,
                                                       surface->w, surface->h,
@@ -48,8 +48,10 @@ SDL_Surface *flipSurface(SDL_Surface * surface)
 
 HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int anti_ali) : GraphicHandler(winName, win, anti_ali)
 {
-  SDL_Init(SDL_INIT_VIDEO);
+  screenWidth = 0;
+  screenHeight = 0;
 
+  SDL_Init(SDL_INIT_VIDEO);
   if (TTF_Init() == -1)
     {
       HandleError::showError("TTF_init() failed");
@@ -65,9 +67,6 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
       exit(-1);
     }
 
-  screenWidth = 640;
-  screenHeight = 480;
-
   glcontext = SDL_GL_CreateContext(screen);
 
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -76,8 +75,8 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, m_anti_ali);
 
-  SDL_initFramerate(&manager);
-  SDL_setFramerate(&manager, FPS);
+  //SDL_initFramerate(&manager);
+  //SDL_setFramerate(&manager, FPS);
   //SDL_EnableKeyRepeat(10, 10);
   //desactivation du key repeat
   //SDL_EnableKeyRepeat(0, 0);
@@ -110,37 +109,114 @@ float  HandleSDL::getElapsedTime()
   return 1000.f - (1000.f - tmp);
 }
 
-void  HandleSDL::createTextTexture(const char* text, GLuint *texture, int i, Color c)
+SDL_Rect  createSdlRect(SDL_Surface &s, int x, int y)
 {
+  SDL_Rect  r;
+
+  r.x = x;
+  r.y = y;
+  r.w = s.w;
+  r.h = s.h;
+  return r;
+}
+
+SDL_Surface  *renderText(SDL_Surface *disp, TTF_Font *m_font, std::string const &s, SDL_Color const &textColor)
+{
+  SDL_Surface *m_surface;
+
+  m_surface = TTF_RenderText_Blended(m_font, s.c_str(), textColor);
+  if (NULL == m_surface)
+    {
+      HandleError::showError("TTF_RenderTextBlended() failed");
+      return disp;
+    }
+  if (!disp) {
+      Uint32 rmask, gmask, bmask, amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+      rmask = 0xff000000;
+      gmask = 0x00ff0000;
+      bmask = 0x0000ff00;
+      amask = 0x000000ff;
+#else
+      rmask = 0x000000ff;
+      gmask = 0x0000ff00;
+      bmask = 0x00ff0000;
+      amask = 0xff000000;
+#endif
+
+      SDL_PixelFormat format = *(m_surface->format);
+      format.BitsPerPixel = 32;
+      format.BytesPerPixel = 4;
+      format.Rmask = rmask;
+      format.Gmask = gmask;
+      format.Bmask = bmask;
+      format.Amask = amask;
+
+      disp = SDL_CreateRGBSurface(SDL_SWSURFACE, m_surface->w, m_surface->h,
+                                  format.BitsPerPixel,
+                                  format.Rmask,
+                                  format.Gmask,
+                                  format.Bmask,
+                                  format.Amask);
+      SDL_BlitSurface(m_surface, 0, disp, 0);
+      SDL_FreeSurface(m_surface);
+
+      return disp;
+    }
+  SDL_Surface *disp2;
+
+  disp2 = SDL_CreateRGBSurface(SDL_SWSURFACE, m_surface->w > disp->w ? m_surface->w : disp->w, m_surface->h + disp->h,
+                               disp->format->BitsPerPixel,
+                               disp->format->Rmask,
+                               disp->format->Gmask,
+                               disp->format->Bmask,
+                               disp->format->Amask);
+
+  SDL_BlitSurface(disp, 0, disp2, 0);
+  SDL_Rect src = createSdlRect(*m_surface, 0, disp->h);
+  SDL_FreeSurface(disp);
+  SDL_BlitSurface(m_surface, 0, disp2, &src);
+  SDL_FreeSurface(m_surface);
+  return disp2;
+}
+
+Texture  *HandleSDL::createTextTexture(const char* text, Texture *texture, Color c)
+{
+  if (!text)
+    return texture;
   if (!m_font && !(m_font = TTF_OpenFont("./font/tabitha.ttf", 65)))
     {
       HandleError::showError("tabitha.ttf: No such file or directory");
       exit(-1);
     }
 
-  SDL_Surface *m_surface;
-  SDL_Color textColor = {c.red() * 255, c.green() * 255, c.blue() * 255, 0};
+  std::vector<std::string> st = Utility::split<std::string>(text, "\n");
 
-  m_surface = TTF_RenderText_Blended(m_font, text, textColor);
-  if (NULL == m_surface)
-    {
-      HandleError::showError("TTF_RenderTextBlended() failed");
-      exit(-1);
+  SDL_Surface *m_surface = 0;
+  SDL_Color textColor = {(Uint8)c.ired(), (Uint8)c.igreen(), (Uint8)c.iblue(), 0};
+
+  for (auto it = st.begin(); it != st.end(); ++it){
+      m_surface = renderText(m_surface, m_font, *it, textColor);
     }
 
+  if (!m_surface)
+    return texture;
   glEnable(GL_TEXTURE_2D);
 
-  // Generation de la texture du texte
-  glGenTextures(1, &texture[i]);
+  if (!texture) {
+      texture = new Texture;
+    }
 
-  // Selection de la texture generee
-  glBindTexture(GL_TEXTURE_2D, texture[i]);
+  GLuint tmp;
+  glGenTextures(1, &tmp);
+  texture->setTextureID(tmp);
 
-  // Parametrage
+  glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  // Detection du codage des pixels
   GLenum codagePixel;
   if (m_surface->format->Rmask == 0x000000ff)
     {
@@ -154,12 +230,12 @@ void  HandleSDL::createTextTexture(const char* text, GLuint *texture, int i, Col
       codagePixel = GL_BGRA;
     }
 
-  // Chargement de la texture du texte precedemment creee
   glTexImage2D(GL_TEXTURE_2D, 0, 4, m_surface->w, m_surface->h, 0, codagePixel, GL_UNSIGNED_BYTE, NULL);
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_surface->w, m_surface->h, codagePixel, GL_UNSIGNED_BYTE, m_surface->pixels);
   glDisable(GL_TEXTURE_2D);
-  // Liberation de l'image du texte
+  texture->setSize(m_surface->w, m_surface->h);
   SDL_FreeSurface(m_surface);
+  return texture;
 }
 
 GLuint   HandleSDL::loadTexture(std::string const &s, bool useMipMap, GLuint *width, GLuint *height)
@@ -191,7 +267,7 @@ GLuint   HandleSDL::loadTexture(const char *s, bool useMipMap, GLuint *width, GL
   SDL_Surface *picture_surface = IMG_Load(s);
   if (picture_surface == NULL)
     {
-      HandleError::showError(s + std::string(": No such file or directory"));
+      HandleError::showError(s + std::string(": ") + std::string(IMG_GetError()));
       return 0;
     }
   return this->internTextureLoad(picture_surface, s, useMipMap, width, height);
@@ -204,10 +280,8 @@ GLuint  HandleSDL::internTextureLoad(SDL_Surface *picture_surface, const char *n
   Uint32 rmask, gmask, bmask, amask;
   GLuint  glID = 0;
 
-  if (picture_surface == NULL)
-    {
+  if (!picture_surface)
       return 0;
-    }
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
   rmask = 0xff000000;
@@ -287,7 +361,7 @@ void  HandleSDL::createSkyBoxTextures(string textures[])
       picture_surface = IMG_Load(textures[i].c_str());
       if (picture_surface == NULL)
         {
-          HandleError::showError(textures[i] + std::string(": No such file or directory"));
+          HandleError::showError(textures[i] + std::string(": ") + std::string(IMG_GetError()));
           continue;
         }
 
@@ -392,7 +466,6 @@ void  HandleSDL::switchScreenMode()
 
 void  HandleSDL::updateScreen()
 {
-  //SDL_GL_SwapBuffers();
   SDL_GL_SwapWindow(screen);
   //SDL_framerateDelay(&manager);
 }
@@ -411,5 +484,3 @@ bool  HandleSDL::displayInformationMessage(const char *title, const char *msg)
 {
   return !SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title, msg, NULL);
 }
-
-#endif

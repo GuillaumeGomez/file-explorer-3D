@@ -16,7 +16,7 @@ LoadingMenu::LoadingMenu(int nb, MyWindow *m) : m_win(m), pourcent(0), obj(0), n
     for (int i = 0; i <= 100; ++i)
     {
         m_text = Utility::toString<int>(i) + " %";
-        MyWindow::createTextTexture(m_text.c_str(), m_texture, i, Color(1.f, 1.f, 1.f));
+        MyWindow::createTextTexture(m_text.c_str(), &m_texture[i], Color(1.f, 1.f, 1.f));
     }
     m_widget1 = new Object::Plane(Vector3D(0.f, -0.85f), Rotation(), RED, 2.f, 0.07f);
     m_widget2 = new Object::Plane(Vector3D(0.f, -0.85f), Rotation(), WHITE, 2.f, 0.07f);
@@ -31,7 +31,6 @@ LoadingMenu::LoadingMenu(int nb, MyWindow *m) : m_win(m), pourcent(0), obj(0), n
 LoadingMenu::~LoadingMenu()
 {
     m_widget3->setTexture(0);
-    glDeleteTextures(101, m_texture);
     delete m_widget1;
     delete m_widget2;
     delete m_widget3;

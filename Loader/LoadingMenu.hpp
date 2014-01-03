@@ -3,6 +3,7 @@
 
 #include <string>
 #include <GL/glew.h>
+#include "Texture.hpp"
 
 class MyWindow;
 class GraphicHandler;
@@ -24,7 +25,7 @@ private:
     int         pourcent;
     int         obj;
     int         nbObject;
-    GLuint      m_texture[101];
+    Texture     m_texture[101];
     std::string m_text;
 };
 

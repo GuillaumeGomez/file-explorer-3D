@@ -10,6 +10,7 @@
 #include "Vector3D.hpp"
 #include "VertexBuffer.hpp"
 #include "Utils/HandleFile.hpp"
+#include "Texture.hpp"
 
 class myGLWidget;
 class Camera;
@@ -24,11 +25,13 @@ typedef std::vector<myGLWidget*>  WinList;
 
 #define WTIMER  1000.f
 
-#ifdef WIN32
+//#ifdef WIN32
 #define WINDOW_HANDLER  HandleSDL
-#else
-#define WINDOW_HANDLER  HandleSFML
-#endif
+#include "HandleSDL.hpp"
+//#else
+//#define WINDOW_HANDLER  HandleSFML
+//#include "HandleSFML.hpp"
+//#endif
 
 class MyWindow
 {
@@ -60,7 +63,7 @@ public:
   static GraphicHandler   *getLib();
   static GLuint   loadTexture(std::string const &s, bool useMipMap = true, GLuint *width = 0, GLuint *height = 0);
   static GLuint   loadTexture(const char *s, bool useMipMap = true, GLuint *width = 0, GLuint *height = 0);
-  static void     createTextTexture(const char* text, GLuint *texture, int i = 0, Color c = Color());
+  static Texture  *createTextTexture(const char* text, Texture *texture = 0, Color c = Color());
   static void     createSkyBoxTextures(std::string textures[6]);
   static bool     displayErrorMessage(const char *title, const char *msg);
   static bool     displayWarningMessage(const char *title, const char *msg);

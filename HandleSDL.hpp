@@ -1,8 +1,6 @@
 #ifndef HANDLESDL_HPP
 #define HANDLESDL_HPP
 
-#ifdef WIN32
-
 #include <string>
 #include <SDL/SDL.h>
 #include <SDL/SDL_framerate.h>
@@ -11,6 +9,7 @@
 #include "TextureHandler.hpp"
 #include "Color.hpp"
 #include "GraphicHandler.hpp"
+#include "Texture.hpp"
 
 class MyWindow;
 
@@ -29,11 +28,11 @@ public:
     virtual GLuint  loadTexture(std::string const &s, bool useMipMap = true, GLuint *width = 0, GLuint *height = 0);
     virtual GLuint  loadTexture(const char *s, bool useMipMap = true, GLuint *width = 0, GLuint *height = 0);
     virtual GLuint  loadTextureFromMemory(void *data, int size, const char *name, bool useMipMap = true, GLuint *width = 0, GLuint *height = 0);
-    virtual void createTextTexture(const char* text, GLuint *texture, int i = 0, Color c = Color());
-    virtual void createSkyBoxTextures(std::string textures[6]);
-    virtual bool displayErrorMessage(const char *title, const char *msg);
-    virtual bool displayWarningMessage(const char *title, const char *msg);
-    virtual bool displayInformationMessage(const char *title, const char *msg);
+    virtual Texture *createTextTexture(const char* text, Texture *texture = 0, Color c = Color());
+    virtual void    createSkyBoxTextures(std::string textures[6]);
+    virtual bool    displayErrorMessage(const char *title, const char *msg);
+    virtual bool    displayWarningMessage(const char *title, const char *msg);
+    virtual bool    displayInformationMessage(const char *title, const char *msg);
 
 private:
     GLuint  internTextureLoad(SDL_Surface *picture_surface, const char *name, bool useMipMap, GLuint *width, GLuint *height);
@@ -45,7 +44,5 @@ private:
 
     static TTF_Font       *m_font;
 };
-
-#endif
 
 #endif // HANDLESDL_HPP

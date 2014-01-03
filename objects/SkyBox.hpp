@@ -8,7 +8,7 @@ namespace Object
   class SkyBox : public Cube
   {
   public:
-    SkyBox(float size);
+    SkyBox();
     virtual ~SkyBox();
     void  initializeGL();
     void  initializeGLNoList();

@@ -18,10 +18,8 @@ Door::Door(Vector3D p, Rotation r, const char *name) : myGLWidget(p, r)
   m_size = 5 * m_name.length();
   m_height = 130.f;
 
-  GLuint  tex(0);
-
-  MyWindow::createTextTexture(m_name.c_str(), &tex, 0, RED);
-  m_texture.setTextureID(tex);
+  m_texture = (*MyWindow::createTextTexture(m_name.c_str(), &m_texture, RED));
+  //m_texture.setTextureID(tex);
 }
 
 Door::~Door()

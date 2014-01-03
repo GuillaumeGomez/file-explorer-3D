@@ -2,20 +2,27 @@
 #include "../MyWindow.hpp"
 
 Texture::Texture(GLuint id)
-    : m_id(id), m_textureName(""), m_largeur(0), m_hauteur(0), m_format(0), m_formatInterne(0),
-      m_textureVide(false), m_repeat(false)
+    : m_id(id), m_textureName(""), m_width(0), m_height(0), m_format(0), m_internFormat(0),
+      m_emptyTexture(false), m_repeat(false)
 {
 }
 
-Texture::Texture(std::string fichierImage)
-    : m_id(0), m_textureName(fichierImage), m_largeur(0), m_hauteur(0), m_format(0), m_formatInterne(0),
-      m_textureVide(false), m_repeat(false)
+Texture::Texture(std::string imageFile)
+    : m_id(0), m_textureName(imageFile), m_width(0), m_height(0), m_format(0), m_internFormat(0),
+      m_emptyTexture(false), m_repeat(false)
 {
 }
 
-Texture::Texture(GLuint largeur, GLuint hauteur, GLenum format, GLenum formatInterne, bool textureVide)
-    : m_id(0), m_textureName(""), m_largeur(largeur), m_hauteur(hauteur), m_format(format),
-      m_formatInterne(formatInterne), m_textureVide(textureVide), m_repeat(false)
+Texture::Texture(Texture const &t)
+    : m_id(t.m_id), m_textureName(t.m_textureName), m_width(t.m_width), m_height(t.m_height),
+      m_format(t.m_format), m_internFormat(t.m_internFormat), m_emptyTexture(t.m_emptyTexture),
+      m_repeat(t.m_repeat)
+{
+}
+
+Texture::Texture(GLuint width, GLuint height, GLenum format, GLenum internFormat, bool emptyTexture)
+    : m_id(0), m_textureName(""), m_width(width), m_height(height), m_format(format),
+      m_internFormat(internFormat), m_emptyTexture(emptyTexture), m_repeat(false)
 {
 }
 
@@ -30,7 +37,7 @@ bool  Texture::load()
         return true;
     this->destroy();
     if (m_textureName.empty()){
-        if (m_largeur == 0 || m_hauteur == 0)
+        if (m_width == 0 || m_height == 0)
             return false;
         glGenTextures(1, &m_id);
 
@@ -43,13 +50,13 @@ bool  Texture::load()
         }
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexImage2D(GL_TEXTURE_2D, 0, m_formatInterne, m_largeur, m_hauteur, 0, m_format, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, m_internFormat, m_width, m_height, 0, m_format, GL_UNSIGNED_BYTE, 0);
 
         // Deverrouillage
         glBindTexture(GL_TEXTURE_2D, 0);
         return true;
     }
-    m_id = MyWindow::loadTexture(m_textureName, true, &m_largeur, &m_hauteur);
+    m_id = MyWindow::loadTexture(m_textureName, true, &m_width, &m_height);
     return m_id != 0;
 }
 
@@ -87,12 +94,12 @@ std::string const &Texture::getTextureName() const
 
 GLuint  Texture::height() const
 {
-    return m_hauteur;
+    return m_height;
 }
 
 GLuint  Texture::width() const
 {
-    return m_largeur;
+    return m_width;
 }
 
 void  Texture::bind()
@@ -125,4 +132,25 @@ void    Texture::setRepeat(bool b){
 bool    Texture::isRepeating() const
 {
     return m_repeat;
+}
+
+void  Texture::setSize(GLuint width, GLuint height)
+{
+  m_width = width;
+  m_height = height;
+}
+
+void  Texture::operator=(Texture const &t)
+{
+  if (t.m_id != m_id) {
+      this->destroy();
+    }
+  m_id = t.m_id;
+  m_textureName = t.m_textureName;
+  m_width = t.m_width;
+  m_height = t.m_height;
+  m_format = t.m_format;
+  m_internFormat = t.m_internFormat;
+  m_emptyTexture = t.m_emptyTexture;
+  m_repeat = t.m_repeat;
 }
