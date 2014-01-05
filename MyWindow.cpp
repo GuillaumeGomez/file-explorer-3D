@@ -197,8 +197,8 @@ void  MyWindow::mousePressEvent(int but, int posx, int posy)
   (void)posy;
   if (but != SDL_BUTTON_LEFT)
     return;
-  if (!Utils::playSound("./sounds/gun.wav"))
-    HandleError::showError("Problem with playing file");
+  /*if (!Utils::playSound("./sounds/gun.wav"))
+    HandleError::showError("Problem with playing file");*/
 }
 
 void  MyWindow::mouseReleaseEvent(int but, int posx, int posy)

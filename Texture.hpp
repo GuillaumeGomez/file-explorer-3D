@@ -7,7 +7,8 @@
 class Texture
 {
 public:
-  Texture(GLuint id = 0);
+  Texture();
+  Texture(GLuint id);
   Texture(std::string imageFile);
   Texture(Texture const &t);
   Texture(GLuint width, GLuint height, GLenum format, GLenum internFormat, bool emptyTexture);

@@ -18,6 +18,7 @@ Text::Text(string text, Color c, float x, float y, float font_size)
       m_hasTexture = true;
     }
   m_size = 0.017f * m_text.length();
+  m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_shader = new Shader;
   m_render2D = true;
 }
@@ -31,6 +32,7 @@ Text::Text(const char *text, Color c, float x, float y, float font_size)
       m_hasTexture = true;
     }
   m_size = 0.017f * m_text.length();
+  m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_shader = new Shader;
   m_render2D = true;
 }
@@ -44,6 +46,7 @@ Text::Text(string text, Color c, Vector3D v, Rotation r, float font_size)
       m_hasTexture = true;
     }
   m_size = 5 * m_text.length();
+  m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_shader = new Shader;
 }
 
@@ -56,51 +59,39 @@ Text::Text(const char *text, Color c, Vector3D v, Rotation r, float font_size)
       m_hasTexture = true;
     }
   m_size = 5 * m_text.length();
+  m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_shader = new Shader;
 }
 
-
-Text::Text(GLuint tex_id, std::string text, Vector3D v, Rotation r, float font_size)
-  : myGLWidget(v, r, Color()), m_text(text), m_font_size(font_size)
-{
-  this->setTexture(tex_id);
-  m_size = m_text.length() * 5;
-  m_shader = new Shader;
-}
-
-Text::Text(GLuint tex_id, float length, Vector3D v, Rotation r, float font_size)
-  : myGLWidget(v, r, Color()), m_text(""), m_font_size(font_size)
-{
-  this->setTexture(tex_id);
-  m_size = length;
-  m_shader = new Shader;
-}
-
-Text::Text(Texture s, std::string text, Vector3D v, Rotation r, float font_size)
+Text::Text(Texture const &s, std::string text, Vector3D v, Rotation r, float font_size)
   : myGLWidget(v, r, s), m_text(text), m_font_size(font_size)
 {
   m_size = m_text.length() * 5;
+  m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_shader = new Shader;
 }
 
-Text::Text(Texture s, float length, Vector3D v, Rotation r, float font_size)
+Text::Text(Texture const &s, float length, int lines, Vector3D v, Rotation r, float font_size)
   : myGLWidget(v, r, s), m_text(""), m_font_size(font_size)
 {
   m_size = length;
+  m_lines = (lines <= 0 ? 1 : lines);
   m_shader = new Shader;
 }
 
-Text::Text(Texture s, std::string text, float x, float y, float font_size)
+Text::Text(Texture const &s, std::string text, float x, float y, float font_size)
   : myGLWidget(Vector3D(x, y, 0.f), Rotation(), s), m_text(text), m_font_size(font_size)
 {
   m_size = m_text.length() * 5;
+  m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_shader = new Shader;
 }
 
-Text::Text(Texture s, float length, float x, float y, float font_size)
+Text::Text(Texture const &s, float length, int lines, float x, float y, float font_size)
   : myGLWidget(Vector3D(x, y, 0.f), Rotation(), s), m_text(""), m_font_size(font_size)
 {
   m_size = length;
+  m_lines = (lines <= 0 ? 1 : lines);
   m_shader = new Shader;
 }
 
@@ -108,7 +99,7 @@ Text::~Text()
 {
 }
 
-GLfloat Text::getSize() const
+const GLfloat &Text::getSize() const
 {
   return m_size;
 }
@@ -185,19 +176,15 @@ void    Text::initializeGL()
   m_uniLoc_modelView = glGetUniformLocation(m_shader->getProgramID(), "modelview");
 
   if (m_render2D) {
-      GLfloat verticesTmp[] = {m_pos.x(), m_font_size + m_pos.y(),
-                               m_size + m_pos.x(), m_font_size + m_pos.y(),
-                               m_pos.x(), m_pos.y(),
-                               m_size + m_pos.x(), m_pos.y()};
-      for (unsigned int i(0); i < sizeof(verticesTmp) / sizeof(verticesTmp[0]); ++i){
-          m_vertices.push_back(verticesTmp[i]);
-        }
+      this->fill2DVertices();
     } else {
+      GLfloat tmp = m_font_size * m_lines + m_font_size * (m_lines - 1);
+
       GLfloat verticesTmp[] = {
-        m_size / -2.f, m_font_size / 2.f, 0.f,
-        m_size / 2.f, m_font_size / 2.f, 0.f,
-        m_size / -2.f, m_font_size / -2.f, 0.f,
-        m_size / 2.f, m_font_size / -2.f, 0.f
+        m_size / -2.f, tmp / 2.f, 0.f,
+        m_size / 2.f, tmp / 2.f, 0.f,
+        m_size / -2.f, tmp / -2.f, 0.f,
+        m_size / 2.f, tmp / -2.f, 0.f
       };
       for (unsigned int i(0); i < sizeof(verticesTmp) / sizeof(verticesTmp[0]); ++i){
           m_vertices.push_back(verticesTmp[i]);
@@ -249,28 +236,56 @@ void    Text::initializeGLNoList()
 {
 }
 
+void  Text::fill2DVertices(bool recalc)
+{
+  if (recalc) {
+      std::vector<std::string> v = Utility::split<std::string>(m_text, "\n");
+      m_size = 0.f;
+
+      if (v.size() > 0) {
+          for (auto it = v.begin(); it != v.end(); ++it) {
+              GLfloat tmp_size = 0.017f * (*it).length();
+
+              if (tmp_size > m_size)
+                m_size = tmp_size;
+            }
+        } else {
+          m_size = 0.017f * m_text.length();
+        }
+    }
+  GLfloat tmp = m_font_size * m_lines + m_font_size * (m_lines - 1) + m_pos.y();
+  GLfloat tmp_h = m_texture.height() / 600.f + m_pos.y();
+
+  //GLfloat tmp_w = m_texture.width() / 800;
+
+  //GLfloat old_tmp = m_font_size + m_pos.y();
+
+  GLfloat verticesTmp[] = {m_pos.x(), tmp_h,
+                           m_size + m_pos.x(), tmp_h,
+                           m_pos.x(), m_pos.y(),
+                           m_size + m_pos.x(), m_pos.y()};
+
+  m_vertices.clear();
+  unsigned int size(sizeof(verticesTmp) / sizeof(verticesTmp[0]));
+
+  for (unsigned int i(0); i < size; ++i){
+      m_vertices.push_back(verticesTmp[i]);
+    }
+}
+
 void    Text::setText(const char *s)
 {
   if (s && m_text != s) {
-
       m_texture.destroy();
       MyWindow::createTextTexture(s, &m_texture, this->getColor());
       m_text = s;
       //m_texture.setTextureID(tex);
 
-      m_size = 0.017f * m_text.length();
-      GLfloat verticesTmp[] = {m_pos.x(), m_font_size + m_pos.y(),
-                               m_size + m_pos.x(), m_font_size + m_pos.y(),
-                               m_pos.x(), m_pos.y(),
-                               m_size + m_pos.x(), m_pos.y()};
-
-      m_vertices.clear();
-      unsigned int size(sizeof(verticesTmp) / sizeof(verticesTmp[0]));
-
-      for (unsigned int i(0); i < size; ++i){
-          m_vertices.push_back(verticesTmp[i]);
+      m_lines = Utility::numberOfOccurence<std::string>(s, "\n") + 1;
+      if (m_render2D) {
+          this->fill2DVertices(true);
+          this->updateVertexBufferObject(&m_vertices[0], m_vertices.size() * sizeof(m_vertices[0]), 0);
         }
-      this->updateVertexBufferObject(&m_vertices[0], m_vertices.size() * sizeof(m_vertices[0]), 0);
     }
 }
 

@@ -87,6 +87,7 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
   SDL_SetWindowMinimumSize(screen, 400, 400);
   sdl_flags = SDL_GetWindowFlags(screen);
   SDL_GetWindowSize(screen, &screenWidth, &screenHeight);
+  //SDL_SetRelativeMouseMode(SDL_TRUE); -> fps mode for cursor
 }
 
 HandleSDL::~HandleSDL()
@@ -109,76 +110,49 @@ float  HandleSDL::getElapsedTime()
   return 1000.f - (1000.f - tmp);
 }
 
-SDL_Rect  createSdlRect(SDL_Surface &s, int x, int y)
+SDL_Surface  *renderText(TTF_Font *m_font, const char *s, SDL_Color const &textColor, int w)
 {
-  SDL_Rect  r;
+  SDL_Surface *surface(0);
+  SDL_Surface *disp(0);
 
-  r.x = x;
-  r.y = y;
-  r.w = s.w;
-  r.h = s.h;
-  return r;
-}
-
-SDL_Surface  *renderText(SDL_Surface *disp, TTF_Font *m_font, std::string const &s, SDL_Color const &textColor)
-{
-  SDL_Surface *m_surface;
-
-  m_surface = TTF_RenderText_Blended(m_font, s.c_str(), textColor);
-  if (NULL == m_surface)
-    {
+  if (!s || strlen(s) < 1)
+    return disp;
+  if (!(surface = TTF_RenderText_Blended_Wrapped(m_font, s, textColor, w))){
       HandleError::showError("TTF_RenderTextBlended() failed");
       return disp;
     }
-  if (!disp) {
-      Uint32 rmask, gmask, bmask, amask;
+  Uint32 rmask, gmask, bmask, amask;
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-      rmask = 0xff000000;
-      gmask = 0x00ff0000;
-      bmask = 0x0000ff00;
-      amask = 0x000000ff;
+  rmask = 0xff000000;
+  gmask = 0x00ff0000;
+  bmask = 0x0000ff00;
+  amask = 0x000000ff;
 #else
-      rmask = 0x000000ff;
-      gmask = 0x0000ff00;
-      bmask = 0x00ff0000;
-      amask = 0xff000000;
+  rmask = 0x000000ff;
+  gmask = 0x0000ff00;
+  bmask = 0x00ff0000;
+  amask = 0xff000000;
 #endif
 
-      SDL_PixelFormat format = *(m_surface->format);
-      format.BitsPerPixel = 32;
-      format.BytesPerPixel = 4;
-      format.Rmask = rmask;
-      format.Gmask = gmask;
-      format.Bmask = bmask;
-      format.Amask = amask;
+  SDL_PixelFormat format = *(surface->format);
+  format.BitsPerPixel = 32;
+  format.BytesPerPixel = 4;
+  format.Rmask = rmask;
+  format.Gmask = gmask;
+  format.Bmask = bmask;
+  format.Amask = amask;
 
-      disp = SDL_CreateRGBSurface(SDL_SWSURFACE, m_surface->w, m_surface->h,
-                                  format.BitsPerPixel,
-                                  format.Rmask,
-                                  format.Gmask,
-                                  format.Bmask,
-                                  format.Amask);
-      SDL_BlitSurface(m_surface, 0, disp, 0);
-      SDL_FreeSurface(m_surface);
+  disp = SDL_CreateRGBSurface(SDL_SWSURFACE, surface->w, surface->h,
+                              format.BitsPerPixel,
+                              format.Rmask,
+                              format.Gmask,
+                              format.Bmask,
+                              format.Amask);
+  SDL_BlitSurface(surface, 0, disp, 0);
+  SDL_FreeSurface(surface);
 
-      return disp;
-    }
-  SDL_Surface *disp2;
-
-  disp2 = SDL_CreateRGBSurface(SDL_SWSURFACE, m_surface->w > disp->w ? m_surface->w : disp->w, m_surface->h + disp->h,
-                               disp->format->BitsPerPixel,
-                               disp->format->Rmask,
-                               disp->format->Gmask,
-                               disp->format->Bmask,
-                               disp->format->Amask);
-
-  SDL_BlitSurface(disp, 0, disp2, 0);
-  SDL_Rect src = createSdlRect(*m_surface, 0, disp->h);
-  SDL_FreeSurface(disp);
-  SDL_BlitSurface(m_surface, 0, disp2, &src);
-  SDL_FreeSurface(m_surface);
-  return disp2;
+  return disp;
 }
 
 Texture  *HandleSDL::createTextTexture(const char* text, Texture *texture, Color c)
@@ -193,14 +167,17 @@ Texture  *HandleSDL::createTextTexture(const char* text, Texture *texture, Color
 
   std::vector<std::string> st = Utility::split<std::string>(text, "\n");
 
-  SDL_Surface *m_surface = 0;
+  SDL_Surface *surface = 0;
   SDL_Color textColor = {(Uint8)c.ired(), (Uint8)c.igreen(), (Uint8)c.iblue(), 0};
+  int w, h, max(0);
 
   for (auto it = st.begin(); it != st.end(); ++it){
-      m_surface = renderText(m_surface, m_font, *it, textColor);
+      TTF_SizeText(m_font, (*it).c_str(), &w, &h);
+      if (w > max)
+        max = w;
     }
 
-  if (!m_surface)
+  if (!(surface = renderText(m_font, text, textColor, max)))
     return texture;
   glEnable(GL_TEXTURE_2D);
 
@@ -210,6 +187,7 @@ Texture  *HandleSDL::createTextTexture(const char* text, Texture *texture, Color
 
   GLuint tmp;
   glGenTextures(1, &tmp);
+  texture->destroy();
   texture->setTextureID(tmp);
 
   glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
@@ -218,7 +196,7 @@ Texture  *HandleSDL::createTextTexture(const char* text, Texture *texture, Color
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   GLenum codagePixel;
-  if (m_surface->format->Rmask == 0x000000ff)
+  if (surface->format->Rmask == 0x000000ff)
     {
       codagePixel = GL_RGBA;
     }
@@ -230,11 +208,11 @@ Texture  *HandleSDL::createTextTexture(const char* text, Texture *texture, Color
       codagePixel = GL_BGRA;
     }
 
-  glTexImage2D(GL_TEXTURE_2D, 0, 4, m_surface->w, m_surface->h, 0, codagePixel, GL_UNSIGNED_BYTE, NULL);
-  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_surface->w, m_surface->h, codagePixel, GL_UNSIGNED_BYTE, m_surface->pixels);
+  glTexImage2D(GL_TEXTURE_2D, 0, 4, surface->w, surface->h, 0, codagePixel, GL_UNSIGNED_BYTE, NULL);
+  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, codagePixel, GL_UNSIGNED_BYTE, surface->pixels);
   glDisable(GL_TEXTURE_2D);
-  texture->setSize(m_surface->w, m_surface->h);
-  SDL_FreeSurface(m_surface);
+  texture->setSize(surface->w, surface->h);
+  SDL_FreeSurface(surface);
   return texture;
 }
 
@@ -281,7 +259,7 @@ GLuint  HandleSDL::internTextureLoad(SDL_Surface *picture_surface, const char *n
   GLuint  glID = 0;
 
   if (!picture_surface)
-      return 0;
+    return 0;
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
   rmask = 0xff000000;

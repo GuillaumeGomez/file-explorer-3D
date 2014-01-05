@@ -25,12 +25,10 @@ win32 {
     INCLUDEPATH += SDL2/
     INCLUDEPATH += include/
     SOURCES +=  glew.c \
-                #HandleSDL.cpp \
 
     DEFINES += GLEW_STATIC _USE_MATH_DEFINES
 
     LIBS += -L./SDL2/ \
-            #-L./SDL/ \
             -lwinmm \
             -lmingw32 \
             -luser32 \
@@ -39,20 +37,13 @@ win32 {
             -lOleAut32 \
             -lOle32 \
             -luuid \
-            #-lSDLmain \
             -lSDL2main \
-            #-lSDL \
             -lSDL2 \
-            #-lSDL_gfx \
             -lSDL2_gfx \
-            #-lSDL_ttf \
             -lSDL2_ttf \
-            #-lSDL_image \
             -lSDL2_image \
             -lopengl32 \
             -lglu32 \
-
-    #HEADERS += HandleSDL.hpp \
 }
 
 SOURCES += main.cpp \

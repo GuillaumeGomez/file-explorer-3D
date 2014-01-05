@@ -13,23 +13,23 @@ namespace Object
     Text(const char *text, Color = Color(), float x = 0.f, float y = 0.f, float font_size = 0.2f);
     Text(std::string text, Color = Color(), Vector3D = Vector3D(), Rotation = Rotation(), float font_size = 0.2f);
     Text(const char *text, Color = Color(), Vector3D = Vector3D(), Rotation = Rotation(), float font_size = 0.2f);
-    Text(GLuint tex_id, std::string text, Vector3D v, Rotation r, float font_size = 0.2f);
-    Text(GLuint tex_id, float length, Vector3D v, Rotation r, float font_size = 0.2f);
-    Text(Texture s, std::string text, Vector3D v, Rotation = Rotation(), float font_size = 0.2f);
-    Text(Texture s, float length, Vector3D v, Rotation = Rotation(), float font_size = 0.2f);
-    Text(Texture s, std::string text, float x = 0.f, float y = 0.f, float font_size = 0.2f);
-    Text(Texture s, float length, float x = 0.f, float y = 0.f, float font_size = 0.2f);
+    Text(Texture const &s, std::string text, Vector3D v, Rotation = Rotation(), float font_size = 0.2f);
+    Text(Texture const &s, float length, int lines, Vector3D v, Rotation = Rotation(), float font_size = 0.2f);
+    Text(Texture const &s, std::string text, float x = 0.f, float y = 0.f, float font_size = 0.2f);
+    Text(Texture const &s, float length, int lines, float x = 0.f, float y = 0.f, float font_size = 0.2f);
     virtual ~Text();
     virtual void    initializeGL();
     virtual void    initializeGLNoList();
     virtual void    paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
     void            setText(std::string);
     void            setText(const char*);
-    GLfloat         getSize() const;
+    GLfloat const   &getSize() const;
 
   protected:
+    void        fill2DVertices(bool recalc = false);
     std::string m_text;
     float       m_font_size;
+    int         m_lines;
     float       m_size;
 
     static Shader   *s_m_shader;

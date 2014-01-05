@@ -62,7 +62,7 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
   m_primaryShader = 0;
 }
 
-myGLWidget::myGLWidget(Vector3D p, Rotation rot, Texture tex)
+myGLWidget::myGLWidget(Vector3D p, Rotation rot, Texture const &tex)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false), m_texture(tex)

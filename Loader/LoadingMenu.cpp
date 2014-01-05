@@ -20,7 +20,7 @@ LoadingMenu::LoadingMenu(int nb, MyWindow *m) : m_win(m), pourcent(0), obj(0), n
     }
     m_widget1 = new Object::Plane(Vector3D(0.f, -0.85f), Rotation(), RED, 2.f, 0.07f);
     m_widget2 = new Object::Plane(Vector3D(0.f, -0.85f), Rotation(), WHITE, 2.f, 0.07f);
-    m_widget3 = new Object::Text(m_texture[0], 0.06f * 3.f, Vector3D(-0.09f, -0.7f), Rotation(), 0.12f);
+    m_widget3 = new Object::Text(m_texture[0], 0.06f * 3.f, 1, Vector3D(-0.09f, -0.7f), Rotation(), 0.12f);
 
     m_widget3->setRender2D(true);
     m_widget1->initializeGL();
