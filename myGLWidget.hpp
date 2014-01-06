@@ -47,9 +47,9 @@ public:
   virtual bool    loadTexture();
   virtual void    update(float const&);
   bool            hasTexture() const;
-  void            setTexture(const std::string);
-  virtual void            setTexture(GLuint);
-  void            setTexture(Texture const &);
+  virtual void    setTexture(const std::string);
+  virtual void    setTexture(GLuint);
+  virtual void    setTexture(Texture const &);
   GLuint          getTextureId() const;
   void            setColor(Color);
   Color const     &getColor() const;

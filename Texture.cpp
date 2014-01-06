@@ -128,6 +128,8 @@ void  Texture::destroy()
   if (!m_id)
     return;
   MyWindow::destroyTexture(m_id);
+  m_width = 0;
+  m_height = 0;
   m_id = 0;
 }
 

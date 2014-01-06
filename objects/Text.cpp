@@ -239,7 +239,7 @@ void    Text::initializeGLNoList()
 void  Text::fill2DVertices(bool recalc)
 {
   if (recalc) {
-      std::vector<std::string> v = Utility::split<std::string>(m_text, "\n");
+      /*std::vector<std::string> v = Utility::split<std::string>(m_text, "\n");
       m_size = 0.f;
 
       if (v.size() > 0) {
@@ -251,17 +251,19 @@ void  Text::fill2DVertices(bool recalc)
             }
         } else {
           m_size = 0.017f * m_text.length();
-        }
+        }*/
     }
-  GLfloat tmp = m_font_size * m_lines + m_font_size * (m_lines - 1) + m_pos.y();
-  GLfloat tmp_h = m_texture.height() / 600.f + m_pos.y();
+  m_size = m_texture.width() / 1000.f;
+  //GLfloat tmp_h = m_font_size * m_lines + m_font_size * (m_lines - 1);
+  //GLfloat tmp_h = m_texture.height() / 600.f;
+  GLfloat tmp_h = m_font_size * (m_texture.height() / 72);
 
   //GLfloat tmp_w = m_texture.width() / 800;
 
   //GLfloat old_tmp = m_font_size + m_pos.y();
 
-  GLfloat verticesTmp[] = {m_pos.x(), tmp_h,
-                           m_size + m_pos.x(), tmp_h,
+  GLfloat verticesTmp[] = {m_pos.x(), tmp_h + m_pos.y(),
+                           m_size + m_pos.x(), tmp_h + m_pos.y(),
                            m_pos.x(), m_pos.y(),
                            m_size + m_pos.x(), m_pos.y()};
 
@@ -286,6 +288,15 @@ void    Text::setText(const char *s)
           this->fill2DVertices(true);
           this->updateVertexBufferObject(&m_vertices[0], m_vertices.size() * sizeof(m_vertices[0]), 0);
         }
+    }
+}
+
+void  Text::setTexture(const Texture &t)
+{
+  myGLWidget::setTexture(t);
+  if (m_render2D) {
+      this->fill2DVertices(true);
+      this->updateVertexBufferObject(&m_vertices[0], m_vertices.size() * sizeof(m_vertices[0]), 0);
     }
 }
 
