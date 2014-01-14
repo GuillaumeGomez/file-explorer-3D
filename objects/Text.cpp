@@ -291,6 +291,11 @@ void    Text::setText(const char *s)
     }
 }
 
+std::string const &Text::getText() const
+{
+  return m_text;
+}
+
 void  Text::setTexture(const Texture &t)
 {
   myGLWidget::setTexture(t);
@@ -303,4 +308,9 @@ void  Text::setTexture(const Texture &t)
 void    Text::setText(std::string s)
 {
   this->setText(s.c_str());
+}
+
+std::string Text::getClassName() const
+{
+  return std::string("Text");
 }

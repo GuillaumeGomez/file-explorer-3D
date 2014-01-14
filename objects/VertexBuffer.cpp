@@ -159,13 +159,13 @@ void  VertexBuffer::draw()
     {
       glm::mat4 trans;
 
-      if (m_widget->getRotation().getRotX() != 0.f ||
-          m_widget->getRotation().getRotY() != 0.f ||
-          m_widget->getRotation().getRotZ() != 0.f)
-        trans = glm::rotate(trans, m_widget->getRotation().getRotation(),
-                            glm::vec3(m_widget->getRotation().getRotX(),
-                                      m_widget->getRotation().getRotY(),
-                                      m_widget->getRotation().getRotZ()));
+      if (m_widget->rotation().x() != 0.f ||
+          m_widget->rotation().y() != 0.f ||
+          m_widget->rotation().z() != 0.f)
+        trans = glm::rotate(trans, m_widget->rotation().rotation(),
+                            glm::vec3(m_widget->rotation().x(),
+                                      m_widget->rotation().y(),
+                                      m_widget->rotation().z()));
       /*trans = glm::rotate(
         trans,
         (float)clock() / (float)CLOCKS_PER_SEC * 180.0f,

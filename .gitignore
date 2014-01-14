@@ -244,3 +244,17 @@ VertexBuffer.o
 VertexContainer.o
 Wall.o
 My_World_SDL.pro.user.861e075
+debug/btUnionFind.o
+debug/btUniversalConstraint.o
+debug/btVoronoiSimplexSolver.o
+debug/btWheelInfo.o
+debug/Bullet-C-API.o
+debug/gim_box_set.o
+debug/gim_contact.o
+debug/gim_memory.o
+debug/gim_tri_collision.o
+debug/HandleBullet.o
+debug/HandlePhysics.o
+debug/Model.o
+debug/SphereTriangleDetector.o
+*.o

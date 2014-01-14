@@ -14,8 +14,9 @@ class LoadingMenu
 public:
     LoadingMenu(int nbObject, MyWindow*);
     virtual ~LoadingMenu();
-    void    newLoadedObject(GraphicHandler *);
+    void    newLoadedObject();
     void    createTextTexture(const char*, int i);
+    void    draw();
 
 private:
     MyWindow    *m_win;

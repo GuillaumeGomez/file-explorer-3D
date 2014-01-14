@@ -53,12 +53,10 @@ public:
   GLuint          getTextureId() const;
   void            setColor(Color);
   Color const     &getColor() const;
-  void            setVector3D(Vector3D);
-  Vector3D const  &getVector3D();
   Color const     &getPikingColor() const;
   void            setPikingColor(Color);
-  Vector3D        &getPosition();
-  void            setPosition(Vector3D);
+  virtual Vector3D        &getPosition();
+  virtual void            setPosition(Vector3D);
   virtual void    resize(int width, int height);
   virtual void    setSelected(bool);
   bool            isSelected() const;
@@ -69,11 +67,11 @@ public:
   virtual int     objectSize();
   virtual void    setMainWindow(MyWindow*);
   MyWindow        *getMainWindow() const;
-  Rotation        &getRotation();
+  Rotation        &rotation();
   Texture         &getTexture();
   void            setRender2D(bool);
   std::vector<GLfloat>    &getColors();
-  std::vector<GLfloat>    &getPositions();
+  std::vector<GLfloat>    &getVertices();
   std::vector<GLfloat>    &getTextures();
   std::string const &getTextureName() const;
   virtual void    initVertexBufferObject(GLenum = GL_STATIC_DRAW);
@@ -81,8 +79,13 @@ public:
   virtual void    updateVertexBufferObject(void *donnees, int tailleBytes, int decalage);
   virtual void    initVertexArrayObject();
   Color const     &getPrimaryColor() const;
+  virtual std::string getClassName() const;
+  void            setDrawMode(GLenum);
+  GLenum          drawMode() const;
 
 protected:
+  void        convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const &tmp_vertices, std::vector<Vector3D> const &tmp_textures);
+  void        convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const &tmp_vertices);
   bool                    m_hasTexture;
   Vector3D                m_pos;
   Rotation                m_rot;
@@ -98,6 +101,7 @@ protected:
   GLuint                  m_texturesSize;
   GLuint                  m_pointsNumber;
   bool                    m_render2D;
+  GLenum                  m_drawMode;
   Texture                 m_texture;
   Color                   m_pickingColor;
   GLint                   m_uniLoc_modelView;
@@ -112,6 +116,7 @@ protected:
   std::vector<GLfloat>  m_vertices;
   std::vector<GLfloat>  m_couleurs;
   std::vector<GLfloat>  m_textures;
+  std::vector<GLfloat>  m_normals;
 
   static Color  pick_color;
   static Color  &getStaticPickColor();

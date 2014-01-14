@@ -27,13 +27,13 @@ GLint  DataHandler::addObject(myGLWidget *m)
         if ((tmp = m->getColors().size()) > 0) {
             col_objects.push_back(std::pair<myGLWidget*, GLuint>(m, col_objects.size()));
             tot = (GLint)col_objects.size() - 1;
-            col_pos.insert(col_pos.end(), m->getPositions().begin(), m->getPositions().end());
+            col_pos.insert(col_pos.end(), m->getVertices().begin(), m->getVertices().end());
             col_datas.insert(col_datas.end(), m->getColors().begin(), m->getColors().end());
             return tot;
         }
         tex_objects.push_back(std::pair<myGLWidget*, GLuint>(m, tex_objects.size()));
         tot = (GLint)tex_objects.size() - 1;
-        tex_pos.insert(tex_pos.end(), m->getPositions().begin(), m->getPositions().end());
+        tex_pos.insert(tex_pos.end(), m->getVertices().begin(), m->getVertices().end());
         tex_datas.insert(tex_datas.end(), m->getTextures().begin(), m->getTextures().end());
     }
     return tot;
@@ -71,8 +71,8 @@ GLint   DataHandler::findObject(myGLWidget *m)
 
     glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
 
-    if (m_rot.getRotation() != 0.f && (m_rot.getRotX() != 0.f || m_rot.getRotY() != 0.f || m_rot.getRotZ() != 0.f))
-        tmp = glm::rotate(tmp, m_rot.getRotation(), glm::vec3(m_rot.getRotX(), m_rot.getRotY(), m_rot.getRotZ()));
+    if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
+        tmp = glm::rotate(tmp, m_rot.rotation(), glm::vec3(m_rot.x(), m_rot.y(), m_rot.z()));
     glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
 
     // Rendu

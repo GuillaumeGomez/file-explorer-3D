@@ -38,7 +38,8 @@ Color &myGLWidget::getStaticPickColor()
 myGLWidget::myGLWidget(Vector3D p, Rotation rot)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
-    m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false)
+    m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
+    m_drawMode(GL_TRIANGLES)
 {
   m_primaryColor = myGLWidget::getStaticPickColor();
   m_primaryShader = 0;
@@ -47,7 +48,8 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot)
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, Color co)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(co), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
-    m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false)
+    m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
+    m_drawMode(GL_TRIANGLES)
 {
   m_primaryColor = myGLWidget::getStaticPickColor();
   m_primaryShader = 0;
@@ -56,7 +58,8 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, Color co)
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
-    m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false), m_texture(tex)
+    m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false), m_texture(tex),
+    m_drawMode(GL_TRIANGLES)
 {
   m_primaryColor = myGLWidget::getStaticPickColor();
   m_primaryShader = 0;
@@ -65,7 +68,8 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, Texture const &tex)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
-    m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false), m_texture(tex)
+    m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
+    m_texture(tex), m_drawMode(GL_TRIANGLES)
 {
   m_primaryColor = myGLWidget::getStaticPickColor();
   m_primaryShader = 0;
@@ -134,16 +138,6 @@ bool myGLWidget::loadTexture()
   m_hasTexture = false;
   m_hasTexture = m_texture.load();
   return m_hasTexture;
-}
-
-Vector3D const  &myGLWidget::getVector3D()
-{
-  return m_pos;
-}
-
-void  myGLWidget::setVector3D(Vector3D p)
-{
-  m_pos = p;
 }
 
 Color const &myGLWidget::getColor() const
@@ -217,8 +211,8 @@ void  myGLWidget::pick(const glm::mat4 &view_matrix, const glm::mat4 &proj_matri
 
   glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
 
-  if (m_rot.getRotation() != 0.f && (m_rot.getRotX() != 0.f || m_rot.getRotY() != 0.f || m_rot.getRotZ() != 0.f))
-    tmp = glm::rotate(tmp, m_rot.getRotation(), glm::vec3(m_rot.getRotX(), m_rot.getRotY(), m_rot.getRotZ()));
+  if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
+    tmp = glm::rotate(tmp, m_rot.rotation(), glm::vec3(m_rot.x(), m_rot.y(), m_rot.z()));
   glUniformMatrix4fv(m_primaryLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
 
   glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
@@ -242,7 +236,7 @@ MyWindow   *myGLWidget::getMainWindow() const
   return mainWindow;
 }
 
-Rotation &myGLWidget::getRotation()
+Rotation &myGLWidget::rotation()
 {
   return m_rot;
 }
@@ -404,7 +398,7 @@ std::vector<GLfloat>    &myGLWidget::getTextures()
   return m_textures;
 }
 
-std::vector<GLfloat>    &myGLWidget::getPositions()
+std::vector<GLfloat>    &myGLWidget::getVertices()
 {
   return m_vertices;
 }
@@ -421,4 +415,123 @@ void    myGLWidget::initializeGLNoList()
 Color const &myGLWidget::getPrimaryColor() const
 {
   return m_primaryColor;
+}
+
+void  myGLWidget::convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const &tmp_vertices, std::vector<Vector3D> const &tmp_textures)
+{
+  unsigned int pos = 0;
+
+  for (; pos < 3; ++pos) {
+      m_vertices.push_back(tmp_vertices[pos].x());
+      m_vertices.push_back(tmp_vertices[pos].y());
+      m_vertices.push_back(tmp_vertices[pos].z());
+
+      m_textures.push_back(tmp_textures[pos].x());
+      m_textures.push_back(tmp_textures[pos].y());
+    }
+
+  for (; pos < tmp_vertices.size(); ++pos) {
+      if (!(pos & 1)) {
+          m_vertices.push_back(tmp_vertices[pos - 1].x());
+          m_vertices.push_back(tmp_vertices[pos - 1].y());
+          m_vertices.push_back(tmp_vertices[pos - 1].z());
+
+          m_vertices.push_back(tmp_vertices[pos - 2].x());
+          m_vertices.push_back(tmp_vertices[pos - 2].y());
+          m_vertices.push_back(tmp_vertices[pos - 2].z());
+
+          m_vertices.push_back(tmp_vertices[pos].x());
+          m_vertices.push_back(tmp_vertices[pos].y());
+          m_vertices.push_back(tmp_vertices[pos].z());
+
+          m_textures.push_back(tmp_textures[pos - 1].x());
+          m_textures.push_back(tmp_textures[pos - 1].y());
+          m_textures.push_back(tmp_textures[pos - 2].x());
+          m_textures.push_back(tmp_textures[pos - 2].y());
+          m_textures.push_back(tmp_textures[pos].x());
+          m_textures.push_back(tmp_textures[pos].y());
+        } else {
+          m_vertices.push_back(tmp_vertices[pos - 2].x());
+          m_vertices.push_back(tmp_vertices[pos - 2].y());
+          m_vertices.push_back(tmp_vertices[pos - 2].z());
+
+          m_vertices.push_back(tmp_vertices[pos - 1].x());
+          m_vertices.push_back(tmp_vertices[pos - 1].y());
+          m_vertices.push_back(tmp_vertices[pos - 1].z());
+
+          m_vertices.push_back(tmp_vertices[pos].x());
+          m_vertices.push_back(tmp_vertices[pos].y());
+          m_vertices.push_back(tmp_vertices[pos].z());
+
+          m_textures.push_back(tmp_textures[pos - 2].x());
+          m_textures.push_back(tmp_textures[pos - 2].y());
+          m_textures.push_back(tmp_textures[pos - 1].x());
+          m_textures.push_back(tmp_textures[pos - 1].y());
+          m_textures.push_back(tmp_textures[pos].x());
+          m_textures.push_back(tmp_textures[pos].y());
+        }
+    }
+}
+
+void  myGLWidget::convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const &tmp_vertices)
+{
+  unsigned int pos = 0;
+
+  for (; pos < 3; ++pos) {
+      m_vertices.push_back(tmp_vertices[pos].x());
+      m_vertices.push_back(tmp_vertices[pos].y());
+      m_vertices.push_back(tmp_vertices[pos].z());
+
+      m_couleurs.push_back(m_color.red());
+      m_couleurs.push_back(m_color.green());
+      m_couleurs.push_back(m_color.blue());
+    }
+
+  for (; pos < tmp_vertices.size(); ++pos) {
+      if (!(pos & 1)) {
+          m_vertices.push_back(tmp_vertices[pos - 1].x());
+          m_vertices.push_back(tmp_vertices[pos - 1].y());
+          m_vertices.push_back(tmp_vertices[pos - 1].z());
+
+          m_vertices.push_back(tmp_vertices[pos - 2].x());
+          m_vertices.push_back(tmp_vertices[pos - 2].y());
+          m_vertices.push_back(tmp_vertices[pos - 2].z());
+
+          m_vertices.push_back(tmp_vertices[pos].x());
+          m_vertices.push_back(tmp_vertices[pos].y());
+          m_vertices.push_back(tmp_vertices[pos].z());
+        } else {
+          m_vertices.push_back(tmp_vertices[pos - 2].x());
+          m_vertices.push_back(tmp_vertices[pos - 2].y());
+          m_vertices.push_back(tmp_vertices[pos - 2].z());
+
+          m_vertices.push_back(tmp_vertices[pos - 1].x());
+          m_vertices.push_back(tmp_vertices[pos - 1].y());
+          m_vertices.push_back(tmp_vertices[pos - 1].z());
+
+          m_vertices.push_back(tmp_vertices[pos].x());
+          m_vertices.push_back(tmp_vertices[pos].y());
+          m_vertices.push_back(tmp_vertices[pos].z());
+        }
+      for (int i = 0; i < 3; ++i) {
+          m_couleurs.push_back(m_color.red());
+          m_couleurs.push_back(m_color.green());
+          m_couleurs.push_back(m_color.blue());
+        }
+    }
+}
+
+std::string myGLWidget::getClassName() const
+{
+  return std::string("myGLWidget");
+}
+
+void  myGLWidget::setDrawMode(GLenum e)
+{
+  m_drawMode = e;
+}
+
+GLenum  myGLWidget::drawMode() const
+{
+  return m_drawMode;
 }

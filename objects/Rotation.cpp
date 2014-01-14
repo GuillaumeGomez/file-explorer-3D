@@ -10,7 +10,7 @@ Rotation::Rotation(Rotation const &r)
 {
 }
 
-float Rotation::getSpeed() const
+float &Rotation::speed()
 {
   return m_acSpeed;
 }
@@ -20,7 +20,7 @@ void Rotation::setSpeed(float s)
   m_acSpeed = s;
 }
 
-float Rotation::getRotation()
+float &Rotation::rotation()
 {
   return m_rotation;
 }
@@ -30,17 +30,17 @@ void  Rotation::setRotation(float s)
   m_rotation = s;
 }
 
-float Rotation::getRotX()
+float &Rotation::x()
 {
   return m_rotX;
 }
 
-float Rotation::getRotY()
+float &Rotation::y()
 {
   return m_rotY;
 }
 
-float Rotation::getRotZ()
+float &Rotation::z()
 {
   return m_rotZ;
 }

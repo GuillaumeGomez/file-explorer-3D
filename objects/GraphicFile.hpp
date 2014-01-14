@@ -19,6 +19,7 @@ namespace Object
     virtual void    update(const float &);
     std::string const &getFileName() const;
     virtual void    setSelected(bool);
+    virtual std::string getClassName() const;
 
   private:
     Rotation    tmpRotation;

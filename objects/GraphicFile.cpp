@@ -219,13 +219,13 @@ void  GraphicFile::pick(const glm::mat4& view_matrix, const glm::mat4& proj_matr
 void  GraphicFile::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 {
   if (!isSelected()){
-      if (tmpRotation.getRotation() > m_rot.getRotation()){
-          if (tmpRotation.getRotation() > 360.f)
-            tmpRotation.setRotation(int(tmpRotation.getRotation()) % 360);
+      if (tmpRotation.rotation() > m_rot.rotation()){
+          if (tmpRotation.rotation() > 360.f)
+            tmpRotation.setRotation(int(tmpRotation.rotation()) % 360);
           tmpRotation.setSpeed(-40.f);
         }
       else {
-          tmpRotation.setRotation(m_rot.getRotX());
+          tmpRotation.setRotation(m_rot.x());
           tmpRotation.setSpeed(0.f);
         }
     } else {
@@ -233,8 +233,8 @@ void  GraphicFile::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_m
     }
   glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
 
-  if (tmpRotation.getRotation() != 0.f && (tmpRotation.getRotX() != 0.f || tmpRotation.getRotY() != 0.f || tmpRotation.getRotZ() != 0.f))
-    tmp = glm::rotate(tmp, tmpRotation.getRotation(), glm::vec3(tmpRotation.getRotX(), tmpRotation.getRotY(), tmpRotation.getRotZ()));
+  if (tmpRotation.rotation() != 0.f && (tmpRotation.x() != 0.f || tmpRotation.y() != 0.f || tmpRotation.z() != 0.f))
+    tmp = glm::rotate(tmp, tmpRotation.rotation(), glm::vec3(tmpRotation.x(), tmpRotation.y(), tmpRotation.z()));
 
   glUseProgram(m_shader_color->getProgramID());
 
@@ -262,7 +262,7 @@ void  GraphicFile::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_m
 
 void    GraphicFile::update(const float &n)
 {
-  if (tmpRotation.getRotation() != m_rot.getRotation() || tmpRotation.getSpeed() != 0.f)
+  if (tmpRotation.rotation() != m_rot.rotation() || tmpRotation.speed() != 0.f)
     tmpRotation.update(n);
 }
 
@@ -275,4 +275,9 @@ void  GraphicFile::setSelected(bool b)
   else
     this->updateVertexBufferObject(&m_couleurs[0], m_colorsSize, m_verticesSize + m_texturesSize);
   m_selected = b;
+}
+
+std::string GraphicFile::getClassName() const
+{
+  return std::string("GraphicFile");
 }

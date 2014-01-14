@@ -10,6 +10,7 @@
 #include "objects/GraphicFile.hpp"
 #include "objects/Cube.hpp"
 #include "FrameBuffer.hpp"
+#include "HandlePhysics.hpp"
 
 #include "Loader/Loader.hpp"
 
@@ -36,8 +37,8 @@ void  *repeat_func(void *arg)
 }
 
 MyWindow::MyWindow(std::string winName, int antiali, int fps)
-  : m_printInfo(false), MIN(WTIMER / (fps <= 0 ? 40 : fps)), pause(false), m_test(false), m_wireframe(false),
-    m_tetrisMode(false)
+  : m_printInfo(false), MIN(WTIMER / (fps <= 0 ? 40 : fps)), pause(false), m_wireframe(false),
+    m_tetrisMode(false), m_physics(0)
 {
   m_camera = 0;
   m_key = 0;
@@ -78,6 +79,7 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
         m_displayList[i]->initializeGL();
       }
     m_tetris = new Tetris;
+    m_physics = new HandlePhysics;
   } catch (std::bad_alloc &err) {
     HandleError::showError(err.what());
     throw MyException("Bad alloc");
@@ -88,6 +90,8 @@ MyWindow::~MyWindow()
 {
   if (this->m_thread)
     delete this->m_thread;
+  if (this->m_physics)
+    delete this->m_physics;
   if (this->m_fps)
     delete this->m_fps;
   if (this->m_camera)
@@ -138,12 +142,12 @@ void  MyWindow::repeatKey()
                 ++front;
             }
           if (front == 1 && lat == 1)
-            m_camera->setSpeed(m_camera->getSpeed() * 0.75f);
+            m_camera->setSpeed(m_camera->speed() * 0.75f);
           s = m_key->getNbKeys() - 1;
           while (s >= 0)
             m_camera->keyPressEvent(k[s--]);
           if (front == 1 && lat == 1)
-            m_camera->setSpeed(m_camera->getSpeed() / 0.75f);
+            m_camera->setSpeed(m_camera->speed() / 0.75f);
         } else {
           while (s >= 0)
             m_tetris->keyPressEvent(k[s--]);
@@ -157,9 +161,12 @@ void  MyWindow::update()
 {
   //glEnable(GL_COLOR_MATERIAL);
 
-  if (!m_tetrisMode)
-    picking();
+  this->clearScreen();
+
   float tmp = sdl->getElapsedTime();
+  if (tmp != 0.f) {
+      m_physics->update(tmp);
+    }
   if (tmp != 0.f) {
       if (m_tetrisMode) {
           m_tetris->update(tmp);
@@ -172,14 +179,13 @@ void  MyWindow::update()
         }
     }
 
-  this->clearScreen();
-
   if (m_tetrisMode) {
       glDepthMask(GL_FALSE);
       m_tetris->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
       glDepthMask(GL_TRUE);
     } else {
       m_camera->look();
+      picking();
       this->paintGL();
     }
   //glDisable(GL_COLOR_MATERIAL);
@@ -231,9 +237,9 @@ void MyWindow::keyPressEvent(int key)
           break;
         case SDLK_RETURN:
           this->m_printInfo = !this->m_printInfo;
+          //this->setDisplaySentence("test les d'jeuns\net voila la phase 2 hahahahaha\na\nb\nc\nd");
           break;
         case SDLK_TAB:
-          //this->m_test = !this->m_test;
           this->m_tetrisMode = !this->m_tetrisMode;
           m_key->lock();
           m_key->setInterval(100);
@@ -257,8 +263,6 @@ void MyWindow::keyPressEvent(int key)
         case SDLK_F11:
           sdl->switchScreenMode();
           break;
-        /*case SDLK_RETURN:
-          this->m_printInfo = !this->m_printInfo;*/
           break;
         case SDLK_TAB:
           this->m_tetrisMode = !this->m_tetrisMode;
@@ -266,11 +270,8 @@ void MyWindow::keyPressEvent(int key)
           m_key->setInterval(10);
           m_key->unlock();
           break;
-        case SDLK_BACKSPACE:
-          m_wireframe = !m_wireframe;
-          glPolygonMode(GL_FRONT_AND_BACK, m_wireframe ? GL_LINE : GL_FILL);
           break;
-        /*case SDLK_UP:
+          /*case SDLK_UP:
         case SDLK_SPACE:
           m_tetris->keyPressEvent(key);
           break;*/
@@ -299,10 +300,10 @@ void MyWindow::initializeGL()
 
   tmp->initializeGL();
   this->addObject(tmp, true);
-  tmp = new Object::GraphicFile(Vector3D(0.f, 2.f, -6.f), Rotation(), GREEN, "./GraphicHandler.cpp");
-  tmp->setPickingAllowed(true);
-  tmp->initializeGL();
-  this->addObject(tmp);
+  //tmp = new Object::GraphicFile(Vector3D(0.f, 2.f, -6.f), Rotation(), GREEN, "./GraphicHandler.cpp");
+  //tmp->setPickingAllowed(true);
+  //tmp->initializeGL();
+  //this->addObject(tmp);
 
   m_disp = new Object::Cube(Vector3D(-3.f, 2.f, -6.f), Rotation(), "", 2.f);
   m_disp->setTexture(1);
@@ -316,7 +317,6 @@ void MyWindow::paintGL()
   float fps;
 
   fps = this->m_fps->getFpsCount();
-  display_sentence = "";
 
   /* 3D part */
   const glm::mat4 view_mat = Camera::getViewMatrix();
@@ -346,6 +346,7 @@ void MyWindow::paintGL()
       m_displayList[3]->paintGL(view_mat, proj2d_mat);
     }
   if (display_sentence != ""){
+      m_displayList[4]->setPosition(Vector3D());
       static_cast<Object::Text*>(m_displayList[4])->setText(display_sentence);
       m_displayList[4]->paintGL(view_mat, proj2d_mat);
     }
@@ -354,6 +355,8 @@ void MyWindow::paintGL()
     for (WinList::iterator it = _2D_objectList.begin(); it != _2D_objectList.end(); ++it){
         (*it)->paintGL(view_mat, proj2d_mat);
       }
+
+  //display_sentence = "";
 
   glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
@@ -373,9 +376,10 @@ void  MyWindow::addObject(myGLWidget *s, bool is2D)
   if (!s)
     return;
   s->setMainWindow(this);
-  if (!is2D)
-    objectList.push_back(s);
-  else {
+  if (!is2D) {
+      objectList.push_back(s);
+      m_physics->addObject(s);
+    } else {
       _2D_objectList.push_back(s);
     }
   if (s->isPickingAllowed())
@@ -427,13 +431,11 @@ GraphicHandler *MyWindow::getLib()
 
 void  MyWindow::picking()
 {
-  glm::mat4 pickMat = Camera::getViewMatrix();
+  /*  glm::mat4 pickMat = Camera::getViewMatrix();
   glm::mat4 perspectiveMat = glm::perspective(70.f, Camera::getRatio(), 0.1f, 20.f);
 
   m_fbo->bind();
-  //glEnable(GL_TEXTURE_2D);
   paintGL2(pickMat, perspectiveMat);
-  //glDisable(GL_TEXTURE_2D);
   unsigned char pixel[3];
   glReadPixels(mouseX, sdl->height() - mouseY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
   m_fbo->unbind();
@@ -447,7 +449,34 @@ void  MyWindow::picking()
           (*it)->setSelected(true);
           break;
         }
+    }*/
+  static HandleFile f("res.txt", std::ios_base::out | std::ios_base::trunc);
+
+  if (!f.isOpen())
+    f.open();
+  static myGLWidget *w(0);
+
+  if (w)
+    w->setSelected(false);
+  w = m_physics->pick(mouseX, mouseY, sdl->width(), sdl->height());
+
+  if (!w) {
+      if (f.isOpen())
+        f.write("No object picked\n");
+      return;
     }
+  if (!w->isSelected()) {
+      for (auto it = objectList.begin(); it != objectList.end(); ++it){
+          (*it)->setSelected(false);
+          /*if ((*it) == w) {
+          (*it)->setSelected(true);
+          break;
+          }*/
+        }
+      w->setSelected(true);
+    }
+  if (f.isOpen())
+    f.write(w->getClassName() + std::string("\n"));
 }
 
 void  MyWindow::setDisplaySentence(std::string s)

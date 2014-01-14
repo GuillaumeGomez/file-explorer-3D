@@ -138,7 +138,12 @@ void    Door::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
   //glLoadIdentity();
   glPushMatrix();
   glTranslatef(m_pos.x(), m_pos.y(), m_pos.z());
-  glRotatef(m_rot.getRotation(), m_rot.getRotX(), m_rot.getRotY(), 0.0f);
+  glRotatef(m_rot.rotation(), m_rot.x(), m_rot.y(), 0.0f);
   //glCallList(m_glObject);
   glPopMatrix();
+}
+
+string Door::getClassName() const
+{
+  return std::string("Door");
 }

@@ -24,7 +24,9 @@ namespace Object
     virtual void    setTexture(const Texture &);
     void            setText(std::string);
     void            setText(const char*);
+    std::string const &getText() const;
     GLfloat const   &getSize() const;
+    virtual std::string getClassName() const;
 
   protected:
     void        fill2DVertices(bool recalc = false);

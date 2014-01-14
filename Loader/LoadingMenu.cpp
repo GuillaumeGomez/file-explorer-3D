@@ -36,26 +36,29 @@ LoadingMenu::~LoadingMenu()
     delete m_widget3;
 }
 
-void  LoadingMenu::newLoadedObject(GraphicHandler *s)
+void  LoadingMenu::newLoadedObject()
 {
     int tmp;
 
     ++obj;
     tmp = obj * 100 / nbObject;
-    if (tmp != pourcent)
-    {
+    if (tmp != pourcent) {
         pourcent = tmp;
-
-        m_win->clearScreen();
-
-        m_widget2->setPosition(Vector3D(pourcent / 50.f, -0.85f));
-        m_widget3->setTexture(m_texture[pourcent]);
-
-        m_widget3->paintGL(Camera::getViewMatrix(), Camera::get2DProjectionMatrix());
-
-        m_widget2->paintGL(Camera::getViewMatrix(), Camera::get2DProjectionMatrix());
-        m_widget1->paintGL(Camera::getViewMatrix(), Camera::get2DProjectionMatrix());
-
-        s->updateScreen();
+        this->draw();
     }
+}
+
+void  LoadingMenu::draw()
+{
+  m_win->clearScreen();
+
+  m_widget2->setPosition(Vector3D(pourcent / 50.f, -0.85f));
+  m_widget3->setTexture(m_texture[pourcent]);
+
+  m_widget3->paintGL(Camera::getViewMatrix(), Camera::get2DProjectionMatrix());
+
+  m_widget2->paintGL(Camera::getViewMatrix(), Camera::get2DProjectionMatrix());
+  m_widget1->paintGL(Camera::getViewMatrix(), Camera::get2DProjectionMatrix());
+
+  m_win->getLib()->updateScreen();
 }

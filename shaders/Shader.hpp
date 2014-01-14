@@ -30,6 +30,9 @@ public:
     void        setVertexSource(std::string);
     void        setFragmentSource(std::string);
 
+    static std::string getStandardVertexShader(bool hasTexture);
+    static std::string getStandardFragmentShader(bool hasTexture);
+
 private:
     GLuint m_vertexID;
     GLuint m_fragmentID;

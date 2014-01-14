@@ -113,6 +113,7 @@ void Cylinder::initializeGL()
   GLfloat radiusLow, radiusHigh;
   GLfloat baseRadius(m_rayon), topRadius(m_rayon);
   GLint  slices(32), stacks(32);
+  std::vector<Vector3D>   tmp_v, tmp_t;
 
   slices = m_uSlices;
 
@@ -156,32 +157,18 @@ void Cylinder::initializeGL()
 
       for (i = 0; i <= slices; i++) {
           if (m_hasTexture){
-              m_textures.push_back(1 - (float) i / slices);
-              m_textures.push_back((float) j / stacks);
+              tmp_t.push_back(Vector3D(1 - (float) i / slices, (float) j / stacks));
             }
-          else{
-              m_couleurs.push_back(m_color.red());
-              m_couleurs.push_back(m_color.green());
-              m_couleurs.push_back(m_color.blue());
-            }
-          m_vertices.push_back(radiusLow * sinCache[i]);
-          m_vertices.push_back(radiusLow * cosCache[i]);
-          m_vertices.push_back(zLow);
+          tmp_v.push_back(Vector3D(radiusLow * sinCache[i], radiusLow * cosCache[i], zLow));
 
           if (m_hasTexture){
-              m_textures.push_back(1 - (float) i / slices);
-              m_textures.push_back((float) (j+1) / stacks);
+              tmp_t.push_back(Vector3D(1 - (float) i / slices, (float) (j+1) / stacks));
             }
-          else{
-              m_couleurs.push_back(m_color.red());
-              m_couleurs.push_back(m_color.green());
-              m_couleurs.push_back(m_color.blue());
-            }
-          m_vertices.push_back(radiusHigh * sinCache[i]);
-          m_vertices.push_back(radiusHigh * cosCache[i]);
-          m_vertices.push_back(zHigh);
+          tmp_v.push_back(Vector3D(radiusHigh * sinCache[i], radiusHigh * cosCache[i], zHigh));
         }
     }
+  m_hasTexture ? this->convertTRIANGLE_STRIP_To_TRIANGLES(tmp_v, tmp_t) : this->convertTRIANGLE_STRIP_To_TRIANGLES(tmp_v);
+
   m_pointsNumber = m_vertices.size() / 3;
 
   this->initVertexBufferObject();
@@ -205,22 +192,27 @@ void Cylinder::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matri
 
   glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
 
-  if (m_rot.getRotation() != 0.f && (m_rot.getRotX() != 0.f || m_rot.getRotY() != 0.f || m_rot.getRotZ() != 0.f))
-    tmp = glm::rotate(tmp, m_rot.getRotation(), glm::vec3(m_rot.getRotX(), m_rot.getRotY(), m_rot.getRotZ()));
+  if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
+    tmp = glm::rotate(tmp, m_rot.rotation(), glm::vec3(m_rot.x(), m_rot.y(), m_rot.z()));
   glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
 
   // Rendu
   if (m_hasTexture){
       m_texture.bind();
-      glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
+      glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
       m_texture.unbind();
     }
   else{
-      glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
+      glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
     }
 
   glBindVertexArray(0);
 
   // Desactivation du shader
   glUseProgram(0);
+}
+
+std::string Cylinder::getClassName() const
+{
+  return std::string("Cylinder");
 }

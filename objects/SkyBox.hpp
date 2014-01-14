@@ -15,6 +15,7 @@ namespace Object
     void  paintGL(float&x, float&y);
     void  bindVertexBufferObject();
     void  initVertexBufferObject();
+    virtual std::string getClassName() const;
 
   private:
     GLuint      textures[6];

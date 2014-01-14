@@ -14,6 +14,7 @@ namespace Object
     virtual void    initializeGL();
     virtual void    initializeGLNoList();
     virtual void    paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix);
+    virtual std::string getClassName() const;
 
   protected:
     float   width;

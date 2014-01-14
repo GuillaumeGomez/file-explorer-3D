@@ -163,7 +163,7 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   m_texture.setTexture("./textures/tetris.png");
 
   float tmp_speeds[12] = {1.f, 0.9f, 0.8f, 0.7f, 0.6f, 0.5f, 0.4f, 0.3f, 0.2f, 0.1f, 0.09f, 0.08f};
-  int   tmp_levels[11] = {5, 9, 13, 20, 35, 55, 80, 110, 140, 170, 200};
+  int   tmp_levels[11] = {20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220};
 
   for (unsigned int i = 0; i < 12; ++i) {
       m_speeds[i] = tmp_speeds[i];

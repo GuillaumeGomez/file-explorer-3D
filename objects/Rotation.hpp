@@ -9,13 +9,13 @@ public:
   Rotation(float rot = 0.f, float speed = 0.f, float x = 0.f, float y = 0.f, float z = 0.f);
   Rotation(Rotation const&);
   virtual ~Rotation(){}
-  float getRotation();
+  float &rotation();
   void  setRotation(float);
-  float getSpeed() const;
+  float &speed();
   void  setSpeed(float s);
-  float getRotX();
-  float getRotY();
-  float getRotZ();
+  float &x();
+  float &y();
+  float &z();
   void  setRotX(float);
   void  setRotY(float);
   void  setRotZ(float);

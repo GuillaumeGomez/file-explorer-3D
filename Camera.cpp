@@ -174,7 +174,7 @@ void Camera::setSpeed(float s)
   m_speed = s;
 }
 
-const float &Camera::getSpeed() const
+const float &Camera::speed() const
 {
   return m_speed;
 }

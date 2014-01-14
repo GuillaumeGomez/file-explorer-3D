@@ -28,7 +28,7 @@ public:
   virtual void        keyPressEvent(int);
   virtual void        keyReleaseEvent(int);
   virtual void        setSpeed(float s);
-  virtual const float &getSpeed() const;
+  virtual const float &speed() const;
   virtual void        setsensivity(float s);
   virtual void        look();
   virtual void        setPosition(const Vector3D &p);

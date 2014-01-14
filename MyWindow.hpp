@@ -20,6 +20,7 @@ class HandleThread;
 class HandleFpsCount;
 class FrameBuffer;
 class Tetris;
+class HandlePhysics;
 
 typedef std::vector<myGLWidget*>  WinList;
 
@@ -77,10 +78,9 @@ private:
   bool                m_printInfo;
   const float         MIN;
   bool                pause;
-  bool                m_test;
   bool                m_wireframe;
   bool                m_tetrisMode;
-  //FPSCount            m_fps;
+  HandlePhysics       *m_physics;
   WinList             objectList;
   WinList             _2D_objectList;
   WinList             m_pickObjects;

@@ -182,3 +182,8 @@ void    Button::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matr
 
     m_buttonText->paintGL(view_matrix, proj_matrix);
 }
+
+string Button::getClassName() const
+{
+  return std::string("Button");
+}

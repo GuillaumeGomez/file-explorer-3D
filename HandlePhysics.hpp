@@ -1,10 +1,33 @@
-#ifndef HANDLEBULLET_HPP
-#define HANDLEBULLET_HPP
+#ifndef HANDLEPHYSICS_HPP
+#define HANDLEPHYSICS_HPP
 
-class HandleBullet
+#include <btBulletDynamicsCommon.h>
+#include <vector>
+
+class myGLWidget;
+namespace Object
+{
+  class Cube;
+}
+
+class HandlePhysics
 {
 public:
-  HandleBullet();
+  HandlePhysics();
+  virtual ~HandlePhysics();
+  bool        addObject(myGLWidget *obj);
+  void        deleteObject(myGLWidget *obj);
+  void        update(float const&);
+  myGLWidget  *pick(int mouseX, int mouseY, int screenWidth, int screenHeight);
+
+private:
+  btBroadphaseInterface *broadphase;
+  btDefaultCollisionConfiguration *collisionConfiguration;
+  btCollisionDispatcher *dispatcher;
+  btSequentialImpulseConstraintSolver *solver;
+  btDiscreteDynamicsWorld *dynamicsWorld;
+  std::vector<btRigidBody*> rigidBodies;
+  std::vector<Object::Cube*>        debugCube;
 };
 
-#endif // HANDLEBULLET_HPP
+#endif // HANDLEPHYSICS_HPP

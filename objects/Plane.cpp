@@ -207,8 +207,8 @@ void  Plane::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 
       glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
 
-      if (m_rot.getRotation() != 0.f && (m_rot.getRotX() != 0.f || m_rot.getRotY() != 0.f || m_rot.getRotZ() != 0.f))
-        tmp = glm::rotate(tmp, m_rot.getRotation(), glm::vec3(m_rot.getRotX(), m_rot.getRotY(), m_rot.getRotZ()));
+      if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
+        tmp = glm::rotate(tmp, m_rot.rotation(), glm::vec3(m_rot.x(), m_rot.y(), m_rot.z()));
       glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
     }
 
@@ -229,4 +229,9 @@ void  Plane::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 void  Plane::initializeGLNoList()
 {
 
+}
+
+std::string Plane::getClassName() const
+{
+  return std::string("Plane");
 }

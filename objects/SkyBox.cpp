@@ -159,3 +159,8 @@ void  SkyBox::paintGL(float &x, float &y)
     glBindVertexArray(0);
     glUseProgram(0);
 }
+
+string SkyBox::getClassName() const
+{
+  return std::string("SkyBox");
+}

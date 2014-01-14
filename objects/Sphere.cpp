@@ -110,6 +110,7 @@ void Sphere::initializeGL()
   GLfloat zLow, zHigh;
   GLfloat sinftemp1 = 0.0, sinftemp2 = 0.0;
   GLint start, finish;
+  std::vector<Vector3D> tmp_v, tmp_t;
 
   if (slices >= CACHE_SIZE)
     slices = CACHE_SIZE - 1;
@@ -156,31 +157,16 @@ void Sphere::initializeGL()
       sinftemp2 = sinCache1b[j + 1];
 
       for (i = 0; i <= slices; i++) {
-          if (m_hasTexture) {
-              m_textures.push_back(1 - (float) i / slices);
-              m_textures.push_back(1 - (float) (j + 1) / stacks);
-            } else {
-              m_couleurs.push_back(m_color.red());
-              m_couleurs.push_back(m_color.green());
-              m_couleurs.push_back(m_color.blue());
-            }
-          m_vertices.push_back(sinftemp2 * sinCache1a[i]);
-          m_vertices.push_back(sinftemp2 * cosCache1a[i]);
-          m_vertices.push_back(zHigh);
+          if (m_hasTexture)
+            tmp_t.push_back(Vector3D(1 - (float) i / slices, 1 - (float) (j + 1) / stacks));
+          tmp_v.push_back(Vector3D(sinftemp2 * sinCache1a[i], sinftemp2 * cosCache1a[i], zHigh));
 
-          if (m_hasTexture) {
-              m_textures.push_back(1 - (float) i / slices);
-              m_textures.push_back(1 - (float) j / stacks);
-            } else {
-              m_couleurs.push_back(m_color.red());
-              m_couleurs.push_back(m_color.green());
-              m_couleurs.push_back(m_color.blue());
-            }
-          m_vertices.push_back(sinftemp1 * sinCache1a[i]);
-          m_vertices.push_back(sinftemp1 * cosCache1a[i]);
-          m_vertices.push_back(zLow);
+          if (m_hasTexture)
+              tmp_t.push_back(Vector3D(1 - (float) i / slices, 1 - (float) j / stacks));
+          tmp_v.push_back(Vector3D(sinftemp1 * sinCache1a[i], sinftemp1 * cosCache1a[i], zLow));
         }
     }
+  m_hasTexture ? this->convertTRIANGLE_STRIP_To_TRIANGLES(tmp_v, tmp_t) : this->convertTRIANGLE_STRIP_To_TRIANGLES(tmp_v);
   m_pointsNumber = m_vertices.size() / 3;
 
   this->initVertexBufferObject();
@@ -203,22 +189,27 @@ void  Sphere::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
 
   glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
 
-  if (m_rot.getRotation() != 0.f && (m_rot.getRotX() != 0.f || m_rot.getRotY() != 0.f || m_rot.getRotZ() != 0.f))
-    tmp = glm::rotate(tmp, m_rot.getRotation(), glm::vec3(m_rot.getRotX(), m_rot.getRotY(), m_rot.getRotZ()));
+  if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
+    tmp = glm::rotate(tmp, m_rot.rotation(), glm::vec3(m_rot.x(), m_rot.y(), m_rot.z()));
   glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
 
   // Rendu
   if (m_hasTexture){
       m_texture.bind();
-      glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
+      glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
       m_texture.unbind();
     }
   else{
-      glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
+      glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
     }
 
   glBindVertexArray(0);
 
   // Desactivation du shader
   glUseProgram(0);
+}
+
+string Sphere::getClassName() const
+{
+  return std::string("Sphere");
 }
