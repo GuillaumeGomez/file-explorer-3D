@@ -47,7 +47,7 @@ void  GraphicFile::initializeGL()
 {
   GLuint  tex;
 
-  if ((tex = mainWindow->loadIconFile(fileName)) > 0){
+  if ((tex = mainWindow->getLib()->loadIconFile(fileName)) > 0){
       m_texture.setTextureID(tex);
       m_hasTexture = true;
     }

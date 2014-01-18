@@ -13,7 +13,7 @@ Text::Text(string text, Color c, float x, float y, float font_size)
   : myGLWidget(Vector3D(x, y, 0.f), Rotation(), c), m_text(text), m_font_size(font_size)
 {
   if (m_text.length() > 0) {
-      MyWindow::createTextTexture(m_text.c_str(), &m_texture, c);
+      MyWindow::getLib()->createTextTexture(m_text.c_str(), &m_texture, c);
     } else {
       m_hasTexture = true;
     }
@@ -27,7 +27,7 @@ Text::Text(const char *text, Color c, float x, float y, float font_size)
   : myGLWidget(Vector3D(x, y, 0.f), Rotation(), c), m_text(text ? text : ""), m_font_size(font_size)
 {
   if (m_text.length() > 0) {
-      MyWindow::createTextTexture(m_text.c_str(), &m_texture, c);
+      MyWindow::getLib()->createTextTexture(m_text.c_str(), &m_texture, c);
     } else {
       m_hasTexture = true;
     }
@@ -41,7 +41,7 @@ Text::Text(string text, Color c, Vector3D v, Rotation r, float font_size)
   : myGLWidget(v, r, c), m_text(text), m_font_size(font_size)
 {
   if (m_text.length() > 0) {
-      MyWindow::createTextTexture(m_text.c_str(), &m_texture, c);
+      MyWindow::getLib()->createTextTexture(m_text.c_str(), &m_texture, c);
     } else {
       m_hasTexture = true;
     }
@@ -54,7 +54,7 @@ Text::Text(const char *text, Color c, Vector3D v, Rotation r, float font_size)
   : myGLWidget(v, r, c), m_text(text ? text : ""), m_font_size(font_size)
 {
   if (m_text.length() > 0) {
-      MyWindow::createTextTexture(m_text.c_str(), &m_texture, c);
+      MyWindow::getLib()->createTextTexture(m_text.c_str(), &m_texture, c);
     } else {
       m_hasTexture = true;
     }
@@ -279,7 +279,7 @@ void    Text::setText(const char *s)
 {
   if (s && m_text != s) {
       m_texture.destroy();
-      MyWindow::createTextTexture(s, &m_texture, this->getColor());
+      MyWindow::getLib()->createTextTexture(s, &m_texture, this->getColor());
       m_text = s;
       //m_texture.setTextureID(tex);
 

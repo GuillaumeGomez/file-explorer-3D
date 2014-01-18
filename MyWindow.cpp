@@ -2,7 +2,6 @@
 #include "myGLWidget.hpp"
 #include "Camera.hpp"
 #include "KeyHandler.hpp"
-#include "GraphicHandler.hpp"
 #include "Utils/HandleThread.hpp"
 #include "objects/Wall.hpp"
 #include "objects/Button.hpp"
@@ -26,7 +25,7 @@
 
 using namespace std;
 
-GraphicHandler  *MyWindow::sdl = 0;
+HandleSDL  *MyWindow::sdl = 0;
 
 void  *repeat_func(void *arg)
 {
@@ -424,7 +423,7 @@ void  MyWindow::start()
     }
 }
 
-GraphicHandler *MyWindow::getLib()
+HandleSDL *MyWindow::getLib()
 {
   return sdl;
 }
@@ -450,19 +449,12 @@ void  MyWindow::picking()
           break;
         }
     }*/
-  static HandleFile f("res.txt", std::ios_base::out | std::ios_base::trunc);
-
-  if (!f.isOpen())
-    f.open();
   static myGLWidget *w(0);
 
   if (w)
     w->setSelected(false);
   w = m_physics->pick(mouseX, mouseY, sdl->width(), sdl->height());
-
   if (!w) {
-      if (f.isOpen())
-        f.write("No object picked\n");
       return;
     }
   if (!w->isSelected()) {
@@ -475,8 +467,6 @@ void  MyWindow::picking()
         }
       w->setSelected(true);
     }
-  if (f.isOpen())
-    f.write(w->getClassName() + std::string("\n"));
 }
 
 void  MyWindow::setDisplaySentence(std::string s)
@@ -495,54 +485,4 @@ void  MyWindow::setDisplaySentence(const char *s)
 Vector3D const  &MyWindow::getPlayerPosition() const
 {
   return m_camera->getPosition();
-}
-
-GLuint  MyWindow::loadTexture(std::string const &s, bool useMipMap, GLuint *width, GLuint *height)
-{
-  return sdl->loadTexture(s, useMipMap, width, height);
-}
-
-GLuint  MyWindow::loadTexture(const char *s, bool useMipMap, GLuint *width, GLuint *height)
-{
-  return sdl->loadTexture(s, useMipMap, width, height);
-}
-
-Texture *MyWindow::createTextTexture(const char* text, Texture *texture, Color c)
-{
-  return sdl->createTextTexture(text, texture, c);
-}
-
-void MyWindow::createSkyBoxTextures(std::string textures[6])
-{
-  return sdl->createSkyBoxTextures(textures);
-}
-
-bool MyWindow::displayErrorMessage(const char *title, const char *msg)
-{
-  return sdl->displayErrorMessage(title, msg);
-}
-
-bool MyWindow::displayWarningMessage(const char *title, const char *msg)
-{
-  return sdl->displayWarningMessage(title, msg);
-}
-
-bool MyWindow::displayInformationMessage(const char *title, const char *msg)
-{
-  return sdl->displayInformationMessage(title, msg);
-}
-
-bool  MyWindow::destroyTexture(GLuint id)
-{
-  return sdl->destroyTexture(id);
-}
-
-int      MyWindow::loadIconFile(const char *s)
-{
-  return sdl->loadIconFile(s);
-}
-
-int      MyWindow::loadIconFile(std::string s)
-{
-  return sdl->loadIconFile(s);
 }

@@ -75,7 +75,6 @@ SOURCES       = glew.c \
 		HandleFpsCount.cpp \
 		objects\TextureHandler.cpp \
 		objects\Wall.cpp \
-		GraphicHandler.cpp \
 		objects\GraphicFile.cpp \
 		objects\VertexBuffer.cpp \
 		shaders\Shader.cpp \
@@ -87,6 +86,7 @@ SOURCES       = glew.c \
 		DataHandler.cpp \
 		Tetris.cpp \
 		objects\Model.cpp \
+		objects\Line.cpp \
 		HandlePhysics.cpp \
 		Bullet\BulletCollision\BroadphaseCollision\btAxisSweep3.cpp \
 		Bullet\BulletCollision\BroadphaseCollision\btBroadphaseProxy.cpp \
@@ -250,7 +250,6 @@ OBJECTS       = debug/glew.o \
 		debug/HandleFpsCount.o \
 		debug/TextureHandler.o \
 		debug/Wall.o \
-		debug/GraphicHandler.o \
 		debug/GraphicFile.o \
 		debug/VertexBuffer.o \
 		debug/Shader.o \
@@ -262,6 +261,7 @@ OBJECTS       = debug/glew.o \
 		debug/DataHandler.o \
 		debug/Tetris.o \
 		debug/Model.o \
+		debug/Line.o \
 		debug/HandlePhysics.o \
 		debug/btAxisSweep3.o \
 		debug/btBroadphaseProxy.o \
@@ -433,7 +433,7 @@ dist:
 	$(ZIP) My_World_SDL.zip $(SOURCES) $(DIST) My_World_SDL.pro ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\spec_pre.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\qdevice.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\device_config.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\common\shell-win32.conf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\qconfig.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axbase.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axbase_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axcontainer.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axcontainer_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axserver.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axserver_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_bluetooth.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_bluetooth_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_bootstrap_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_clucene_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_concurrent.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_concurrent_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_core.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_core_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_declarative.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_declarative_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_designer.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_designer_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_designercomponents_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_gui.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_gui_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_help.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_help_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimedia.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimedia_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimediawidgets.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimediawidgets_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_network.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_network_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_nfc.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_nfc_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_opengl.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_opengl_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_openglextensions.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_openglextensions_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_platformsupport_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_positioning.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_positioning_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_printsupport.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_printsupport_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qml.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qml_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qmldevtools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qmltest.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qmltest_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_quick.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_quick_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_quickparticles_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_script.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_script_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_scripttools.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_scripttools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sensors.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sensors_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_serialport.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_serialport_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sql.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sql_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_svg.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_svg_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_testlib.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_testlib_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_uitools.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_uitools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkit.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkit_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkitwidgets.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkitwidgets_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_widgets.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_widgets_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_winextras.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_winextras_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xml.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xml_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xmlpatterns.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xmlpatterns_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\qt_functions.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\qt_config.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\win32-g++\qmake.conf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\spec_post.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\exclusive_builds.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\default_pre.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\win32\default_pre.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\resolve_config.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\exclusive_builds_post.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\default_post.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\build_pass.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\c++11.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\qml_debug.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\declarative_debug.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\win32\rtti.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\warn_on.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\win32\windows.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\testcase_targets.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\exceptions.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\yacc.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\lex.prf My_World_SDL.pro  YACCSOURCES YACCSOURCES LEXSOURCES 
 
 clean: compiler_clean 
-	-$(DEL_FILE) debug\glew.o debug\main.o debug\HandleSDL.o debug\MyWindow.o debug\Camera.o debug\myGLWidget.o debug\Vector3D.o debug\Color.o debug\Cube.o debug\Cylinder.o debug\KeyHandler.o debug\Loader.o debug\Plane.o debug\Rectangle.o debug\Rotation.o debug\SkyBox.o debug\Sphere.o debug\HandleThread.o debug\HandleMutex.o debug\MyMutexLocker.o debug\MyException.o debug\LoadingMenu.o debug\HandleError.o debug\Room.o debug\Utils.o debug\Directory.o debug\Door.o debug\Text.o debug\HandleFile.o debug\HandleFpsCount.o debug\TextureHandler.o debug\Wall.o debug\GraphicHandler.o debug\GraphicFile.o debug\VertexBuffer.o debug\Shader.o debug\Box.o debug\VertexContainer.o debug\Texture.o debug\FrameBuffer.o debug\Button.o debug\DataHandler.o debug\Tetris.o debug\Model.o debug\HandlePhysics.o debug\btAxisSweep3.o debug\btBroadphaseProxy.o debug\btCollisionAlgorithm.o debug\btDbvt.o debug\btDbvtBroadphase.o debug\btDispatcher.o debug\btMultiSapBroadphase.o debug\btOverlappingPairCache.o debug\btQuantizedBvh.o debug\btSimpleBroadphase.o debug\btActivatingCollisionAlgorithm.o debug\btBox2dBox2dCollisionAlgorithm.o debug\btBoxBoxCollisionAlgorithm.o debug\btBoxBoxDetector.o debug\btCollisionDispatcher.o debug\btCollisionObject.o debug\btCollisionWorld.o debug\btCompoundCollisionAlgorithm.o debug\btCompoundCompoundCollisionAlgorithm.o debug\btConvex2dConvex2dAlgorithm.o debug\btConvexConcaveCollisionAlgorithm.o debug\btConvexConvexAlgorithm.o debug\btConvexPlaneCollisionAlgorithm.o debug\btDefaultCollisionConfiguration.o debug\btEmptyCollisionAlgorithm.o debug\btGhostObject.o debug\btHashedSimplePairCache.o debug\btInternalEdgeUtility.o debug\btManifoldResult.o debug\btSimulationIslandManager.o debug\btSphereBoxCollisionAlgorithm.o debug\btSphereSphereCollisionAlgorithm.o debug\btSphereTriangleCollisionAlgorithm.o debug\btUnionFind.o debug\SphereTriangleDetector.o debug\btBox2dShape.o debug\btBoxShape.o debug\btBvhTriangleMeshShape.o debug\btCapsuleShape.o debug\btCollisionShape.o debug\btCompoundShape.o debug\btConcaveShape.o
+	-$(DEL_FILE) debug\glew.o debug\main.o debug\HandleSDL.o debug\MyWindow.o debug\Camera.o debug\myGLWidget.o debug\Vector3D.o debug\Color.o debug\Cube.o debug\Cylinder.o debug\KeyHandler.o debug\Loader.o debug\Plane.o debug\Rectangle.o debug\Rotation.o debug\SkyBox.o debug\Sphere.o debug\HandleThread.o debug\HandleMutex.o debug\MyMutexLocker.o debug\MyException.o debug\LoadingMenu.o debug\HandleError.o debug\Room.o debug\Utils.o debug\Directory.o debug\Door.o debug\Text.o debug\HandleFile.o debug\HandleFpsCount.o debug\TextureHandler.o debug\Wall.o debug\GraphicFile.o debug\VertexBuffer.o debug\Shader.o debug\Box.o debug\VertexContainer.o debug\Texture.o debug\FrameBuffer.o debug\Button.o debug\DataHandler.o debug\Tetris.o debug\Model.o debug\Line.o debug\HandlePhysics.o debug\btAxisSweep3.o debug\btBroadphaseProxy.o debug\btCollisionAlgorithm.o debug\btDbvt.o debug\btDbvtBroadphase.o debug\btDispatcher.o debug\btMultiSapBroadphase.o debug\btOverlappingPairCache.o debug\btQuantizedBvh.o debug\btSimpleBroadphase.o debug\btActivatingCollisionAlgorithm.o debug\btBox2dBox2dCollisionAlgorithm.o debug\btBoxBoxCollisionAlgorithm.o debug\btBoxBoxDetector.o debug\btCollisionDispatcher.o debug\btCollisionObject.o debug\btCollisionWorld.o debug\btCompoundCollisionAlgorithm.o debug\btCompoundCompoundCollisionAlgorithm.o debug\btConvex2dConvex2dAlgorithm.o debug\btConvexConcaveCollisionAlgorithm.o debug\btConvexConvexAlgorithm.o debug\btConvexPlaneCollisionAlgorithm.o debug\btDefaultCollisionConfiguration.o debug\btEmptyCollisionAlgorithm.o debug\btGhostObject.o debug\btHashedSimplePairCache.o debug\btInternalEdgeUtility.o debug\btManifoldResult.o debug\btSimulationIslandManager.o debug\btSphereBoxCollisionAlgorithm.o debug\btSphereSphereCollisionAlgorithm.o debug\btSphereTriangleCollisionAlgorithm.o debug\btUnionFind.o debug\SphereTriangleDetector.o debug\btBox2dShape.o debug\btBoxShape.o debug\btBvhTriangleMeshShape.o debug\btCapsuleShape.o debug\btCollisionShape.o debug\btCompoundShape.o debug\btConcaveShape.o
 	-$(DEL_FILE) debug\btConeShape.o debug\btConvex2dShape.o debug\btConvexHullShape.o debug\btConvexInternalShape.o debug\btConvexPointCloudShape.o debug\btConvexPolyhedron.o debug\btConvexShape.o debug\btConvexTriangleMeshShape.o debug\btCylinderShape.o debug\btEmptyShape.o debug\btHeightfieldTerrainShape.o debug\btMinkowskiSumShape.o debug\btMultimaterialTriangleMeshShape.o debug\btMultiSphereShape.o debug\btOptimizedBvh.o debug\btPolyhedralConvexShape.o debug\btScaledBvhTriangleMeshShape.o debug\btShapeHull.o debug\btSphereShape.o debug\btStaticPlaneShape.o debug\btStridingMeshInterface.o debug\btTetrahedronShape.o debug\btTriangleBuffer.o debug\btTriangleCallback.o debug\btTriangleIndexVertexArray.o debug\btTriangleIndexVertexMaterialArray.o debug\btTriangleMesh.o debug\btTriangleMeshShape.o debug\btUniformScalingShape.o debug\btContactProcessing.o debug\btGenericPoolAllocator.o debug\btGImpactBvh.o debug\btGImpactCollisionAlgorithm.o debug\btGImpactQuantizedBvh.o debug\btGImpactShape.o debug\btTriangleShapeEx.o debug\gim_box_set.o debug\gim_contact.o debug\gim_memory.o debug\gim_tri_collision.o debug\btContinuousConvexCollision.o debug\btConvexCast.o debug\btGjkConvexCast.o debug\btGjkEpa2.o debug\btGjkEpaPenetrationDepthSolver.o debug\btGjkPairDetector.o debug\btMinkowskiPenetrationDepthSolver.o debug\btPersistentManifold.o debug\btPolyhedralContactClipping.o debug\btRaycastCallback.o debug\btSubSimplexConvexCast.o debug\btVoronoiSimplexSolver.o debug\btKinematicCharacterController.o debug\btConeTwistConstraint.o debug\btContactConstraint.o debug\btFixedConstraint.o debug\btGearConstraint.o debug\btGeneric6DofConstraint.o debug\btGeneric6DofSpringConstraint.o debug\btHinge2Constraint.o debug\btHingeConstraint.o debug\btPoint2PointConstraint.o debug\btSequentialImpulseConstraintSolver.o debug\btSliderConstraint.o debug\btSolve2LinearConstraint.o debug\btTypedConstraint.o debug\btUniversalConstraint.o debug\btDiscreteDynamicsWorld.o debug\btRigidBody.o debug\btSimpleDynamicsWorld.o debug\Bullet-C-API.o
 	-$(DEL_FILE) debug\btRaycastVehicle.o debug\btWheelInfo.o debug\btMultiBody.o debug\btMultiBodyConstraint.o debug\btMultiBodyConstraintSolver.o debug\btMultiBodyDynamicsWorld.o debug\btMultiBodyJointLimitConstraint.o debug\btMultiBodyJointMotor.o debug\btMultiBodyPoint2Point.o debug\btDantzigLCP.o debug\btMLCPSolver.o debug\btSerializer.o debug\btQuickprof.o debug\btGeometryUtil.o debug\btConvexHull.o debug\btConvexHullComputer.o debug\btAlignedAllocator.o
 
@@ -573,7 +573,6 @@ debug/main.o: main.cpp MyWindow.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		HandleError.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o main.cpp
 
@@ -625,7 +624,6 @@ debug/HandleSDL.o: HandleSDL.cpp HandleSDL.hpp \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
 		objects/Color.hpp \
-		GraphicHandler.hpp \
 		Texture.hpp \
 		MyWindow.hpp \
 		glm/glm.hpp \
@@ -693,6 +691,8 @@ debug/HandleSDL.o: HandleSDL.cpp HandleSDL.hpp \
 		Utils/HandleFile.hpp \
 		HandleError.hpp \
 		String_utils.hpp \
+		Utils/MyException.hpp \
+		Utils/Utils.hpp \
 		SDL2/SDL/SDL_image.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\HandleSDL.o HandleSDL.cpp
 
@@ -809,7 +809,6 @@ debug/MyWindow.o: MyWindow.cpp MyWindow.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		myGLWidget.hpp \
 		objects/Rotation.hpp \
 		shaders/Shader.hpp \
@@ -833,6 +832,104 @@ debug/MyWindow.o: MyWindow.cpp MyWindow.hpp \
 		objects/GraphicFile.hpp \
 		objects/Cube.hpp \
 		FrameBuffer.hpp \
+		HandlePhysics.hpp \
+		Bullet/btBulletDynamicsCommon.h \
+		Bullet/btBulletCollisionCommon.h \
+		Bullet/BulletCollision/CollisionDispatch/btCollisionWorld.h \
+		Bullet/LinearMath/btVector3.h \
+		Bullet/LinearMath/btScalar.h \
+		Bullet/LinearMath/btMinMax.h \
+		Bullet/LinearMath/btAlignedAllocator.h \
+		Bullet/LinearMath/btTransform.h \
+		Bullet/LinearMath/btMatrix3x3.h \
+		Bullet/LinearMath/btQuaternion.h \
+		Bullet/LinearMath/btQuadWord.h \
+		Bullet/BulletCollision/CollisionDispatch/btCollisionObject.h \
+		Bullet/LinearMath/btMotionState.h \
+		Bullet/LinearMath/btAlignedObjectArray.h \
+		Bullet/BulletCollision/CollisionDispatch/btCollisionDispatcher.h \
+		Bullet/BulletCollision/BroadphaseCollision/btDispatcher.h \
+		Bullet/BulletCollision/NarrowPhaseCollision/btPersistentManifold.h \
+		Bullet/BulletCollision/NarrowPhaseCollision/btManifoldPoint.h \
+		Bullet/LinearMath/btTransformUtil.h \
+		Bullet/BulletCollision/CollisionDispatch/btManifoldResult.h \
+		Bullet/BulletCollision/NarrowPhaseCollision/btDiscreteCollisionDetectorInterface.h \
+		Bullet/BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h \
+		Bullet/BulletCollision/BroadphaseCollision/btBroadphaseProxy.h \
+		Bullet/BulletCollision/CollisionDispatch/btCollisionCreateFunc.h \
+		Bullet/BulletCollision/BroadphaseCollision/btOverlappingPairCache.h \
+		Bullet/BulletCollision/BroadphaseCollision/btBroadphaseInterface.h \
+		Bullet/BulletCollision/BroadphaseCollision/btOverlappingPairCallback.h \
+		Bullet/BulletCollision/CollisionShapes/btBoxShape.h \
+		Bullet/BulletCollision/CollisionShapes/btPolyhedralConvexShape.h \
+		Bullet/BulletCollision/CollisionShapes/btConvexInternalShape.h \
+		Bullet/BulletCollision/CollisionShapes/btConvexShape.h \
+		Bullet/BulletCollision/CollisionShapes/btCollisionShape.h \
+		Bullet/BulletCollision/CollisionShapes/btCollisionMargin.h \
+		Bullet/LinearMath/btAabbUtil2.h \
+		Bullet/BulletCollision/CollisionShapes/btSphereShape.h \
+		Bullet/BulletCollision/CollisionShapes/btCapsuleShape.h \
+		Bullet/BulletCollision/CollisionShapes/btCylinderShape.h \
+		Bullet/BulletCollision/CollisionShapes/btConeShape.h \
+		Bullet/BulletCollision/CollisionShapes/btStaticPlaneShape.h \
+		Bullet/BulletCollision/CollisionShapes/btConcaveShape.h \
+		Bullet/BulletCollision/CollisionShapes/btTriangleCallback.h \
+		Bullet/BulletCollision/CollisionShapes/btConvexHullShape.h \
+		Bullet/BulletCollision/CollisionShapes/btTriangleMesh.h \
+		Bullet/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h \
+		Bullet/BulletCollision/CollisionShapes/btStridingMeshInterface.h \
+		Bullet/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h \
+		Bullet/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h \
+		Bullet/BulletCollision/CollisionShapes/btTriangleMeshShape.h \
+		Bullet/BulletCollision/CollisionShapes/btOptimizedBvh.h \
+		Bullet/BulletCollision/BroadphaseCollision/btQuantizedBvh.h \
+		Bullet/BulletCollision/CollisionShapes/btTriangleInfoMap.h \
+		Bullet/LinearMath/btHashMap.h \
+		Bullet/LinearMath/btSerializer.h \
+		Bullet/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.h \
+		Bullet/BulletCollision/CollisionShapes/btCompoundShape.h \
+		Bullet/BulletCollision/CollisionShapes/btTetrahedronShape.h \
+		Bullet/BulletCollision/CollisionShapes/btEmptyShape.h \
+		Bullet/BulletCollision/CollisionShapes/btMultiSphereShape.h \
+		Bullet/BulletCollision/CollisionShapes/btUniformScalingShape.h \
+		Bullet/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h \
+		Bullet/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.h \
+		Bullet/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h \
+		Bullet/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h \
+		Bullet/BulletCollision/CollisionDispatch/btCollisionConfiguration.h \
+		Bullet/BulletCollision/BroadphaseCollision/btSimpleBroadphase.h \
+		Bullet/BulletCollision/BroadphaseCollision/btAxisSweep3.h \
+		Bullet/BulletCollision/BroadphaseCollision/btDbvtBroadphase.h \
+		Bullet/BulletCollision/BroadphaseCollision/btDbvt.h \
+		Bullet/LinearMath/btQuickprof.h \
+		Bullet/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.h \
+		Bullet/LinearMath/btDefaultMotionState.h \
+		Bullet/LinearMath/btIDebugDraw.h \
+		Bullet/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h \
+		Bullet/BulletDynamics/Dynamics/btDynamicsWorld.h \
+		Bullet/BulletDynamics/ConstraintSolver/btContactSolverInfo.h \
+		Bullet/BulletDynamics/Dynamics/btSimpleDynamicsWorld.h \
+		Bullet/BulletDynamics/Dynamics/btRigidBody.h \
+		Bullet/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btJacobianEntry.h \
+		Bullet/BulletDynamics/ConstraintSolver/btTypedConstraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btSolverConstraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btSolverBody.h \
+		Bullet/BulletDynamics/ConstraintSolver/btHingeConstraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btConeTwistConstraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btSliderConstraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btGeneric6DofSpringConstraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btUniversalConstraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btHinge2Constraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btGearConstraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btFixedConstraint.h \
+		Bullet/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h \
+		Bullet/BulletDynamics/ConstraintSolver/btConstraintSolver.h \
+		Bullet/BulletDynamics/Vehicle/btRaycastVehicle.h \
+		Bullet/BulletDynamics/Vehicle/btVehicleRaycaster.h \
+		Bullet/BulletDynamics/Vehicle/btWheelInfo.h \
+		Bullet/BulletDynamics/Dynamics/btActionInterface.h \
 		Loader/Loader.hpp \
 		HandleError.hpp \
 		Utils/Utils.hpp \
@@ -961,7 +1058,6 @@ debug/Camera.o: Camera.cpp objects/SkyBox.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1095,7 +1191,6 @@ debug/myGLWidget.o: myGLWidget.cpp myGLWidget.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1235,7 +1330,6 @@ debug/Cube.o: objects/Cube.cpp objects/Cube.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1365,7 +1459,6 @@ debug/Cylinder.o: objects/Cylinder.cpp objects/Cylinder.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1501,7 +1594,6 @@ debug/Loader.o: Loader/Loader.cpp Loader/Loader.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		myGLWidget.hpp \
 		objects/Rotation.hpp \
 		shaders/Shader.hpp \
@@ -1643,7 +1735,6 @@ debug/Plane.o: objects/Plane.cpp objects/Plane.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1775,7 +1866,6 @@ debug/Rectangle.o: objects/Rectangle.cpp objects/Rectangle.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -1914,7 +2004,6 @@ debug/SkyBox.o: objects/SkyBox.cpp objects/SkyBox.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -2047,7 +2136,6 @@ debug/Sphere.o: objects/Sphere.cpp objects/Sphere.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -2194,7 +2282,6 @@ debug/LoadingMenu.o: Loader/LoadingMenu.cpp Loader/LoadingMenu.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		objects/Plane.hpp \
 		myGLWidget.hpp \
 		objects/Rotation.hpp \
@@ -2326,8 +2413,7 @@ debug/HandleError.o: HandleError.cpp HandleError.hpp \
 		SDL2/SDL/SDL_version.h \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
-		objects/TextureHandler.hpp \
-		GraphicHandler.hpp
+		objects/TextureHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\HandleError.o HandleError.cpp
 
 debug/Room.o: objects/Room.cpp objects/Room.hpp \
@@ -2446,7 +2532,6 @@ debug/Room.o: objects/Room.cpp objects/Room.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -2593,7 +2678,6 @@ debug/Door.o: objects/Door.cpp objects/Door.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -2724,7 +2808,6 @@ debug/Text.o: objects/Text.cpp objects/Text.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -2868,7 +2951,6 @@ debug/Wall.o: objects/Wall.cpp objects/Wall.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -2881,125 +2963,6 @@ debug/Wall.o: objects/Wall.cpp objects/Wall.hpp \
 		glm/gtc/quaternion.inl \
 		glm/gtc/type_ptr.inl
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Wall.o objects\Wall.cpp
-
-debug/GraphicHandler.o: GraphicHandler.cpp GraphicHandler.hpp \
-		include/GL/glew.h \
-		objects/TextureHandler.hpp \
-		objects/Color.hpp \
-		Texture.hpp \
-		MyWindow.hpp \
-		glm/glm.hpp \
-		glm/core/_fixes.hpp \
-		glm/core/setup.hpp \
-		glm/core/_detail.hpp \
-		glm/core/_vectorize.hpp \
-		glm/core/type.hpp \
-		glm/core/type_half.hpp \
-		glm/core/type_half.inl \
-		glm/core/type_float.hpp \
-		glm/core/type_int.hpp \
-		glm/core/type_gentype.hpp \
-		glm/core/type_size.hpp \
-		glm/core/type_vec1.hpp \
-		glm/core/type_vec.hpp \
-		glm/core/_swizzle.hpp \
-		glm/core/_swizzle_func.hpp \
-		glm/core/type_vec1.inl \
-		glm/core/type_vec2.hpp \
-		glm/core/type_vec2.inl \
-		glm/core/type_vec3.hpp \
-		glm/core/type_vec3.inl \
-		glm/core/type_vec4.hpp \
-		glm/core/type_vec4.inl \
-		glm/core/type_mat2x2.hpp \
-		glm/core/type_mat.hpp \
-		glm/core/type_mat2x2.inl \
-		glm/core/type_mat2x3.hpp \
-		glm/core/type_mat2x3.inl \
-		glm/core/type_mat2x4.hpp \
-		glm/core/type_mat2x4.inl \
-		glm/core/type_mat3x2.hpp \
-		glm/core/type_mat3x2.inl \
-		glm/core/type_mat3x3.hpp \
-		glm/core/type_mat3x3.inl \
-		glm/core/type_mat3x4.hpp \
-		glm/core/type_mat3x4.inl \
-		glm/core/type_mat4x2.hpp \
-		glm/core/type_mat4x2.inl \
-		glm/core/type_mat4x3.hpp \
-		glm/core/type_mat4x3.inl \
-		glm/core/type_mat4x4.hpp \
-		glm/core/type_mat4x4.inl \
-		glm/core/func_trigonometric.hpp \
-		glm/core/func_trigonometric.inl \
-		glm/core/func_exponential.hpp \
-		glm/core/func_exponential.inl \
-		glm/core/func_common.hpp \
-		glm/core/func_common.inl \
-		glm/core/func_packing.hpp \
-		glm/core/func_packing.inl \
-		glm/core/func_geometric.hpp \
-		glm/core/func_geometric.inl \
-		glm/core/func_matrix.hpp \
-		glm/core/func_matrix.inl \
-		glm/core/func_vector_relational.hpp \
-		glm/core/func_vector_relational.inl \
-		glm/core/func_integer.hpp \
-		glm/core/func_integer.inl \
-		glm/core/func_noise.hpp \
-		glm/core/func_noise.inl \
-		objects/Vector3D.hpp \
-		objects/VertexBuffer.hpp \
-		Utils/HandleFile.hpp \
-		HandleSDL.hpp \
-		SDL2/SDL/SDL.h \
-		SDL2/SDL/SDL_main.h \
-		SDL2/SDL/SDL_stdinc.h \
-		SDL2/SDL/SDL_config.h \
-		SDL2/SDL/SDL_platform.h \
-		SDL2/SDL/begin_code.h \
-		SDL2/SDL/close_code.h \
-		SDL2/SDL/SDL_assert.h \
-		SDL2/SDL/SDL_atomic.h \
-		SDL2/SDL/SDL_audio.h \
-		SDL2/SDL/SDL_error.h \
-		SDL2/SDL/SDL_endian.h \
-		SDL2/SDL/SDL_mutex.h \
-		SDL2/SDL/SDL_thread.h \
-		SDL2/SDL/SDL_rwops.h \
-		SDL2/SDL/SDL_clipboard.h \
-		SDL2/SDL/SDL_cpuinfo.h \
-		SDL2/SDL/SDL_events.h \
-		SDL2/SDL/SDL_video.h \
-		SDL2/SDL/SDL_pixels.h \
-		SDL2/SDL/SDL_rect.h \
-		SDL2/SDL/SDL_surface.h \
-		SDL2/SDL/SDL_blendmode.h \
-		SDL2/SDL/SDL_keyboard.h \
-		SDL2/SDL/SDL_keycode.h \
-		SDL2/SDL/SDL_scancode.h \
-		SDL2/SDL/SDL_mouse.h \
-		SDL2/SDL/SDL_joystick.h \
-		SDL2/SDL/SDL_gamecontroller.h \
-		SDL2/SDL/SDL_quit.h \
-		SDL2/SDL/SDL_gesture.h \
-		SDL2/SDL/SDL_touch.h \
-		SDL2/SDL/SDL_haptic.h \
-		SDL2/SDL/SDL_hints.h \
-		SDL2/SDL/SDL_loadso.h \
-		SDL2/SDL/SDL_log.h \
-		SDL2/SDL/SDL_messagebox.h \
-		SDL2/SDL/SDL_power.h \
-		SDL2/SDL/SDL_render.h \
-		SDL2/SDL/SDL_system.h \
-		SDL2/SDL/SDL_timer.h \
-		SDL2/SDL/SDL_version.h \
-		SDL2/SDL/SDL_framerate.h \
-		SDL2/SDL/SDL_ttf.h \
-		HandleError.hpp \
-		Utils/Utils.hpp \
-		String_utils.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\GraphicHandler.o GraphicHandler.cpp
 
 debug/GraphicFile.o: objects/GraphicFile.cpp objects/GraphicFile.hpp \
 		objects/Rectangle.hpp \
@@ -3118,7 +3081,6 @@ debug/GraphicFile.o: objects/GraphicFile.cpp objects/GraphicFile.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -3250,7 +3212,6 @@ debug/VertexBuffer.o: objects/VertexBuffer.cpp objects/VertexBuffer.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
 		glm/gtc/type_ptr.hpp \
@@ -3388,7 +3349,6 @@ debug/Box.o: objects/Box.cpp objects/Box.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -3520,8 +3480,7 @@ debug/Texture.o: Texture.cpp Texture.hpp \
 		SDL2/SDL/SDL_version.h \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
-		objects/TextureHandler.hpp \
-		GraphicHandler.hpp
+		objects/TextureHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Texture.o Texture.cpp
 
 debug/FrameBuffer.o: FrameBuffer.cpp FrameBuffer.hpp \
@@ -3575,7 +3534,6 @@ debug/FrameBuffer.o: FrameBuffer.cpp FrameBuffer.hpp \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
 		objects/Color.hpp \
-		GraphicHandler.hpp \
 		MyWindow.hpp \
 		glm/glm.hpp \
 		glm/core/_fixes.hpp \
@@ -3758,7 +3716,6 @@ debug/Button.o: objects/Button.cpp objects/Plane.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -3893,7 +3850,6 @@ debug/DataHandler.o: DataHandler.cpp DataHandler.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -4023,7 +3979,6 @@ debug/Tetris.o: Tetris.cpp Tetris.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -4156,7 +4111,6 @@ debug/Model.o: objects/Model.cpp objects/Model.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -4172,6 +4126,9 @@ debug/Model.o: objects/Model.cpp objects/Model.hpp \
 		String_utils.hpp \
 		HandleError.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Model.o objects\Model.cpp
+
+debug/Line.o: objects/Line.cpp objects/Line.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Line.o objects\Line.cpp
 
 debug/HandlePhysics.o: HandlePhysics.cpp HandlePhysics.hpp \
 		Bullet/btBulletDynamicsCommon.h \
@@ -4386,7 +4343,6 @@ debug/HandlePhysics.o: HandlePhysics.cpp HandlePhysics.hpp \
 		SDL2/SDL/SDL_framerate.h \
 		SDL2/SDL/SDL_ttf.h \
 		objects/TextureHandler.hpp \
-		GraphicHandler.hpp \
 		shaders/Shader.hpp \
 		glm/gtc/matrix_transform.hpp \
 		glm/gtc/matrix_transform.inl \
@@ -4398,7 +4354,8 @@ debug/HandlePhysics.o: HandlePhysics.cpp HandlePhysics.hpp \
 		glm/gtc/constants.inl \
 		glm/gtc/quaternion.inl \
 		glm/gtc/type_ptr.inl \
-		Camera.hpp
+		Camera.hpp \
+		objects/Line.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\HandlePhysics.o HandlePhysics.cpp
 
 debug/btAxisSweep3.o: Bullet/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp Bullet/BulletCollision/BroadphaseCollision/btAxisSweep3.h \

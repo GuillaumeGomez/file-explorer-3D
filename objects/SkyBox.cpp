@@ -25,7 +25,7 @@ SkyBox::SkyBox() : Cube(Vector3D(0.f, 0.f, 0.f), Rotation(), Color(), 1.f)
 
     std::string tex[] = {"./textures/skybox/west.jpg", "./textures/skybox/east.jpg", "./textures/skybox/ground.jpg",
                          "./textures/skybox/sky.jpg", "./textures/skybox/north.jpg", "./textures/skybox/south.jpg"};
-    MyWindow::createSkyBoxTextures(tex);
+    MyWindow::getLib()->createSkyBoxTextures(tex);
     glDisable(GL_TEXTURE_CUBE_MAP_ARB);
 }
 

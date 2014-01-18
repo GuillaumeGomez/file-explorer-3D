@@ -11,7 +11,7 @@ void HandleError::showError(const char *s)
 {
   if (!s)
     return;
-  if (!MyWindow::displayErrorMessage("Error", s))
+  if (!MyWindow::getLib()->displayErrorMessage("Error", s))
     {
 #if defined(WIN32)
       const WCHAR *pwcsName;

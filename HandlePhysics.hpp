@@ -5,10 +5,6 @@
 #include <vector>
 
 class myGLWidget;
-namespace Object
-{
-  class Cube;
-}
 
 class HandlePhysics
 {
@@ -27,7 +23,6 @@ private:
   btSequentialImpulseConstraintSolver *solver;
   btDiscreteDynamicsWorld *dynamicsWorld;
   std::vector<btRigidBody*> rigidBodies;
-  std::vector<Object::Cube*>        debugCube;
 };
 
 #endif // HANDLEPHYSICS_HPP

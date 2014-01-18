@@ -1,7 +1,43 @@
 #include "HandlePhysics.hpp"
 #include "myGLWidget.hpp"
 #include "Camera.hpp"
-#include "Cube.hpp"
+#include "objects/Line.hpp"
+
+//add drawDebugWorld
+
+class DebugDrawer : public btIDebugDraw
+{
+protected:
+  int m_debugMode;
+  Object::Line  *line;
+
+public:
+  DebugDrawer() {
+    line = new Object::Line(Vector3D(), Vector3D(), WHITE);
+    line->initializeGL();
+    m_debugMode = 0;
+  }
+  virtual ~DebugDrawer() {
+    delete line;
+  }
+
+  void  drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color) {
+    std::vector<GLfloat> v = line->getVertices();
+
+    for (int i = 0; i < 3; ++i) {
+        v[i] = from[i];
+        v[i + 3] = to[i];
+      }
+    (void)color;
+    line->updateVertices(v);
+    line->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
+  }
+  void drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,btScalar distance,int lifeTime,const btVector3& color){}
+  void reportErrorWarning(const char*s){}
+  void draw3dText(const btVector3 &b, const char *s){}
+  void setDebugMode(int x){m_debugMode = x;}
+  int  getDebugMode() const{return m_debugMode;}
+};
 
 HandlePhysics::HandlePhysics()
 {
@@ -18,6 +54,10 @@ HandlePhysics::HandlePhysics()
   // The world.
   dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
   dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+
+  DebugDrawer *tt = new DebugDrawer;
+  tt->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+  dynamicsWorld->setDebugDrawer(tt);
 }
 
 HandlePhysics::~HandlePhysics()
@@ -25,7 +65,7 @@ HandlePhysics::~HandlePhysics()
   for (auto it = rigidBodies.begin(); it != rigidBodies.end(); ++it){
       dynamicsWorld->removeRigidBody(*it);
       delete (*it)->getMotionState();
-      delete (*it)->getCollisionShape();
+      //delete (*it)->getCollisionShape();
       delete (*it);
       rigidBodies.erase(it);
     }
@@ -74,14 +114,8 @@ bool  HandlePhysics::addObject(myGLWidget *obj)
 
   static btCollisionShape* boxCollisionShape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
 
-  Object::Cube  *tmp = new Object::Cube(pos, rot, WHITE, 1.f);
-
-  tmp->initializeGL();
-  tmp->setDrawMode(GL_LINE_STRIP);
-  debugCube.push_back(tmp);
-
   btDefaultMotionState* motionstate = new btDefaultMotionState(btTransform(
-                                                                 btQuaternion(rot.x(), rot.y(), rot.z()),
+                                                                 btQuaternion(rot.y(), rot.x(), rot.z()),
                                                                  btVector3(pos.x(), pos.y(), pos.z())
                                                                  ));
 
@@ -116,13 +150,7 @@ void  HandlePhysics::deleteObject(myGLWidget *obj)
 
 myGLWidget  *HandlePhysics::pick(int mouseX, int mouseY, int screenWidth, int screenHeight)
 {
-  const glm::mat4 view_mat = Camera::getViewMatrix();
-  const glm::mat4 proj_mat = Camera::getProjectionMatrix();
-
-  for (auto it = debugCube.begin(); it != debugCube.end(); ++it){
-      (*it)->paintGL(view_mat, proj_mat);
-    }
-
+  dynamicsWorld->debugDrawWorld();
 
   glm::vec4 lRayStart_NDC(((float)mouseX/(float)screenWidth  - 0.5f) * 2.f, // [0,1024] -> [-1,1]
                           ((float)mouseY/(float)screenHeight - 0.5f) * 2.f, // [0, 768] -> [-1,1]
@@ -169,5 +197,6 @@ myGLWidget  *HandlePhysics::pick(int mouseX, int mouseY, int screenWidth, int sc
 
 void  HandlePhysics::update(const float &t)
 {
-  dynamicsWorld->stepSimulation(t / 10000.f, 2);
+  dynamicsWorld->updateAabbs();
+  dynamicsWorld->stepSimulation(t / 1000.f);
 }

@@ -72,7 +72,6 @@ SOURCES += main.cpp \
     HandleFpsCount.cpp \
     objects/TextureHandler.cpp \
     objects/Wall.cpp \
-    GraphicHandler.cpp \
     objects/GraphicFile.cpp \
     objects/VertexBuffer.cpp \
     shaders/Shader.cpp \
@@ -84,6 +83,7 @@ SOURCES += main.cpp \
     DataHandler.cpp \
     Tetris.cpp \
     objects/Model.cpp \
+    objects/Line.cpp \
     HandlePhysics.cpp \
 \
     Bullet/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp \
@@ -249,7 +249,6 @@ HEADERS += \
     HandleFpsCount.hpp \
     objects/TextureHandler.hpp \
     objects/Wall.hpp \
-    GraphicHandler.hpp \
     objects/Plane.hpp \
     objects/GraphicFile.hpp \
     objects/VertexBuffer.hpp \
@@ -262,6 +261,7 @@ HEADERS += \
     DataHandler.hpp \
     Tetris.hpp \
     objects/Model.hpp \
+    objects/Line.hpp \
     HandlePhysics.hpp \
 \
     Bullet/BulletCollision/BroadphaseCollision/btAxisSweep3.h \

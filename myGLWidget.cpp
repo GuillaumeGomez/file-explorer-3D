@@ -388,19 +388,44 @@ void  myGLWidget::initVertexArrayObject()
   glBindVertexArray(0);
 }
 
-std::vector<GLfloat>    &myGLWidget::getColors()
+std::vector<GLfloat> const &myGLWidget::getColors() const
 {
   return m_couleurs;
 }
 
-std::vector<GLfloat>    &myGLWidget::getTextures()
+void  myGLWidget::updateColors(const std::vector<GLfloat> &c)
+{
+  if (m_hasTexture)
+    return;
+  for (unsigned int i = 0; i < m_couleurs.size() && i < c.size(); ++i)
+    m_couleurs[i] = c[i];
+  this->updateVertexBufferObject(&m_couleurs[0], m_colorsSize, m_verticesSize);
+}
+
+std::vector<GLfloat> const   &myGLWidget::getTextures() const
 {
   return m_textures;
 }
 
-std::vector<GLfloat>    &myGLWidget::getVertices()
+void  myGLWidget::updateTextures(const std::vector<GLfloat> &t)
+{
+  if (!m_hasTexture)
+    return;
+  for (unsigned int i = 0; i < m_textures.size() && i < t.size(); ++i)
+    m_textures[i] = t[i];
+  this->updateVertexBufferObject(&m_textures[0], m_texturesSize, m_verticesSize);
+}
+
+std::vector<GLfloat> const   &myGLWidget::getVertices() const
 {
   return m_vertices;
+}
+
+void  myGLWidget::updateVertices(const std::vector<GLfloat> &v)
+{
+  for (unsigned int i = 0; i < m_vertices.size() && i < v.size(); ++i)
+    m_vertices[i] = v[i];
+  this->updateVertexBufferObject(&m_vertices[0], m_verticesSize, 0);
 }
 
 void    myGLWidget::update(const float &n)

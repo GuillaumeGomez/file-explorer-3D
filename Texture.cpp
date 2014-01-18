@@ -11,6 +11,7 @@ Texture::Texture(GLuint id)
   : m_id(id), m_textureName(""), m_width(0), m_height(0), m_format(0), m_internFormat(0),
     m_emptyTexture(false), m_repeat(false)
 {
+  TextureHandler::getInstance()->add(m_id);
 }
 
 Texture::Texture(std::string imageFile)
@@ -24,6 +25,7 @@ Texture::Texture(Texture const &t)
     m_format(t.m_format), m_internFormat(t.m_internFormat), m_emptyTexture(t.m_emptyTexture),
     m_repeat(t.m_repeat)
 {
+  TextureHandler::getInstance()->add(m_id);
 }
 
 Texture::Texture(GLuint width, GLuint height, GLenum format, GLenum internFormat, bool emptyTexture)
@@ -62,7 +64,7 @@ bool  Texture::load()
       glBindTexture(GL_TEXTURE_2D, 0);
       return true;
     }
-  m_id = MyWindow::loadTexture(m_textureName, true, &m_width, &m_height);
+  m_id = MyWindow::getLib()->loadTexture(m_textureName, true, &m_width, &m_height);
   return m_id != 0;
 }
 
@@ -78,8 +80,9 @@ GLuint  Texture::getTextureID() const
 
 void  Texture::setTextureID(GLuint i)
 {
-  //this->destroy();
+  this->destroy();
   m_id = i;
+  TextureHandler::getInstance()->add(m_id);
 }
 
 void  Texture::setTexture(std::string s)
@@ -125,11 +128,11 @@ void  Texture::bind(GLuint i)
 
 void  Texture::destroy()
 {
-  if (!m_id)
-    return;
-  MyWindow::destroyTexture(m_id);
   m_width = 0;
   m_height = 0;
+  if (!m_id)
+    return;
+  TextureHandler::getInstance()->destroy(m_id);
   m_id = 0;
 }
 
@@ -154,6 +157,7 @@ void  Texture::operator=(Texture const &t)
       this->destroy();
     }
   m_id = t.m_id;
+  TextureHandler::getInstance()->add(m_id);
   m_textureName = t.m_textureName;
   m_width = t.m_width;
   m_height = t.m_height;

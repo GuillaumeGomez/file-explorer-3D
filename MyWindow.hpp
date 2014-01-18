@@ -15,7 +15,7 @@
 class myGLWidget;
 class Camera;
 class KeyHandler;
-class GraphicHandler;
+class HandleSDL;
 class HandleThread;
 class HandleFpsCount;
 class FrameBuffer;
@@ -61,18 +61,8 @@ public:
 
   Vector3D const  &getPlayerPosition() const;
 
-  static GraphicHandler   *getLib();
-  static GLuint   loadTexture(std::string const &s, bool useMipMap = true, GLuint *width = 0, GLuint *height = 0);
-  static GLuint   loadTexture(const char *s, bool useMipMap = true, GLuint *width = 0, GLuint *height = 0);
-  static Texture  *createTextTexture(const char* text, Texture *texture = 0, Color c = Color());
-  static void     createSkyBoxTextures(std::string textures[6]);
-  static bool     displayErrorMessage(const char *title, const char *msg);
-  static bool     displayWarningMessage(const char *title, const char *msg);
-  static bool     displayInformationMessage(const char *title, const char *msg);
-  static bool     destroyTexture(GLuint);
-  static int      loadIconFile(const char*);
-  static int      loadIconFile(std::string);
-  static void     clearScreen();
+  static HandleSDL   *getLib();
+  static void       clearScreen();
 
 private:
   bool                m_printInfo;
@@ -99,7 +89,7 @@ private:
   int                 mouseX;
   int                 mouseY;
 
-  static GraphicHandler      *sdl;
+  static HandleSDL      *sdl;
 };
 
 #endif // MYWINDOW_HPP

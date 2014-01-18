@@ -3,9 +3,9 @@
 #include "MyWindow.hpp"
 #include "Utils/HandleMutex.hpp"
 #include "Utils/MyMutexLocker.hpp"
-#include "GraphicHandler.hpp"
 #include "Utils/HandleMutex.hpp"
 #include "String_utils.hpp"
+#include "HandleSDL.hpp"
 
 #include <cmath>
 #include <SDL/SDL.h>
@@ -14,11 +14,7 @@
 
 #include "objects/Text.hpp"
 
-//#ifdef WIN32
 #include "HandleSDL.hpp"
-//#else
-//#include "HandleSFML.hpp"
-//#endif
 
 using namespace std;
 using namespace Object;

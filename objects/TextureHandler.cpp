@@ -1,4 +1,24 @@
 #include "TextureHandler.hpp"
+#include <cstdlib>
+
+TextureHandler  *TextureHandler::instance = 0;
+
+void  clearTextureHandler()
+{
+  TextureHandler  *tmp = TextureHandler::getInstance();
+
+  if (tmp)
+    delete tmp;
+}
+
+TextureHandler *TextureHandler::getInstance()
+{
+  if (!instance) {
+      instance = new TextureHandler;
+      atexit(clearTextureHandler);
+    }
+  return instance;
+}
 
 TextureHandler::TextureHandler()
 {
@@ -6,7 +26,7 @@ TextureHandler::TextureHandler()
 
 TextureHandler::~TextureHandler()
 {
-  for (tex_map::iterator it = textures.begin(); it != textures.end(); ++it){
+  for (auto it = textures.begin(); it != textures.end(); ++it){
       glDeleteTextures(1, &it->second.first);
     }
 }
@@ -21,13 +41,27 @@ GLuint        TextureHandler::add(const char *s, GLuint id)
 
 GLuint        TextureHandler::add(std::string const &s, GLuint id)
 {
-  tex_map::iterator  it = textures.find(s);
+  auto  it = this->findElement(s);
 
   if (it != textures.end()){
       it->second.second += 1;
       return it->second.first;
     }
-  textures[s] = std::pair<GLuint, int>(id, 1);
+  auto tmp = std::pair<GLuint, unsigned int>(id, 1);
+  textures.push_back(std::pair<std::string, std::pair<GLuint, unsigned int> >(s, tmp));
+  return id;
+}
+
+GLuint        TextureHandler::add(GLuint id)
+{
+  auto  it = this->findElement(id);
+
+  if (it != textures.end()){
+      it->second.second += 1;
+      return it->second.first;
+    }
+  auto tmp = std::pair<GLuint, unsigned int>(id, 1);
+  textures.push_back(std::pair<std::string, std::pair<GLuint, unsigned int> >(std::string(""), tmp));
   return id;
 }
 
@@ -41,7 +75,7 @@ GLuint        TextureHandler::get(const char *s)
 
 GLuint        TextureHandler::get(std::string const &s)
 {
-  tex_map::iterator  it = textures.find(s);
+  tex_map::iterator  it = this->findElement(s);
 
   if (it == textures.end())
     return 0;
@@ -78,26 +112,6 @@ unsigned int  TextureHandler::size() const
   return textures.size();
 }
 
-std::pair<GLuint, unsigned int>  TextureHandler::getPair(const std::string &s)
-{
-  for (tex_map::iterator it = textures.begin(); it != textures.end(); ++it){
-      if (it->first == s){
-          return it->second;
-        }
-    }
-  return std::pair<GLuint, unsigned int>(0, 0);
-}
-
-std::pair<GLuint, unsigned int>  TextureHandler::getPair(GLuint id)
-{
-  for (tex_map::iterator it = textures.begin(); it != textures.end(); ++it){
-      if (it->second.first == id){
-          return it->second;
-        }
-    }
-  return std::pair<GLuint, unsigned int>(0, 0);
-}
-
 bool  TextureHandler::destroy(const char *s)
 {
   if (!s)
@@ -106,21 +120,61 @@ bool  TextureHandler::destroy(const char *s)
   return this->destroy(st);
 }
 
+unsigned int TextureHandler::numberOfThisTexture(GLuint id)
+{
+  auto it = this->findElement(id);
+
+  if (it == textures.end())
+    return 0;
+  return it->second.second;
+}
+
+tex_map::iterator TextureHandler::findElement(GLuint id)
+{
+  if (!id)
+    return textures.end();
+  for (auto it = textures.begin(); it != textures.end(); ++it) {
+      if (it->second.first == id)
+        return it;
+    }
+  return textures.end();
+}
+
+tex_map::iterator TextureHandler::findElement(std::string st)
+{
+  if (st.empty())
+    return textures.end();
+  for (auto it = textures.begin(); it != textures.end(); ++it) {
+      if (it->first == st)
+        return it;
+    }
+  return textures.end();
+}
+
 bool  TextureHandler::destroy(const std::string &s)
 {
-  std::pair<GLuint, int>  id = this->getPair(s);
+  auto  it = this->findElement(s);
 
-  if (id.first < 1)
+  if (it == textures.end())
     return false;
-  id.second -= 1;
-  if (id.second > 0)
+  it->second.second -= 1;
+  if (it->second.second > 0)
     return true;
-  glDeleteTextures(1, &id.first);
-  textures.erase(textures.find(s));
+  glDeleteTextures(1, &it->second.first);
+  textures.erase(it);
   return true;
 }
 
 bool  TextureHandler::destroy(GLuint id)
 {
-  return this->destroy(this->get(id));
+  auto  it = this->findElement(id);
+
+  if (it == textures.end())
+    return false;
+  it->second.second -= 1;
+  if (it->second.second > 0)
+    return true;
+  glDeleteTextures(1, &it->second.first);
+  textures.erase(it);
+  return true;
 }

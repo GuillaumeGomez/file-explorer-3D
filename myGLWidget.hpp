@@ -70,9 +70,12 @@ public:
   Rotation        &rotation();
   Texture         &getTexture();
   void            setRender2D(bool);
-  std::vector<GLfloat>    &getColors();
-  std::vector<GLfloat>    &getVertices();
-  std::vector<GLfloat>    &getTextures();
+  std::vector<GLfloat> const   &getColors() const;
+  void                         updateColors(std::vector<GLfloat> const&);
+  std::vector<GLfloat> const   &getVertices() const;
+  void                         updateVertices(std::vector<GLfloat> const&);
+  std::vector<GLfloat> const   &getTextures() const;
+  void                         updateTextures(std::vector<GLfloat> const&);
   std::string const &getTextureName() const;
   virtual void    initVertexBufferObject(GLenum = GL_STATIC_DRAW);
   virtual void    bindVertexBufferObject();
@@ -101,8 +104,8 @@ protected:
   GLuint                  m_texturesSize;
   GLuint                  m_pointsNumber;
   bool                    m_render2D;
-  GLenum                  m_drawMode;
   Texture                 m_texture;
+  GLenum                  m_drawMode;
   Color                   m_pickingColor;
   GLint                   m_uniLoc_modelView;
   GLint                   m_uniLoc_projection;
