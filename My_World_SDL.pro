@@ -3,11 +3,12 @@ CONFIG -= console
 CONFIG -= qt
 
 INCLUDEPATH += objects/
+INCLUDEPATH += Bullet/
+INCLUDEPATH += SDL2/
+INCLUDEPATH += include/
 
 unix {
-    QMAKE_CXXFLAGS += -std=c++0x \
-    INCLUDEPATH += include/
-    INCLUDEPATH += SDL2/
+    QMAKE_CXXFLAGS += -std=c++0x
 
     LIBS += -lGLU -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_ttf -lGLEW -lm -lpthread \
 }
@@ -15,9 +16,6 @@ unix {
 win32 {
     CONFIG += c++11
     DEFINES += WIN32
-    INCLUDEPATH += SDL2/
-    INCLUDEPATH += include/
-    INCLUDEPATH += Bullet/
     SOURCES +=  glew.c \
 
     DEFINES += GLEW_STATIC _USE_MATH_DEFINES

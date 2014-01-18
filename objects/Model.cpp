@@ -245,7 +245,9 @@ bool Model::loadMaterial()
 
           std::string sTextureName = sLine.substr(from, sLine.length() - from - 1);
           std::vector<std::string> tmp_v = Utility::split<std::string>(mtlName, "/");
-
+#ifndef WIN32
+          sTextureName = Utility::replace<std::string>(sTextureName, "\r", "");
+#endif
           if (tmp_v.size() > 1){
               tmp_v.pop_back();
               m_texture.setTexture(Utility::join<std::string>(tmp_v, "/") + "/" + sTextureName);
