@@ -18,7 +18,7 @@ CXXFLAGS      = -pipe -std=c++0x -g -Wall -W -fPIE $(DEFINES)
 INCPATH       = -I/opt/Qt5.2.0/5.2.0/gcc_64/mkspecs/linux-g++ -I. -Iobjects -IBullet -ISDL2 -Iinclude
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/opt/Qt5.2.0/5.2.0/gcc_64
-LIBS          = $(SUBLIBS) -lGLU -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_ttf -lGLEW -lm -lpthread 
+LIBS          = $(SUBLIBS) -lGLU -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_ttf -lGLEW -lm -lpthread -lassimp 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /opt/Qt5.2.0/5.2.0/gcc_64/bin/qmake
@@ -4424,7 +4424,33 @@ Model.o: objects/Model.cpp objects/Model.hpp \
 		glm/gtc/type_ptr.inl \
 		Utils/MyException.hpp \
 		String_utils.hpp \
-		HandleError.hpp
+		HandleError.hpp \
+		assimp/Importer.hpp \
+		assimp/types.h \
+		assimp/defs.h \
+		assimp/vector3.h \
+		assimp/Compiler/pushpack1.h \
+		assimp/Compiler/poppack1.h \
+		assimp/vector2.h \
+		assimp/color4.h \
+		assimp/matrix3x3.h \
+		assimp/matrix4x4.h \
+		assimp/quaternion.h \
+		assimp/vector2.inl \
+		assimp/vector3.inl \
+		assimp/color4.inl \
+		assimp/matrix3x3.inl \
+		assimp/matrix4x4.inl \
+		assimp/config.h \
+		assimp/scene.h \
+		assimp/texture.h \
+		assimp/mesh.h \
+		assimp/light.h \
+		assimp/camera.h \
+		assimp/material.h \
+		assimp/material.inl \
+		assimp/anim.h \
+		assimp/postprocess.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Model.o objects/Model.cpp
 
 Line.o: objects/Line.cpp objects/Line.hpp \

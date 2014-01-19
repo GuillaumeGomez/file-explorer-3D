@@ -14,7 +14,7 @@ CXX           = g++
 DEFINES       = -DUNICODE -DWIN32 -DGLEW_STATIC -D_USE_MATH_DEFINES -DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG -DQT_NEEDS_QMAIN
 CFLAGS        = -pipe -fno-keep-inline-dllexport -O2 -Wall -Wextra $(DEFINES)
 CXXFLAGS      = -pipe -fno-keep-inline-dllexport -O2 -std=c++0x -frtti -Wall -Wextra -fexceptions -mthreads $(DEFINES)
-INCPATH       = -I. -I"objects" -I"SDL2" -I"include" -I"Bullet" -I"..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\win32-g++"
+INCPATH       = -I. -I"objects" -I"Bullet" -I"SDL2" -I"include" -I"..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\win32-g++"
 LINKER      =        g++
 LFLAGS        =        -Wl,-s -Wl,-subsystem,windows -mthreads
 LIBS        =        -L./SDL2/ -L./ -lwinmm -lmingw32 -luser32 -lGdi32 -lComctl32 -lOleAut32 -lOle32 -luuid -lSDL2main -lSDL2 -lSDL2_gfx -lSDL2_ttf -lSDL2_image -lopengl32 -lglu32 
@@ -1616,6 +1616,7 @@ release/Loader.o: Loader/Loader.cpp Loader/Loader.hpp \
 		objects/Plane.hpp \
 		objects/Sphere.hpp \
 		objects/Model.hpp \
+		objects/Line.hpp \
 		Utils/Directory.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\Loader.o Loader\Loader.cpp
 
@@ -4127,7 +4128,134 @@ release/Model.o: objects/Model.cpp objects/Model.hpp \
 		HandleError.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\Model.o objects\Model.cpp
 
-release/Line.o: objects/Line.cpp objects/Line.hpp
+release/Line.o: objects/Line.cpp objects/Line.hpp \
+		myGLWidget.hpp \
+		include/GL/glew.h \
+		objects/Rotation.hpp \
+		objects/Vector3D.hpp \
+		objects/Color.hpp \
+		Texture.hpp \
+		MyWindow.hpp \
+		glm/glm.hpp \
+		glm/core/_fixes.hpp \
+		glm/core/setup.hpp \
+		glm/core/_detail.hpp \
+		glm/core/_vectorize.hpp \
+		glm/core/type.hpp \
+		glm/core/type_half.hpp \
+		glm/core/type_half.inl \
+		glm/core/type_float.hpp \
+		glm/core/type_int.hpp \
+		glm/core/type_gentype.hpp \
+		glm/core/type_size.hpp \
+		glm/core/type_vec1.hpp \
+		glm/core/type_vec.hpp \
+		glm/core/_swizzle.hpp \
+		glm/core/_swizzle_func.hpp \
+		glm/core/type_vec1.inl \
+		glm/core/type_vec2.hpp \
+		glm/core/type_vec2.inl \
+		glm/core/type_vec3.hpp \
+		glm/core/type_vec3.inl \
+		glm/core/type_vec4.hpp \
+		glm/core/type_vec4.inl \
+		glm/core/type_mat2x2.hpp \
+		glm/core/type_mat.hpp \
+		glm/core/type_mat2x2.inl \
+		glm/core/type_mat2x3.hpp \
+		glm/core/type_mat2x3.inl \
+		glm/core/type_mat2x4.hpp \
+		glm/core/type_mat2x4.inl \
+		glm/core/type_mat3x2.hpp \
+		glm/core/type_mat3x2.inl \
+		glm/core/type_mat3x3.hpp \
+		glm/core/type_mat3x3.inl \
+		glm/core/type_mat3x4.hpp \
+		glm/core/type_mat3x4.inl \
+		glm/core/type_mat4x2.hpp \
+		glm/core/type_mat4x2.inl \
+		glm/core/type_mat4x3.hpp \
+		glm/core/type_mat4x3.inl \
+		glm/core/type_mat4x4.hpp \
+		glm/core/type_mat4x4.inl \
+		glm/core/func_trigonometric.hpp \
+		glm/core/func_trigonometric.inl \
+		glm/core/func_exponential.hpp \
+		glm/core/func_exponential.inl \
+		glm/core/func_common.hpp \
+		glm/core/func_common.inl \
+		glm/core/func_packing.hpp \
+		glm/core/func_packing.inl \
+		glm/core/func_geometric.hpp \
+		glm/core/func_geometric.inl \
+		glm/core/func_matrix.hpp \
+		glm/core/func_matrix.inl \
+		glm/core/func_vector_relational.hpp \
+		glm/core/func_vector_relational.inl \
+		glm/core/func_integer.hpp \
+		glm/core/func_integer.inl \
+		glm/core/func_noise.hpp \
+		glm/core/func_noise.inl \
+		objects/VertexBuffer.hpp \
+		Utils/HandleFile.hpp \
+		HandleSDL.hpp \
+		SDL2/SDL/SDL.h \
+		SDL2/SDL/SDL_main.h \
+		SDL2/SDL/SDL_stdinc.h \
+		SDL2/SDL/SDL_config.h \
+		SDL2/SDL/SDL_platform.h \
+		SDL2/SDL/begin_code.h \
+		SDL2/SDL/close_code.h \
+		SDL2/SDL/SDL_assert.h \
+		SDL2/SDL/SDL_atomic.h \
+		SDL2/SDL/SDL_audio.h \
+		SDL2/SDL/SDL_error.h \
+		SDL2/SDL/SDL_endian.h \
+		SDL2/SDL/SDL_mutex.h \
+		SDL2/SDL/SDL_thread.h \
+		SDL2/SDL/SDL_rwops.h \
+		SDL2/SDL/SDL_clipboard.h \
+		SDL2/SDL/SDL_cpuinfo.h \
+		SDL2/SDL/SDL_events.h \
+		SDL2/SDL/SDL_video.h \
+		SDL2/SDL/SDL_pixels.h \
+		SDL2/SDL/SDL_rect.h \
+		SDL2/SDL/SDL_surface.h \
+		SDL2/SDL/SDL_blendmode.h \
+		SDL2/SDL/SDL_keyboard.h \
+		SDL2/SDL/SDL_keycode.h \
+		SDL2/SDL/SDL_scancode.h \
+		SDL2/SDL/SDL_mouse.h \
+		SDL2/SDL/SDL_joystick.h \
+		SDL2/SDL/SDL_gamecontroller.h \
+		SDL2/SDL/SDL_quit.h \
+		SDL2/SDL/SDL_gesture.h \
+		SDL2/SDL/SDL_touch.h \
+		SDL2/SDL/SDL_haptic.h \
+		SDL2/SDL/SDL_hints.h \
+		SDL2/SDL/SDL_loadso.h \
+		SDL2/SDL/SDL_log.h \
+		SDL2/SDL/SDL_messagebox.h \
+		SDL2/SDL/SDL_power.h \
+		SDL2/SDL/SDL_render.h \
+		SDL2/SDL/SDL_system.h \
+		SDL2/SDL/SDL_timer.h \
+		SDL2/SDL/SDL_version.h \
+		SDL2/SDL/SDL_framerate.h \
+		SDL2/SDL/SDL_ttf.h \
+		objects/TextureHandler.hpp \
+		shaders/Shader.hpp \
+		glm/gtc/matrix_transform.hpp \
+		glm/gtc/matrix_transform.inl \
+		glm/gtc/type_ptr.hpp \
+		glm/gtc/half_float.hpp \
+		glm/gtc/half_float.inl \
+		glm/gtc/quaternion.hpp \
+		glm/gtc/constants.hpp \
+		glm/gtc/constants.inl \
+		glm/gtc/quaternion.inl \
+		glm/gtc/type_ptr.inl \
+		HandleError.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\Line.o objects\Line.cpp
 
 release/HandlePhysics.o: HandlePhysics.cpp HandlePhysics.hpp \

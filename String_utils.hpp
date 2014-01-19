@@ -68,25 +68,26 @@ namespace Utility
   // if you want to keep empty parts, just set the last argument to true, example :
   // split<std::string>("salut les   amis", " ", true) -> std::vector<std::string>{"salut", "les", "", "", "amis"}
   template<typename T>
-  std::vector<T>  split(std::string &str, const char *key, bool keepEmptyPart = false)
+  std::vector<T>  split(std::string const &str, const char *key, bool keepEmptyPart = false)
   {
     std::vector<T>  result;
     size_t          pos;
     std::string     sub;
     int             size;
+    std::string     copy(str);
 
     if (!key)
       return result;
     size = strlen(key);
-    while ((pos = str.find(key)) != std::string::npos)
+    while ((pos = copy.find(key)) != std::string::npos)
       {
-        sub = str.substr(0, pos);
-        str.erase(0, pos + size);
+        sub = copy.substr(0, pos);
+        copy.erase(0, pos + size);
         if (!sub.empty() || keepEmptyPart)
           result.push_back(getValueFromString<T>(sub));
       }
-    if (str != "")
-      result.push_back(getValueFromString<T>(str));
+    if (copy != "")
+      result.push_back(getValueFromString<T>(copy));
     return result;
   }
 
@@ -108,7 +109,7 @@ namespace Utility
   }
 
   template<typename T>
-  std::vector<T>  split(std::string &str, std::string const &key, bool keepEmptyPart = false)
+  std::vector<T>  split(std::string const &str, std::string const &key, bool keepEmptyPart = false)
   {
     return split<T>(str, key.c_str(), keepEmptyPart);
   }

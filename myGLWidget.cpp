@@ -347,12 +347,14 @@ void  myGLWidget::updateVertexBufferObject(void *donnees, int tailleBytes, int d
   glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
 
   // Recuperation de l'adresse du VBO
+
+  // remplace glMapBuffer
   void *adresseVBO = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 
   // Si l'adresse retournee est nulle alors on arrete le transfert
   if (!adresseVBO)
     {
-      std::cout << "Erreur au niveau de la recuperation du VBO" << std::endl;
+      std::cout << "Error: cannot get VBO" << std::endl;
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       return;
     }
@@ -388,7 +390,7 @@ void  myGLWidget::initVertexArrayObject()
   glBindVertexArray(0);
 }
 
-std::vector<GLfloat> const &myGLWidget::getColors() const
+std::vector<GLfloat> &myGLWidget::getColors()
 {
   return m_couleurs;
 }
@@ -402,7 +404,7 @@ void  myGLWidget::updateColors(const std::vector<GLfloat> &c)
   this->updateVertexBufferObject(&m_couleurs[0], m_colorsSize, m_verticesSize);
 }
 
-std::vector<GLfloat> const   &myGLWidget::getTextures() const
+std::vector<GLfloat> &myGLWidget::getTextures()
 {
   return m_textures;
 }
@@ -416,7 +418,7 @@ void  myGLWidget::updateTextures(const std::vector<GLfloat> &t)
   this->updateVertexBufferObject(&m_textures[0], m_texturesSize, m_verticesSize);
 }
 
-std::vector<GLfloat> const   &myGLWidget::getVertices() const
+std::vector<GLfloat>   &myGLWidget::getVertices()
 {
   return m_vertices;
 }

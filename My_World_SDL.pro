@@ -10,7 +10,7 @@ INCLUDEPATH += include/
 unix {
     QMAKE_CXXFLAGS += -std=c++0x
 
-    LIBS += -lGLU -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_ttf -lGLEW -lm -lpthread \
+    LIBS += -lGLU -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_ttf -lGLEW -lm -lpthread -lassimp \
 }
 
 win32 {

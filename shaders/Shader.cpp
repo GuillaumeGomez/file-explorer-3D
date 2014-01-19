@@ -76,6 +76,7 @@ bool  Shader::load()
   glBindAttribLocation(m_programID, 0, "in_Vertex");
   glBindAttribLocation(m_programID, 1, "in_Color");
   glBindAttribLocation(m_programID, 2, "in_TexCoord0");
+  glBindAttribLocation(m_programID, 3, "in_normal");
 
   // Linkage du programme
   glLinkProgram(m_programID);
@@ -189,33 +190,38 @@ std::string Shader::getStandardVertexShader(bool hasTexture)
 
   if (hasTexture) {
       vert =
-          "#version 150 core\n"
+          "#version 330\n"
 
           "in vec3 in_Vertex;\n"
           "in vec2 in_TexCoord0;\n"
+          "in vec3 in_normal;\n"
 
           "uniform mat4 projection;\n"
           "uniform mat4 modelview;\n"
 
           "out vec2 coordTexture;\n"
+          "out vec3 vNormal;\n"
 
-          "void main()\n"
-          "{\n"
+          "void main(){\n"
           "gl_Position = projection * modelview * vec4(in_Vertex, 1.0);\n"
           "coordTexture = in_TexCoord0;\n"
+          "vNormal = (mat4(1.0) * vec4(in_normal, 1.0)).xyz;\n"
           "}";
     } else {
-      vert = "#version 150 core\n"
+      vert = "#version 330\n"
           "in vec3 in_Vertex;\n"
           "in vec3 in_Color;\n"
+          "in vec3 in_normal;\n"
 
           "uniform mat4 projection;\n"
           "uniform mat4 modelview;\n"
 
           "out vec3 color;\n"
+          "out vec3 vNormal;\n"
+
           "void main(){\n"
           "gl_Position = projection * modelview * vec4(in_Vertex, 1.0);\n"
-
+          "vNormal = (mat4(1.0) * vec4(in_normal, 1.0)).xyz;\n"
           "color = in_Color;\n"
           "}";
     }
@@ -228,27 +234,30 @@ std::string Shader::getStandardFragmentShader(bool hasTexture)
 
   if (hasTexture) {
       frag =
-          "#version 150 core\n"
+          "#version 330\n"
 
           "in vec2 coordTexture;\n"
+          "in vec3 vNormal;\n"
 
           "uniform sampler2D tex;\n"
 
           "out vec4 out_Color;\n"
 
-          "void main()\n"
-          "{\n"
+          "void main(){\n"
+          "vec3 normalized = normalize(vNormal);"
           "out_Color = texture(tex, coordTexture);\n"
           "}";
     } else {
       frag =
-          "#version 150 core\n"
+          "#version 330\n"
 
           "in vec3 color;\n"
+          "in vec3 vNormal;\n"
+
           "out vec4 out_Color;\n"
 
-          "void main()\n"
-          "{\n"
+          "void main(){\n"
+          "vec3 normalized = normalize(vNormal);"
           "out_Color = vec4(color, 1.0);\n"
           "}";
     }

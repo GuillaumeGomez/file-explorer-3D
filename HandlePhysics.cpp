@@ -22,7 +22,7 @@ public:
   }
 
   void  drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color) {
-    std::vector<GLfloat> v = line->getVertices();
+    std::vector<GLfloat> &v = line->getVertices();
 
     for (int i = 0; i < 3; ++i) {
         v[i] = from[i];
