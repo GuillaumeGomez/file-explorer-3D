@@ -70,6 +70,8 @@ void  Model::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
       if (iMatIndex < tTextures.size())
         tTextures[iMatIndex].bind();
       glDrawArrays(GL_TRIANGLES, iMeshStartIndices[i], iMeshSizes[i]);
+      if (iMatIndex < tTextures.size())
+        tTextures[iMatIndex].unbind();
     }
   //m_texture.bind();
   //glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
