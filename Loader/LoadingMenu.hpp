@@ -26,6 +26,7 @@ private:
     int         pourcent;
     int         obj;
     int         nbObject;
+    const float m_timer;
     Texture     m_texture[101];
     std::string m_text;
 };

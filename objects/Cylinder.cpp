@@ -109,6 +109,7 @@ void Cylinder::initializeGL()
   GLfloat length;
   GLfloat deltaRadius;
   GLfloat zNormal;
+  (void)zNormal;
   GLfloat xyNormalRatio;
   GLfloat radiusLow, radiusHigh;
   GLfloat baseRadius(m_rayon), topRadius(m_rayon);

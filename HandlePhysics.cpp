@@ -23,18 +23,37 @@ public:
 
   void  drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color) {
     std::vector<GLfloat> &v = line->getVertices();
+    std::vector<GLfloat> &c = line->getColors();
 
     for (int i = 0; i < 3; ++i) {
         v[i] = from[i];
         v[i + 3] = to[i];
+        c[i] = color[i];
+        c[i + 3] = color[i];
       }
-    (void)color;
     line->updateVertices(v);
+    line->updateColors(c);
     line->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
   }
-  void drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,btScalar distance,int lifeTime,const btVector3& color){}
-  void reportErrorWarning(const char*s){}
-  void draw3dText(const btVector3 &b, const char *s){}
+  void drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,btScalar distance,int lifeTime,const btVector3& color){
+    std::vector<GLfloat> &v = line->getVertices();
+    std::vector<GLfloat> &c = line->getColors();
+
+    (void)normalOnB;
+    (void)distance;
+    (void)lifeTime;
+    for (int i = 0; i < 3; ++i) {
+        v[i] = PointOnB[i];
+        v[i + 3] = PointOnB[i];
+        c[i] = color[i];
+        c[i + 3] = color[i];
+      }
+    line->updateVertices(v);
+    line->updateColors(c);
+    line->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
+  }
+  void reportErrorWarning(const char*s){(void)s;}
+  void draw3dText(const btVector3 &b, const char *s){(void)b;(void)s;}
   void setDebugMode(int x){m_debugMode = x;}
   int  getDebugMode() const{return m_debugMode;}
 };

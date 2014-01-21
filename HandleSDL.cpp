@@ -398,11 +398,16 @@ void  HandleSDL::createSkyBoxTextures(string textures[])
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
+int HandleSDL::getEvent(SDL_Event *e)
+{
+  return SDL_PollEvent(e);
+}
+
 bool  HandleSDL::handleEvents()
 {
   SDL_Event event;
 
-  while (SDL_PollEvent(&event))
+  while (this->getEvent(&event))
     {
       switch(event.type)
         {

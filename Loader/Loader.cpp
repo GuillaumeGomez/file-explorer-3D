@@ -77,7 +77,7 @@ void  Loader::loadDatas()
           if (obj)
             {
               obj->initializeGL();
-              m_win->addObject(obj, false/*tmp->is2D*/);
+              m_win->addObject(obj, obj->is2D());
             }
           delete tmp;
         }

@@ -110,6 +110,11 @@ void    myGLWidget::setRender2D(bool b)
   m_render2D = b;
 }
 
+bool  myGLWidget::is2D() const
+{
+  return m_render2D;
+}
+
 GLuint myGLWidget::getTextureId() const
 {
   return m_texture.getTextureID();

@@ -67,10 +67,10 @@ void  Model::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 
   for (unsigned int i = 0; i < iMeshSizes.size(); ++i) {
       int iMatIndex = iMaterialIndices[i];
-      if (iMatIndex < tTextures.size())
+      if (iMatIndex < (int)tTextures.size())
         tTextures[iMatIndex].bind();
       glDrawArrays(GL_TRIANGLES, iMeshStartIndices[i], iMeshSizes[i]);
-      if (iMatIndex < tTextures.size())
+      if (iMatIndex < (int)tTextures.size())
         tTextures[iMatIndex].unbind();
     }
   //m_texture.bind();
@@ -150,7 +150,7 @@ bool  Model::loadFile()
       int iSizeBefore = m_vertices.size() * sizeof(GLfloat) + m_textures.size() * sizeof(GLfloat) + m_normals.size() * sizeof(GLfloat);
 
       iMeshStartIndices.push_back(iSizeBefore/iVertexTotalSize);
-      for (unsigned int j = 0; j < iMeshFaces; ++j) {
+      for (int j = 0; j < iMeshFaces; ++j) {
           const aiFace& face = mesh->mFaces[j];
 
           if (face.mIndices)

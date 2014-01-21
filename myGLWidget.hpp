@@ -70,6 +70,7 @@ public:
   Rotation        &rotation();
   Texture         &getTexture();
   void            setRender2D(bool);
+  bool            is2D() const;
   std::vector<GLfloat>        &getColors();
   void                        updateColors(std::vector<GLfloat> const&);
   std::vector<GLfloat>        &getVertices();

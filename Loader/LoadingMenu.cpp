@@ -9,42 +9,53 @@
 
 using namespace std;
 
-LoadingMenu::LoadingMenu(int nb, MyWindow *m) : m_win(m), pourcent(0), obj(0), nbObject(nb)
+LoadingMenu::LoadingMenu(int nb, MyWindow *m) : m_win(m), pourcent(0), obj(0), nbObject(nb), m_timer(1.f / 30.f)
 {
-    m_text = "0 %";
+  m_text = "0 %";
 
-    for (int i = 0; i <= 100; ++i)
+  for (int i = 0; i <= 100; ++i)
     {
-        m_text = Utility::toString<int>(i) + " %";
-        MyWindow::getLib()->createTextTexture(m_text.c_str(), &m_texture[i], Color(1.f, 1.f, 1.f));
+      m_text = Utility::toString<int>(i) + " %";
+      MyWindow::getLib()->createTextTexture(m_text.c_str(), &m_texture[i], Color(1.f, 1.f, 1.f));
     }
-    m_widget1 = new Object::Plane(Vector3D(0.f, -0.85f), Rotation(), RED, 2.f, 0.07f);
-    m_widget2 = new Object::Plane(Vector3D(0.f, -0.85f), Rotation(), WHITE, 2.f, 0.07f);
-    m_widget3 = new Object::Text(m_texture[0], 0.06f * 3.f, 1, Vector3D(-0.09f, -0.7f), Rotation(), 0.12f);
+  m_widget1 = new Object::Plane(Vector3D(0.f, -0.85f), Rotation(), RED, 2.f, 0.07f);
+  m_widget2 = new Object::Plane(Vector3D(0.f, -0.85f), Rotation(), WHITE, 2.f, 0.07f);
+  m_widget3 = new Object::Text(m_texture[0], 0.06f * 3.f, 1, Vector3D(-0.09f, -0.7f), Rotation(), 0.12f);
 
-    m_widget3->setRender2D(true);
-    m_widget1->initializeGL();
-    m_widget2->initializeGL();
-    m_widget3->initializeGL();
+  m_widget3->setRender2D(true);
+  m_widget1->initializeGL();
+  m_widget2->initializeGL();
+  m_widget3->initializeGL();
 }
 
 LoadingMenu::~LoadingMenu()
 {
-    m_widget3->setTexture(0);
-    delete m_widget1;
-    delete m_widget2;
-    delete m_widget3;
+  m_widget3->setTexture(0);
+  delete m_widget1;
+  delete m_widget2;
+  delete m_widget3;
 }
 
 void  LoadingMenu::newLoadedObject()
 {
-    int tmp;
+  int       tmp;
+  SDL_Event e;
 
-    ++obj;
-    tmp = obj * 100 / nbObject;
-    if (tmp != pourcent) {
-        pourcent = tmp;
-        this->draw();
+  ++obj;
+  tmp = obj * 100 / nbObject;
+  if (tmp != pourcent || m_win->getLib()->getElapsedTime() >= m_timer) {
+      pourcent = tmp;
+      this->draw();
+    }
+  while (m_win->getLib()->getEvent(&e)) {
+      switch (e.type) {
+        case SDL_QUIT:
+          exit(10);
+        case SDL_KEYDOWN:
+          if (e.key.keysym.sym == SDLK_ESCAPE ||
+              (e.key.keysym.sym == SDLK_F4 && (e.key.keysym.mod == KMOD_LALT || e.key.keysym.mod == KMOD_RALT)))
+            exit(10);
+        }
     }
 }
 

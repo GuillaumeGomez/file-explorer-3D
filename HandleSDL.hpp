@@ -19,7 +19,7 @@ class HandleSDL
 {
 public:
   HandleSDL(std::string const &winName, MyWindow*, unsigned int anti_ali = 0);
-  ~HandleSDL();
+  virtual ~HandleSDL();
   bool  handleEvents();
   void  switchScreenMode();
   void  updateScreen();
@@ -37,6 +37,7 @@ public:
   GLuint          loadIconFile(std::string s);
   GLuint          loadIconFile(const char *s);
   bool            destroyTexture(GLuint id);
+  int             getEvent(SDL_Event*);
 
 private:
   GLuint  internTextureLoad(SDL_Surface *picture_surface, const char *name, bool useMipMap, GLuint *width, GLuint *height);

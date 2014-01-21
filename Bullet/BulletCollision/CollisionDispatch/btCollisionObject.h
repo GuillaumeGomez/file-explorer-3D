@@ -84,8 +84,8 @@ protected:
 	mutable btScalar			m_deactivationTime;
 
 	btScalar		m_friction;
-	btScalar		m_restitution;
 	btScalar		m_rollingFriction;
+	btScalar		m_restitution;
 
 	///m_internalType is reserved to distinguish Bullet's btCollisionObject, btRigidBody, btSoftBody, btGhostObject etc.
 	///do not assign your own m_internalType unless you write a new dynamics object class.

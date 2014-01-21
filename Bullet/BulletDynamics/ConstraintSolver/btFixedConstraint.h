@@ -36,10 +36,15 @@ public:
 
 	virtual	void	setParam(int num, btScalar value, int axis = -1)
 	{
+	  (void)num;
+	  (void)value;
+	  (void)axis;
 		btAssert(0);
 	}
 	virtual	btScalar getParam(int num, int axis = -1) const
 	{
+	  (void)num;
+	  (void)axis;
 		btAssert(0);
 		return 0.f;
 	}
