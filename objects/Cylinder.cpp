@@ -28,76 +28,16 @@ void Cylinder::initializeGL()
 {
   loadTexture();
 
-  std::string vert;
-  std::string frag;
-
-  if (m_hasTexture) {
-      vert =
-          "#version 150 core\n"
-
-          "in vec3 in_Vertex;\n"
-          "in vec2 in_TexCoord0;\n"
-
-          "uniform mat4 projection;\n"
-          "uniform mat4 modelview;\n"
-
-          "out vec2 coordTexture;\n"
-
-          "void main()\n"
-          "{\n"
-          "gl_Position = projection * modelview * vec4(in_Vertex, 1.0);\n"
-          "coordTexture = in_TexCoord0;\n"
-          "}";
-
-      frag =
-          "#version 150 core\n"
-
-          "in vec2 coordTexture;\n"
-
-          "uniform sampler2D tex;\n"
-
-          "out vec4 out_Color;\n"
-
-          "void main()\n"
-          "{\n"
-          "out_Color = texture(tex, coordTexture);\n"
-          "}";
-    } else {
-      vert = "#version 150 core\n"
-          "in vec3 in_Vertex;\n"
-          "in vec3 in_Color;\n"
-
-          "uniform mat4 projection;\n"
-          "uniform mat4 modelview;\n"
-
-          "out vec3 color;\n"
-          "void main()\n"
-          "{\n"
-          "gl_Position = projection * modelview * vec4(in_Vertex, 1.0);\n"
-          // Envoi de la couleur au Fragment Shader
-
-          "color = in_Color;\n"
-          "}";
-      frag =
-          "#version 150 core\n"
-
-          "in vec3 color;\n"
-
-          "out vec4 out_Color;\n"
-          "void main()\n"
-          "{\n"
-          "out_Color = vec4(color, 1.0);\n"
-          "}";
-    }
-
-  m_shader->setVertexSource(vert);
-  m_shader->setFragmentSource(frag);
+  m_shader->setVertexSource(Shader::getStandardVertexShader(m_hasTexture));
+  m_shader->setFragmentSource(Shader::getStandardFragmentShader(m_hasTexture));
   if (!m_shader->load()){
       HandleError::showError("Shader didn't load in Cylinder");
       exit(-1);
     }
   m_uniLoc_projection = glGetUniformLocation(m_shader->getProgramID(), "projection");
   m_uniLoc_modelView = glGetUniformLocation(m_shader->getProgramID(), "modelview");
+  m_uniloc_rot = glGetUniformLocation(m_shader->getProgramID(), "_rot");
+  m_uniloc_pos = glGetUniformLocation(m_shader->getProgramID(), "_pos");
 
   GLint i,j;
   GLfloat sinCache[CACHE_SIZE];
@@ -191,11 +131,9 @@ void Cylinder::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matri
   // Envoi des matrices
   glUniformMatrix4fv(m_uniLoc_projection, 1, GL_FALSE, glm::value_ptr(proj_matrix));
 
-  glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
-
-  if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
-    tmp = glm::rotate(tmp, m_rot.rotation(), glm::vec3(m_rot.x(), m_rot.y(), m_rot.z()));
-  glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
+  glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(view_matrix));
+  glUniform3fv(m_uniloc_pos, 1, glm::value_ptr(glm::vec3(m_pos.x(), m_pos.y(), m_pos.z())));
+  glUniform4fv(m_uniloc_rot, 1, glm::value_ptr(glm::vec4(m_rot.x(), m_rot.y(), m_rot.z(), m_rot.rotation())));
 
   // Rendu
   if (m_hasTexture){

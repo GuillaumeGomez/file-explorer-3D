@@ -34,13 +34,13 @@ Loader::Loader(MyWindow *w) : m_win(w)
   objList.push_back(ObjectFactory::createNewObject<Model, Vector3D, Rotation, const char*, float>(Vector3D(2.f, 0.f, 9.f), Rotation(), "models/bob/spongebob_bind.obj", 4.f));
   objList.push_back(ObjectFactory::createNewObject<Line, Vector3D, Vector3D, Color>(Vector3D(0.f, 0.f, 10.f), Vector3D(0.f, -70.f, 100.f), WHITE));
 
-  /*const int MAX(30);
+  const int MAX(15);
   int z = 0;
   for (int i = 0; i < MAX; ++i)
     for (int j = 0; j < MAX; j++)
-      //for (z = 0; z < MAX; ++z)
-        objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, Color, float>(Vector3D(j * 24 + 50, i * 24, z), Rotation(), Color(j / 5.f, i / 5.f, z / 5.f), 18.f));
-*/
+      for (z = 0; z < MAX; ++z)
+        objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, Color, float>(Vector3D(j * 24 + 50, i * 24, z * -24), Rotation(), Color(j / 5.f, i / 5.f, z / 5.f), 10.f));
+
   m_load = new LoadingMenu(objList.size(), m_win);
 }
 

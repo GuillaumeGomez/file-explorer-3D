@@ -7,260 +7,182 @@
 #include "../HandleError.hpp"
 #include "../Camera.hpp"
 
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 using namespace Object;
 
 Rectangle::Rectangle(Vector3D p, Rotation r, Color c, float sizex, float sizey, float sizez)
-    : myGLWidget(p, r, c), sizeX(sizex), sizeY(sizey), sizeZ(sizez)
+  : myGLWidget(p, r, c), sizeX(sizex), sizeY(sizey), sizeZ(sizez)
 {
-    m_shader = new Shader;
+  m_shader = new Shader;
 }
 
 Rectangle::Rectangle(Vector3D p, Rotation r, std::string tex, float sizex, float sizey, float sizez)
-    : myGLWidget(p, r, tex), sizeX(sizex), sizeY(sizey), sizeZ(sizez)
+  : myGLWidget(p, r, tex), sizeX(sizex), sizeY(sizey), sizeZ(sizez)
 {
-    m_shader = new Shader;
+  m_shader = new Shader;
 }
 
 void Rectangle::initializeGL()
 {
-    loadTexture();
+  loadTexture();
 
-    std::string vert;
-    std::string frag;
+  std::string vert = Shader::getStandardVertexShader(m_hasTexture);
+  std::string frag = Shader::getStandardFragmentShader(m_hasTexture);
 
-    if (m_hasTexture) {
-        vert =
-                "#version 150 core\n"
+  m_shader->setVertexSource(vert);
+  m_shader->setFragmentSource(frag);
+  if (!m_shader->load()){
+      HandleError::showError("Shader didn't load in Rectangle");
+      exit(-1);
+    }
+  m_uniLoc_projection = glGetUniformLocation(m_shader->getProgramID(), "projection");
+  m_uniLoc_modelView = glGetUniformLocation(m_shader->getProgramID(), "modelview");
+  m_uniloc_rot = glGetUniformLocation(m_shader->getProgramID(), "_rot");
+  m_uniloc_pos = glGetUniformLocation(m_shader->getProgramID(), "_pos");
 
-                "in vec3 in_Vertex;\n"
-                "in vec2 in_TexCoord0;\n"
+  sizeX /= 2.f;
+  sizeY /= 2.f;
+  sizeZ /= 2.f;
 
-                "uniform mat4 projection;\n"
-                "uniform mat4 modelview;\n"
+  GLfloat verticesTmp[] = {-sizeX, -sizeY, -sizeZ,
+                           sizeX, -sizeY, -sizeZ,
+                           sizeX, sizeY, -sizeZ,
+                           sizeX, sizeY, -sizeZ,
+                           -sizeX, sizeY, -sizeZ,
+                           -sizeX, -sizeY, -sizeZ,
 
-                "out vec2 coordTexture;\n"
+                           -sizeX, -sizeY, sizeZ,
+                           sizeX, -sizeY, sizeZ,
+                           sizeX, sizeY, sizeZ,
+                           sizeX, sizeY, sizeZ,
+                           -sizeX, sizeY, sizeZ,
+                           -sizeX, -sizeY, sizeZ,
 
-                "void main()\n"
-                "{\n"
-                "gl_Position = projection * modelview * vec4(in_Vertex, 1.0);\n"
-                "coordTexture = in_TexCoord0;\n"
-                "}";
+                           -sizeX, sizeY, sizeZ,
+                           -sizeX, sizeY, -sizeZ,
+                           -sizeX, -sizeY, -sizeZ,
+                           -sizeX, -sizeY, -sizeZ,
+                           -sizeX, -sizeY, sizeZ,
+                           -sizeX, sizeY, sizeZ,
 
-        frag =
-                "#version 150 core\n"
+                           sizeX, sizeY, sizeZ,
+                           sizeX, sizeY, -sizeZ,
+                           sizeX, -sizeY, -sizeZ,
+                           sizeX, -sizeY, -sizeZ,
+                           sizeX, -sizeY, sizeZ,
+                           sizeX, sizeY, sizeZ,
 
-                "in vec2 coordTexture;\n"
+                           -sizeX, -sizeY, -sizeZ,
+                           sizeX, -sizeY, -sizeZ,
+                           sizeX, -sizeY, sizeZ,
+                           sizeX, -sizeY, sizeZ,
+                           -sizeX, -sizeY, sizeZ,
+                           -sizeX, -sizeY, -sizeZ,
 
-                "uniform sampler2D tex;\n"
+                           -sizeX, sizeY, -sizeZ,
+                           sizeX, sizeY, -sizeZ,
+                           sizeX, sizeY, sizeZ,
+                           sizeX, sizeY, sizeZ,
+                           -sizeX, sizeY, sizeZ,
+                           -sizeX, sizeY, -sizeZ
+                          };
 
-                "out vec4 out_Color;\n"
-
-                "void main()\n"
-                "{\n"
-                "out_Color = texture(tex, coordTexture);\n"
-                "}";
-    } else {
-        vert = "#version 150 core\n"
-                "in vec3 in_Vertex;\n"
-                "in vec3 in_Color;\n"
-
-                "uniform mat4 projection;\n"
-                "uniform mat4 modelview;\n"
-
-                "out vec3 color;\n"
-                "void main()\n"
-                "{\n"
-                "gl_Position = projection * modelview * vec4(in_Vertex, 1.0);\n"
-                "color = in_Color;\n"
-                "}";
-        frag =
-                "#version 150 core\n"
-
-                "in vec3 color;\n"
-
-                "out vec4 out_Color;\n"
-                "void main()\n"
-                "{\n"
-                "out_Color = vec4(color, 1.0);\n"
-                "}";
+  for (unsigned int i(0); i < sizeof(verticesTmp) / sizeof(verticesTmp[0]); ++i){
+      m_vertices.push_back(verticesTmp[i]);
     }
 
-    m_shader->setVertexSource(vert);
-    m_shader->setFragmentSource(frag);
-    if (!m_shader->load()){
-        HandleError::showError("Shader didn't load");
-        exit(-1);
-    }
-    m_uniLoc_projection = glGetUniformLocation(m_shader->getProgramID(), "projection");
-    m_uniLoc_modelView = glGetUniformLocation(m_shader->getProgramID(), "modelview");
+  if (!m_hasTexture){
 
-    sizeX /= 2.f;
-    sizeY /= 2.f;
-    sizeZ /= 2.f;
-
-    GLfloat verticesTmp[] = {-sizeX, -sizeY, -sizeZ,
-                             sizeX, -sizeY, -sizeZ,
-                             sizeX, sizeY, -sizeZ,
-                             sizeX, sizeY, -sizeZ,
-                             -sizeX, sizeY, -sizeZ,
-                             -sizeX, -sizeY, -sizeZ,
-
-                             -sizeX, -sizeY, sizeZ,
-                             sizeX, -sizeY, sizeZ,
-                             sizeX, sizeY, sizeZ,
-                             sizeX, sizeY, sizeZ,
-                             -sizeX, sizeY, sizeZ,
-                             -sizeX, -sizeY, sizeZ,
-
-                             -sizeX, sizeY, sizeZ,
-                             -sizeX, sizeY, -sizeZ,
-                             -sizeX, -sizeY, -sizeZ,
-                             -sizeX, -sizeY, -sizeZ,
-                             -sizeX, -sizeY, sizeZ,
-                             -sizeX, sizeY, sizeZ,
-
-                             sizeX, sizeY, sizeZ,
-                             sizeX, sizeY, -sizeZ,
-                             sizeX, -sizeY, -sizeZ,
-                             sizeX, -sizeY, -sizeZ,
-                             sizeX, -sizeY, sizeZ,
-                             sizeX, sizeY, sizeZ,
-
-                             -sizeX, -sizeY, -sizeZ,
-                             sizeX, -sizeY, -sizeZ,
-                             sizeX, -sizeY, sizeZ,
-                             sizeX, -sizeY, sizeZ,
-                             -sizeX, -sizeY, sizeZ,
-                             -sizeX, -sizeY, -sizeZ,
-
-                             -sizeX, sizeY, -sizeZ,
-                             sizeX, sizeY, -sizeZ,
-                             sizeX, sizeY, sizeZ,
-                             sizeX, sizeY, sizeZ,
-                             -sizeX, sizeY, sizeZ,
-                             -sizeX, sizeY, -sizeZ
-                            };
-
-    for (unsigned int i(0); i < sizeof(verticesTmp) / sizeof(verticesTmp[0]); ++i){
-        m_vertices.push_back(verticesTmp[i]);
-    }
-
-    if (!m_hasTexture){
-        /*GLfloat couleursTmp[] = {m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
-                                 m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue()};*/
-
-        unsigned int size = m_vertices.size() / 3;
-        for (unsigned int i(0); i < size; ++i){
-            m_couleurs.push_back(m_color.red());
-            m_couleurs.push_back(m_color.green());
-            m_couleurs.push_back(m_color.blue());
+      unsigned int size = m_vertices.size() / 3;
+      for (unsigned int i(0); i < size; ++i){
+          m_couleurs.push_back(m_color.red());
+          m_couleurs.push_back(m_color.green());
+          m_couleurs.push_back(m_color.blue());
         }
     }
 
-    else{
-        GLfloat coordTextureTmp[] = {0.0f, 0.0f,
-                                     1.0f, 0.0f,
-                                     1.0f, 1.0f,
-                                     1.0f, 1.0f,
-                                     0.0f, 1.0f,
-                                     0.0f, 0.0f,
+  else{
+      GLfloat coordTextureTmp[] = {0.0f, 0.0f,
+                                   1.0f, 0.0f,
+                                   1.0f, 1.0f,
+                                   1.0f, 1.0f,
+                                   0.0f, 1.0f,
+                                   0.0f, 0.0f,
 
-                                     0.0f, 0.0f,
-                                     1.0f, 0.0f,
-                                     1.0f, 1.0f,
-                                     1.0f, 1.0f,
-                                     0.0f, 1.0f,
-                                     0.0f, 0.0f,
+                                   0.0f, 0.0f,
+                                   1.0f, 0.0f,
+                                   1.0f, 1.0f,
+                                   1.0f, 1.0f,
+                                   0.0f, 1.0f,
+                                   0.0f, 0.0f,
 
-                                     0.0f, 1.0f,
-                                     1.0f, 1.0f,
-                                     1.0f, 0.0f,
-                                     1.0f, 0.0f,
-                                     0.0f, 0.0f,
-                                     0.0f, 1.0f,
+                                   0.0f, 1.0f,
+                                   1.0f, 1.0f,
+                                   1.0f, 0.0f,
+                                   1.0f, 0.0f,
+                                   0.0f, 0.0f,
+                                   0.0f, 1.0f,
 
-                                     0.0f, 1.0f,
-                                     1.0f, 1.0f,
-                                     1.0f, 0.0f,
-                                     1.0f, 0.0f,
-                                     0.0f, 0.0f,
-                                     0.0f, 1.0f,
+                                   0.0f, 1.0f,
+                                   1.0f, 1.0f,
+                                   1.0f, 0.0f,
+                                   1.0f, 0.0f,
+                                   0.0f, 0.0f,
+                                   0.0f, 1.0f,
 
-                                     0.0f, 1.0f,
-                                     1.0f, 1.0f,
-                                     1.0f, 0.0f,
-                                     1.0f, 0.0f,
-                                     0.0f, 0.0f,
-                                     0.0f, 1.0f,
+                                   0.0f, 1.0f,
+                                   1.0f, 1.0f,
+                                   1.0f, 0.0f,
+                                   1.0f, 0.0f,
+                                   0.0f, 0.0f,
+                                   0.0f, 1.0f,
 
-                                     0.0f, 1.0f,
-                                     1.0f, 1.0f,
-                                     1.0f, 0.0f,
-                                     1.0f, 0.0f,
-                                     0.0f, 0.0f,
-                                     0.0f, 1.0f
-                                    };
+                                   0.0f, 1.0f,
+                                   1.0f, 1.0f,
+                                   1.0f, 0.0f,
+                                   1.0f, 0.0f,
+                                   0.0f, 0.0f,
+                                   0.0f, 1.0f
+                                  };
 
-        for (unsigned int i(0); i < sizeof(coordTextureTmp) / sizeof(coordTextureTmp[0]); ++i){
-            m_textures.push_back(coordTextureTmp[i]);
+      for (unsigned int i(0); i < sizeof(coordTextureTmp) / sizeof(coordTextureTmp[0]); ++i){
+          m_textures.push_back(coordTextureTmp[i]);
         }
     }
 
-    m_pointsNumber = m_vertices.size() / 3;
+  m_pointsNumber = m_vertices.size() / 3;
 
-    this->initVertexBufferObject();
-    this->initVertexArrayObject();
+  this->initVertexBufferObject();
+  this->initVertexArrayObject();
 }
 
 void  Rectangle::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 {
-    // Activation du shader
-    glUseProgram(m_shader->getProgramID());
+  // Activation du shader
+  glUseProgram(m_shader->getProgramID());
 
-    glBindVertexArray(m_vaoID);
+  glBindVertexArray(m_vaoID);
 
-    // Envoi des matrices
-    glUniformMatrix4fv(m_uniLoc_projection, 1, GL_FALSE, glm::value_ptr(proj_matrix));
+  // Envoi des matrices
+  glUniformMatrix4fv(m_uniLoc_projection, 1, GL_FALSE, glm::value_ptr(proj_matrix));
 
-    glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
+  glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(view_matrix));
+  glUniform3fv(m_uniloc_pos, 1, glm::value_ptr(glm::vec3(m_pos.x(), m_pos.y(), m_pos.z())));
+  glUniform4fv(m_uniloc_rot, 1, glm::value_ptr(glm::vec4(m_rot.x(), m_rot.y(), m_rot.z(), m_rot.rotation())));
 
-    if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
-        tmp = glm::rotate(tmp, m_rot.rotation(), glm::vec3(m_rot.x(), m_rot.y(), m_rot.z()));
-    glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
-
-    // Rendu
-    if (m_hasTexture){
-        m_texture.bind();
-        glDrawArrays(m_drawMode, 0, m_pointsNumber);
-        m_texture.unbind();
+  if (m_hasTexture){
+      m_texture.bind();
+      glDrawArrays(m_drawMode, 0, m_pointsNumber);
+      m_texture.unbind();
     }
-    else{
-        glDrawArrays(m_drawMode, 0, m_pointsNumber);
+  else{
+      glDrawArrays(m_drawMode, 0, m_pointsNumber);
     }
 
-    glBindVertexArray(0);
-    glUseProgram(0);
+  glBindVertexArray(0);
+  glUseProgram(0);
 }
 
 string Rectangle::getClassName() const

@@ -88,6 +88,7 @@ SOURCES += main.cpp \
     objects/Model.cpp \
     objects/Line.cpp \
     HandlePhysics.cpp \
+    VertexBufferObject.cpp
 
 HEADERS += \
     HandleSDL.hpp \
@@ -135,3 +136,4 @@ HEADERS += \
     objects/Model.hpp \
     objects/Line.hpp \
     HandlePhysics.hpp \
+    VertexBufferObject.hpp

@@ -124,8 +124,7 @@ bool Shader::compileShader(GLuint &shader, GLenum type, std::string const &sourc
 {
   shader = glCreateShader(type);
 
-  if (shader == 0)
-    {
+  if (!shader) {
       HandleError::showError("Erreur, le type de shader n'existe pas");
       return false;
     }
@@ -194,34 +193,114 @@ std::string Shader::getStandardVertexShader(bool hasTexture)
 
           "in vec3 in_Vertex;\n"
           "in vec2 in_TexCoord0;\n"
-          "in vec3 in_normal;\n"
 
           "uniform mat4 projection;\n"
           "uniform mat4 modelview;\n"
+          "uniform vec4 _rot;\n"
+          "uniform vec3 _pos;\n"
 
           "out vec2 coordTexture;\n"
-          "out vec3 vNormal;\n"
+
+          "mat4 my_translate(mat4 ori, vec3 t_pos){\n"
+          "mat4 tmp = ori;\n"
+          "tmp[3] = ori[0] * t_pos.x + ori[1] * t_pos.y + ori[2] * t_pos.z + ori[3];\n"
+          "return tmp;\n}\n"
+
+          "mat4 my_rotate(vec4 rot, mat4 ori){\n"
+          "float ra = radians(rot.w);\n"
+          "float si = sin(ra);\n"
+          "float co = cos(ra);\n"
+          "vec3 axis = rot.xyz;\n"
+
+          "axis = normalize(axis);\n"
+          "vec3 temp = (1.0 - co) * axis;\n"
+          "mat4 rota;\n"
+          "rota[0][0] = co + temp[0] * axis[0];\n"
+          "rota[0][1] = temp[0] * axis[1] + si * axis[2];\n"
+          "rota[0][2] = temp[0] * axis[2] - si * axis[1];\n"
+          "rota[1][0] = temp[1] * axis[0] - si * axis[2];\n"
+          "rota[1][1] = co + temp[1] * axis[1];\n"
+          "rota[1][2] = temp[1] * axis[2] + si * axis[0];\n"
+          "rota[2][0] = temp[2] * axis[0] + si * axis[1];\n"
+          "rota[2][1] = temp[2] * axis[1] - si * axis[0];\n"
+          "rota[2][2] = co + temp[2] * axis[2];\n"
+
+          "mat4 Result;\n"
+          "Result[0] = ori[0] * rota[0][0] + ori[1] * rota[0][1] + ori[2] * rota[0][2];\n"
+          "Result[1] = ori[0] * rota[1][0] + ori[1] * rota[1][1] + ori[2] * rota[1][2];\n"
+          "Result[2] = ori[0] * rota[2][0] + ori[1] * rota[2][1] + ori[2] * rota[2][2];\n"
+          "Result[3] = ori[3];\n"
+          "return Result;\n"
+          "}\n"
+
+          "mat4 my_transform(mat4 model, vec3 po, vec4 an){\n"
+          "mat4 tmp = my_translate(model, po);\n"
+          "if (an.w != 0.0 && (an.x != 0.0 || an.y != 0.0 || an.z != 0.0)){\n"
+          "return my_rotate(an, tmp);\n} else {\n"
+          "return tmp;\n}\n"
+          "}\n"
 
           "void main(){\n"
-          "gl_Position = projection * modelview * vec4(in_Vertex, 1.0);\n"
+          "gl_Position = projection * my_transform(modelview, _pos, _rot) * vec4(in_Vertex, 1.0);\n"
           "coordTexture = in_TexCoord0;\n"
-          "vNormal = (mat4(1.0) * vec4(in_normal, 1.0)).xyz;\n"
           "}";
     } else {
-      vert = "#version 330\n"
+      vert =
+          "#version 330\n"
+
           "in vec3 in_Vertex;\n"
           "in vec3 in_Color;\n"
-          "in vec3 in_normal;\n"
+          "in vec3 in_Normal;\n"
 
           "uniform mat4 projection;\n"
           "uniform mat4 modelview;\n"
+          "uniform vec4 _rot;\n"
+          "uniform vec3 _pos;\n"
 
           "out vec3 color;\n"
           "out vec3 vNormal;\n"
 
+          "mat4 my_translate(mat4 ori, vec3 t_pos){\n"
+          "mat4 tmp = ori;\n"
+          "tmp[3] = ori[0] * t_pos.x + ori[1] * t_pos.y + ori[2] * t_pos.z + ori[3];\n"
+          "return tmp;\n}\n"
+
+          "mat4 my_rotate(vec4 rot, mat4 ori){\n"
+          "float ra = radians(rot.w);\n"
+          "float si = sin(ra);\n"
+          "float co = cos(ra);\n"
+          "vec3 axis = rot.xyz;\n"
+
+          "axis = normalize(axis);\n"
+          "vec3 temp = (1.0 - co) * axis;\n"
+          "mat4 rota;\n"
+          "rota[0][0] = co + temp[0] * axis[0];\n"
+          "rota[0][1] = temp[0] * axis[1] + si * axis[2];\n"
+          "rota[0][2] = temp[0] * axis[2] - si * axis[1];\n"
+          "rota[1][0] = temp[1] * axis[0] - si * axis[2];\n"
+          "rota[1][1] = co + temp[1] * axis[1];\n"
+          "rota[1][2] = temp[1] * axis[2] + si * axis[0];\n"
+          "rota[2][0] = temp[2] * axis[0] + si * axis[1];\n"
+          "rota[2][1] = temp[2] * axis[1] - si * axis[0];\n"
+          "rota[2][2] = co + temp[2] * axis[2];\n"
+
+          "mat4 Result;\n"
+          "Result[0] = ori[0] * rota[0][0] + ori[1] * rota[0][1] + ori[2] * rota[0][2];\n"
+          "Result[1] = ori[0] * rota[1][0] + ori[1] * rota[1][1] + ori[2] * rota[1][2];\n"
+          "Result[2] = ori[0] * rota[2][0] + ori[1] * rota[2][1] + ori[2] * rota[2][2];\n"
+          "Result[3] = ori[3];\n"
+          "return Result;\n"
+          "}\n"
+
+          "mat4 my_transform(mat4 model, vec3 po, vec4 an){\n"
+          "mat4 tmp = my_translate(model, po);\n"
+          "if (an.w != 0.0 && (an.x != 0.0 || an.y != 0.0 || an.z != 0.0)){\n"
+          "return my_rotate(an, tmp);\n} else {\n"
+          "return tmp;\n}\n"
+          "}\n"
+
           "void main(){\n"
-          "gl_Position = projection * modelview * vec4(in_Vertex, 1.0);\n"
-          "vNormal = (mat4(1.0) * vec4(in_normal, 1.0)).xyz;\n"
+          "gl_Position = projection * my_transform(modelview, _pos, _rot) * vec4(in_Vertex, 1.0);\n"
           "color = in_Color;\n"
           "}";
     }

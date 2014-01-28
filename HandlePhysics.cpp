@@ -81,13 +81,13 @@ HandlePhysics::HandlePhysics()
 
 HandlePhysics::~HandlePhysics()
 {
-  for (auto it = rigidBodies.begin(); it != rigidBodies.end(); ++it){
+  /*for (auto it = rigidBodies.begin(); it != rigidBodies.end(); ++it){
       dynamicsWorld->removeRigidBody(*it);
       delete (*it)->getMotionState();
       //delete (*it)->getCollisionShape();
       delete (*it);
       rigidBodies.erase(it);
-    }
+    }*/
   delete dynamicsWorld;
   delete solver;
   delete dispatcher;
@@ -169,7 +169,7 @@ void  HandlePhysics::deleteObject(myGLWidget *obj)
 
 myGLWidget  *HandlePhysics::pick(int mouseX, int mouseY, int screenWidth, int screenHeight)
 {
-  dynamicsWorld->debugDrawWorld();
+  //dynamicsWorld->debugDrawWorld();
 
   glm::vec4 lRayStart_NDC(((float)mouseX/(float)screenWidth  - 0.5f) * 2.f, // [0,1024] -> [-1,1]
                           ((float)mouseY/(float)screenHeight - 0.5f) * 2.f, // [0, 768] -> [-1,1]
@@ -216,6 +216,6 @@ myGLWidget  *HandlePhysics::pick(int mouseX, int mouseY, int screenWidth, int sc
 
 void  HandlePhysics::update(const float &t)
 {
-  dynamicsWorld->updateAabbs();
+  //dynamicsWorld->updateAabbs();
   dynamicsWorld->stepSimulation(t / 1000.f);
 }

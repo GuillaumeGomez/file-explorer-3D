@@ -107,9 +107,11 @@ protected:
   bool                    m_render2D;
   Texture                 m_texture;
   GLenum                  m_drawMode;
-  Color                   m_pickingColor;
   GLint                   m_uniLoc_modelView;
   GLint                   m_uniLoc_projection;
+  GLint                   m_uniloc_rot;
+  GLint                   m_uniloc_pos;
+  Color                   m_pickingColor;
   Color                 m_primaryColor;
   Shader                *m_primaryShader;
   GLint                 m_primaryLoc_modelView;
