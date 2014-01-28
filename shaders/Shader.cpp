@@ -183,6 +183,16 @@ void  Shader::setFragmentSource(std::string s)
   m_fragmentSource = s;
 }
 
+std::string const &Shader::getFragmentSource() const
+{
+  return m_fragmentSource;
+}
+
+std::string const &Shader::getVertexSource() const
+{
+  return m_vertexSource;
+}
+
 std::string Shader::getStandardVertexShader(bool hasTexture)
 {
   std::string vert;

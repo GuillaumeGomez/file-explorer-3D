@@ -3,21 +3,20 @@
 #include "../Camera.hpp"
 #include <cmath>
 #include <iostream>
+#include "../shaders/ShaderHandler.hpp"
 
 using namespace Object;
 
-Plane::Plane(Vector3D p, Rotation r, Color c, float width, float height)
+Plane::Plane(Vector3D p, Rotation r, Color c, float width, float height, bool repeat)
   : myGLWidget(Vector3D(p.x(), p.y(), p.z()), r, c), width(width), height(height)
 {
-  m_shader = new Shader;
-  m_texture.setRepeat(true);
+  m_texture.setRepeat(repeat);
 }
 
-Plane::Plane(Vector3D p, Rotation r, std::string tex, float width, float height)
+Plane::Plane(Vector3D p, Rotation r, std::string tex, float width, float height, bool repeat)
   : myGLWidget(Vector3D(p.x(), p.y(), p.z()), r, tex), width(width), height(height)
 {
-  m_shader = new Shader;
-  m_texture.setRepeat(true);
+  m_texture.setRepeat(repeat);
 }
 
 void Plane::initializeGL()
@@ -93,8 +92,6 @@ void Plane::initializeGL()
               "in vec2 in_TexCoord0;\n"
               "out vec2 coordTexture;\n"
 
-              "uniform mat4 projection;\n"
-
               "void main(){\n"
               "gl_Position.xy = in_Vertex;\n"
               "coordTexture = in_TexCoord0;\n"
@@ -133,9 +130,8 @@ void Plane::initializeGL()
               "}\n";
         }
     }
-  m_shader->setVertexSource(vert);
-  m_shader->setFragmentSource(frag);
-  if (!m_shader->load()){
+  m_shader = ShaderHandler::getInstance()->createShader(vert, frag);
+  if (!m_shader){
       HandleError::showError("Shader didn't load in Plane");
       exit(-1);
     }

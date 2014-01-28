@@ -78,7 +78,6 @@ SOURCES       = glew.c \
 		objects\GraphicFile.cpp \
 		objects\VertexBuffer.cpp \
 		shaders\Shader.cpp \
-		objects\Box.cpp \
 		VertexContainer.cpp \
 		Texture.cpp \
 		FrameBuffer.cpp \
@@ -88,7 +87,8 @@ SOURCES       = glew.c \
 		objects\Model.cpp \
 		objects\Line.cpp \
 		HandlePhysics.cpp \
-		VertexBufferObject.cpp 
+		VertexBufferObject.cpp \
+		shaders\ShaderHandler.cpp 
 OBJECTS       = debug/glew.o \
 		debug/main.o \
 		debug/HandleSDL.o \
@@ -124,7 +124,6 @@ OBJECTS       = debug/glew.o \
 		debug/GraphicFile.o \
 		debug/VertexBuffer.o \
 		debug/Shader.o \
-		debug/Box.o \
 		debug/VertexContainer.o \
 		debug/Texture.o \
 		debug/FrameBuffer.o \
@@ -134,7 +133,8 @@ OBJECTS       = debug/glew.o \
 		debug/Model.o \
 		debug/Line.o \
 		debug/HandlePhysics.o \
-		debug/VertexBufferObject.o
+		debug/VertexBufferObject.o \
+		debug/ShaderHandler.o
 
 DIST          = 
 QMAKE_TARGET  = My_World_SDL
@@ -175,7 +175,7 @@ dist:
 	$(ZIP) My_World_SDL.zip $(SOURCES) $(DIST) My_World_SDL.pro ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\spec_pre.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\qdevice.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\device_config.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\common\shell-win32.conf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\qconfig.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axbase.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axbase_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axcontainer.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axcontainer_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axserver.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_axserver_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_bluetooth.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_bluetooth_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_bootstrap_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_clucene_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_concurrent.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_concurrent_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_core.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_core_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_declarative.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_declarative_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_designer.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_designer_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_designercomponents_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_gui.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_gui_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_help.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_help_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimedia.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimedia_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimediawidgets.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_multimediawidgets_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_network.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_network_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_nfc.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_nfc_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_opengl.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_opengl_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_openglextensions.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_openglextensions_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_platformsupport_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_positioning.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_positioning_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_printsupport.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_printsupport_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qml.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qml_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qmldevtools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qmltest.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qmltest_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_quick.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_quick_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_quickparticles_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_script.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_script_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_scripttools.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_scripttools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sensors.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sensors_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_serialport.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_serialport_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sql.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_sql_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_svg.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_svg_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_testlib.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_testlib_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_uitools.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_uitools_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkit.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkit_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkitwidgets.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_webkitwidgets_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_widgets.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_widgets_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_winextras.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_winextras_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xml.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xml_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xmlpatterns.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\modules\qt_lib_xmlpatterns_private.pri ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\qt_functions.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\qt_config.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\win32-g++\qmake.conf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\spec_post.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\exclusive_builds.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\default_pre.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\win32\default_pre.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\resolve_config.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\exclusive_builds_post.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\default_post.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\build_pass.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\c++11.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\qml_debug.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\declarative_debug.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\win32\rtti.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\warn_on.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\win32\windows.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\testcase_targets.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\exceptions.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\yacc.prf ..\..\..\..\..\Qt\Qt5.2.0\5.2.0\mingw48_32\mkspecs\features\lex.prf My_World_SDL.pro  YACCSOURCES YACCSOURCES LEXSOURCES 
 
 clean: compiler_clean 
-	-$(DEL_FILE) debug\glew.o debug\main.o debug\HandleSDL.o debug\MyWindow.o debug\Camera.o debug\myGLWidget.o debug\Vector3D.o debug\Color.o debug\Cube.o debug\Cylinder.o debug\KeyHandler.o debug\Loader.o debug\Plane.o debug\Rectangle.o debug\Rotation.o debug\SkyBox.o debug\Sphere.o debug\HandleThread.o debug\HandleMutex.o debug\MyMutexLocker.o debug\MyException.o debug\LoadingMenu.o debug\HandleError.o debug\Room.o debug\Utils.o debug\Directory.o debug\Door.o debug\Text.o debug\HandleFile.o debug\HandleFpsCount.o debug\TextureHandler.o debug\Wall.o debug\GraphicFile.o debug\VertexBuffer.o debug\Shader.o debug\Box.o debug\VertexContainer.o debug\Texture.o debug\FrameBuffer.o debug\Button.o debug\DataHandler.o debug\Tetris.o debug\Model.o debug\Line.o debug\HandlePhysics.o debug\VertexBufferObject.o
+	-$(DEL_FILE) debug\glew.o debug\main.o debug\HandleSDL.o debug\MyWindow.o debug\Camera.o debug\myGLWidget.o debug\Vector3D.o debug\Color.o debug\Cube.o debug\Cylinder.o debug\KeyHandler.o debug\Loader.o debug\Plane.o debug\Rectangle.o debug\Rotation.o debug\SkyBox.o debug\Sphere.o debug\HandleThread.o debug\HandleMutex.o debug\MyMutexLocker.o debug\MyException.o debug\LoadingMenu.o debug\HandleError.o debug\Room.o debug\Utils.o debug\Directory.o debug\Door.o debug\Text.o debug\HandleFile.o debug\HandleFpsCount.o debug\TextureHandler.o debug\Wall.o debug\GraphicFile.o debug\VertexBuffer.o debug\Shader.o debug\VertexContainer.o debug\Texture.o debug\FrameBuffer.o debug\Button.o debug\DataHandler.o debug\Tetris.o debug\Model.o debug\Line.o debug\HandlePhysics.o debug\VertexBufferObject.o debug\ShaderHandler.o
 
 distclean: clean
 	-$(DEL_FILE) $(DESTDIR_TARGET)
@@ -943,7 +943,8 @@ debug/myGLWidget.o: myGLWidget.cpp myGLWidget.hpp \
 		glm/gtc/quaternion.inl \
 		glm/gtc/type_ptr.inl \
 		String_utils.hpp \
-		HandleError.hpp
+		HandleError.hpp \
+		shaders/ShaderHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\myGLWidget.o myGLWidget.cpp
 
 debug/Vector3D.o: objects/Vector3D.cpp objects/Vector3D.hpp \
@@ -1212,7 +1213,8 @@ debug/Cylinder.o: objects/Cylinder.cpp objects/Cylinder.hpp \
 		glm/gtc/type_ptr.inl \
 		HandleError.hpp \
 		Camera.hpp \
-		String_utils.hpp
+		String_utils.hpp \
+		shaders/ShaderHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Cylinder.o objects\Cylinder.cpp
 
 debug/KeyHandler.o: KeyHandler.cpp KeyHandler.hpp \
@@ -1488,7 +1490,8 @@ debug/Plane.o: objects/Plane.cpp objects/Plane.hpp \
 		glm/gtc/quaternion.inl \
 		glm/gtc/type_ptr.inl \
 		HandleError.hpp \
-		Camera.hpp
+		Camera.hpp \
+		shaders/ShaderHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Plane.o objects\Plane.cpp
 
 debug/Rectangle.o: objects/Rectangle.cpp objects/Rectangle.hpp \
@@ -1620,7 +1623,9 @@ debug/Rectangle.o: objects/Rectangle.cpp objects/Rectangle.hpp \
 		glm/gtc/type_ptr.inl \
 		String_utils.hpp \
 		HandleError.hpp \
-		Camera.hpp
+		Camera.hpp \
+		shaders/ShaderHandler.hpp \
+		glm/gtx/quaternion.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Rectangle.o objects\Rectangle.cpp
 
 debug/Rotation.o: objects/Rotation.cpp objects/Rotation.hpp \
@@ -1889,7 +1894,8 @@ debug/Sphere.o: objects/Sphere.cpp objects/Sphere.hpp \
 		glm/gtc/quaternion.inl \
 		glm/gtc/type_ptr.inl \
 		HandleError.hpp \
-		Camera.hpp
+		Camera.hpp \
+		shaders/ShaderHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Sphere.o objects\Sphere.cpp
 
 debug/HandleThread.o: Utils/HandleThread.cpp Utils/HandleThread.hpp \
@@ -2561,7 +2567,8 @@ debug/Text.o: objects/Text.cpp objects/Text.hpp \
 		glm/gtc/quaternion.inl \
 		glm/gtc/type_ptr.inl \
 		String_utils.hpp \
-		HandleError.hpp
+		HandleError.hpp \
+		shaders/ShaderHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Text.o objects\Text.cpp
 
 debug/HandleFile.o: Utils/HandleFile.cpp Utils/HandleFile.hpp \
@@ -2836,7 +2843,8 @@ debug/GraphicFile.o: objects/GraphicFile.cpp objects/GraphicFile.hpp \
 		Utils/MyException.hpp \
 		Utils/Utils.hpp \
 		objects/Text.hpp \
-		HandleError.hpp
+		HandleError.hpp \
+		shaders/ShaderHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\GraphicFile.o objects\GraphicFile.cpp
 
 debug/VertexBuffer.o: objects/VertexBuffer.cpp objects/VertexBuffer.hpp \
@@ -2973,137 +2981,6 @@ debug/Shader.o: shaders/Shader.cpp shaders/Shader.hpp \
 		include/GL/glew.h \
 		HandleError.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Shader.o shaders\Shader.cpp
-
-debug/Box.o: objects/Box.cpp objects/Box.hpp \
-		myGLWidget.hpp \
-		include/GL/glew.h \
-		objects/Rotation.hpp \
-		objects/Vector3D.hpp \
-		objects/Color.hpp \
-		Texture.hpp \
-		MyWindow.hpp \
-		glm/glm.hpp \
-		glm/core/_fixes.hpp \
-		glm/core/setup.hpp \
-		glm/core/_detail.hpp \
-		glm/core/_vectorize.hpp \
-		glm/core/type.hpp \
-		glm/core/type_half.hpp \
-		glm/core/type_half.inl \
-		glm/core/type_float.hpp \
-		glm/core/type_int.hpp \
-		glm/core/type_gentype.hpp \
-		glm/core/type_size.hpp \
-		glm/core/type_vec1.hpp \
-		glm/core/type_vec.hpp \
-		glm/core/_swizzle.hpp \
-		glm/core/_swizzle_func.hpp \
-		glm/core/type_vec1.inl \
-		glm/core/type_vec2.hpp \
-		glm/core/type_vec2.inl \
-		glm/core/type_vec3.hpp \
-		glm/core/type_vec3.inl \
-		glm/core/type_vec4.hpp \
-		glm/core/type_vec4.inl \
-		glm/core/type_mat2x2.hpp \
-		glm/core/type_mat.hpp \
-		glm/core/type_mat2x2.inl \
-		glm/core/type_mat2x3.hpp \
-		glm/core/type_mat2x3.inl \
-		glm/core/type_mat2x4.hpp \
-		glm/core/type_mat2x4.inl \
-		glm/core/type_mat3x2.hpp \
-		glm/core/type_mat3x2.inl \
-		glm/core/type_mat3x3.hpp \
-		glm/core/type_mat3x3.inl \
-		glm/core/type_mat3x4.hpp \
-		glm/core/type_mat3x4.inl \
-		glm/core/type_mat4x2.hpp \
-		glm/core/type_mat4x2.inl \
-		glm/core/type_mat4x3.hpp \
-		glm/core/type_mat4x3.inl \
-		glm/core/type_mat4x4.hpp \
-		glm/core/type_mat4x4.inl \
-		glm/core/func_trigonometric.hpp \
-		glm/core/func_trigonometric.inl \
-		glm/core/func_exponential.hpp \
-		glm/core/func_exponential.inl \
-		glm/core/func_common.hpp \
-		glm/core/func_common.inl \
-		glm/core/func_packing.hpp \
-		glm/core/func_packing.inl \
-		glm/core/func_geometric.hpp \
-		glm/core/func_geometric.inl \
-		glm/core/func_matrix.hpp \
-		glm/core/func_matrix.inl \
-		glm/core/func_vector_relational.hpp \
-		glm/core/func_vector_relational.inl \
-		glm/core/func_integer.hpp \
-		glm/core/func_integer.inl \
-		glm/core/func_noise.hpp \
-		glm/core/func_noise.inl \
-		objects/VertexBuffer.hpp \
-		Utils/HandleFile.hpp \
-		HandleSDL.hpp \
-		SDL2/SDL/SDL.h \
-		SDL2/SDL/SDL_main.h \
-		SDL2/SDL/SDL_stdinc.h \
-		SDL2/SDL/SDL_config.h \
-		SDL2/SDL/SDL_platform.h \
-		SDL2/SDL/begin_code.h \
-		SDL2/SDL/close_code.h \
-		SDL2/SDL/SDL_assert.h \
-		SDL2/SDL/SDL_atomic.h \
-		SDL2/SDL/SDL_audio.h \
-		SDL2/SDL/SDL_error.h \
-		SDL2/SDL/SDL_endian.h \
-		SDL2/SDL/SDL_mutex.h \
-		SDL2/SDL/SDL_thread.h \
-		SDL2/SDL/SDL_rwops.h \
-		SDL2/SDL/SDL_clipboard.h \
-		SDL2/SDL/SDL_cpuinfo.h \
-		SDL2/SDL/SDL_events.h \
-		SDL2/SDL/SDL_video.h \
-		SDL2/SDL/SDL_pixels.h \
-		SDL2/SDL/SDL_rect.h \
-		SDL2/SDL/SDL_surface.h \
-		SDL2/SDL/SDL_blendmode.h \
-		SDL2/SDL/SDL_keyboard.h \
-		SDL2/SDL/SDL_keycode.h \
-		SDL2/SDL/SDL_scancode.h \
-		SDL2/SDL/SDL_mouse.h \
-		SDL2/SDL/SDL_joystick.h \
-		SDL2/SDL/SDL_gamecontroller.h \
-		SDL2/SDL/SDL_quit.h \
-		SDL2/SDL/SDL_gesture.h \
-		SDL2/SDL/SDL_touch.h \
-		SDL2/SDL/SDL_haptic.h \
-		SDL2/SDL/SDL_hints.h \
-		SDL2/SDL/SDL_loadso.h \
-		SDL2/SDL/SDL_log.h \
-		SDL2/SDL/SDL_messagebox.h \
-		SDL2/SDL/SDL_power.h \
-		SDL2/SDL/SDL_render.h \
-		SDL2/SDL/SDL_system.h \
-		SDL2/SDL/SDL_timer.h \
-		SDL2/SDL/SDL_version.h \
-		SDL2/SDL/SDL_framerate.h \
-		SDL2/SDL/SDL_ttf.h \
-		objects/TextureHandler.hpp \
-		shaders/Shader.hpp \
-		glm/gtc/matrix_transform.hpp \
-		glm/gtc/matrix_transform.inl \
-		glm/gtc/type_ptr.hpp \
-		glm/gtc/half_float.hpp \
-		glm/gtc/half_float.inl \
-		glm/gtc/quaternion.hpp \
-		glm/gtc/constants.hpp \
-		glm/gtc/constants.inl \
-		glm/gtc/quaternion.inl \
-		glm/gtc/type_ptr.inl \
-		Camera.hpp \
-		HandleError.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Box.o objects\Box.cpp
 
 debug/VertexContainer.o: VertexContainer.cpp VertexContainer.hpp \
 		include/GL/glew.h
@@ -3472,7 +3349,8 @@ debug/Button.o: objects/Button.cpp objects/Plane.hpp \
 		objects/Button.hpp \
 		String_utils.hpp \
 		HandleError.hpp \
-		Utils/MyException.hpp
+		Utils/MyException.hpp \
+		shaders/ShaderHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Button.o objects\Button.cpp
 
 debug/DataHandler.o: DataHandler.cpp DataHandler.hpp \
@@ -3866,6 +3744,7 @@ debug/Model.o: objects/Model.cpp objects/Model.hpp \
 		Utils/MyException.hpp \
 		String_utils.hpp \
 		HandleError.hpp \
+		shaders/ShaderHandler.hpp \
 		assimp/include/assimp/Importer.hpp \
 		assimp/include/assimp/types.h \
 		assimp/include/assimp/defs.h \
@@ -4021,7 +3900,8 @@ debug/Line.o: objects/Line.cpp objects/Line.hpp \
 		glm/gtc/constants.inl \
 		glm/gtc/quaternion.inl \
 		glm/gtc/type_ptr.inl \
-		HandleError.hpp
+		HandleError.hpp \
+		shaders/ShaderHandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Line.o objects\Line.cpp
 
 debug/HandlePhysics.o: HandlePhysics.cpp HandlePhysics.hpp \
@@ -4380,6 +4260,11 @@ debug/VertexBufferObject.o: VertexBufferObject.cpp VertexBufferObject.hpp \
 		glm/gtc/quaternion.inl \
 		glm/gtc/type_ptr.inl
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\VertexBufferObject.o VertexBufferObject.cpp
+
+debug/ShaderHandler.o: shaders/ShaderHandler.cpp shaders/ShaderHandler.hpp \
+		shaders/Shader.hpp \
+		include/GL/glew.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\ShaderHandler.o shaders\ShaderHandler.cpp
 
 ####### Install
 

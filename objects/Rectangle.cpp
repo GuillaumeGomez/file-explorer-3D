@@ -6,6 +6,7 @@
 #include "../HandleSDL.hpp"
 #include "../HandleError.hpp"
 #include "../Camera.hpp"
+#include "../shaders/ShaderHandler.hpp"
 
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -15,13 +16,11 @@ using namespace Object;
 Rectangle::Rectangle(Vector3D p, Rotation r, Color c, float sizex, float sizey, float sizez)
   : myGLWidget(p, r, c), sizeX(sizex), sizeY(sizey), sizeZ(sizez)
 {
-  m_shader = new Shader;
 }
 
 Rectangle::Rectangle(Vector3D p, Rotation r, std::string tex, float sizex, float sizey, float sizez)
   : myGLWidget(p, r, tex), sizeX(sizex), sizeY(sizey), sizeZ(sizez)
 {
-  m_shader = new Shader;
 }
 
 void Rectangle::initializeGL()
@@ -31,9 +30,8 @@ void Rectangle::initializeGL()
   std::string vert = Shader::getStandardVertexShader(m_hasTexture);
   std::string frag = Shader::getStandardFragmentShader(m_hasTexture);
 
-  m_shader->setVertexSource(vert);
-  m_shader->setFragmentSource(frag);
-  if (!m_shader->load()){
+  m_shader = ShaderHandler::getInstance()->createShader(vert, frag);
+  if (!m_shader){
       HandleError::showError("Shader didn't load in Rectangle");
       exit(-1);
     }
@@ -170,7 +168,8 @@ void  Rectangle::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_mat
 
   glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(view_matrix));
   glUniform3fv(m_uniloc_pos, 1, glm::value_ptr(glm::vec3(m_pos.x(), m_pos.y(), m_pos.z())));
-  glUniform4fv(m_uniloc_rot, 1, glm::value_ptr(glm::vec4(m_rot.x(), m_rot.y(), m_rot.z(), m_rot.rotation())));
+  //if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
+    glUniform4fv(m_uniloc_rot, 1, glm::value_ptr(glm::vec4(m_rot.x(), m_rot.y(), m_rot.z(), m_rot.rotation())));
 
   if (m_hasTexture){
       m_texture.bind();

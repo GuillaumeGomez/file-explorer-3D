@@ -3,6 +3,7 @@
 #include "../Utils/Utils.hpp"
 #include "Text.hpp"
 #include "../HandleError.hpp"
+#include "../shaders/ShaderHandler.hpp"
 
 #include "../glm/gtc/matrix_transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
@@ -84,9 +85,8 @@ void  GraphicFile::initializeGL()
       "{\n"
       "out_Color = texture(tex, coordTexture);\n"
       "}";
-  m_shader->setVertexSource(vert);
-  m_shader->setFragmentSource(frag);
-  if (!m_shader->load()){
+  m_shader = ShaderHandler::getInstance()->createShader(vert, frag);
+  if (!m_shader){
       HandleError::showError("Shader didn't load in GraphicFile");
       exit(-1);
     }

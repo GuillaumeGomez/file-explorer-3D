@@ -2,8 +2,8 @@
 #define OBJECTFACTORY_HPP
 
 #include <tuple>
+#include "myGLWidget.hpp"
 
-class myGLWidget;
 template<typename T, class... Args>
 class SubObjectFactory;
 
@@ -44,15 +44,40 @@ public:
   template<typename T, class... Args>
   static ObjectFactory  *createNewObject(Args... a)
   {
-    return new SubObjectFactory<T, Args...>(a...);
+    ObjectFactory *tmp = new SubObjectFactory<T, Args...>(a...);
+
+    tmp->m_is2D = false;
+    tmp->m_isPauseObject = false;
+    return tmp;
   }
+  template<typename T, class... Args>
+  static ObjectFactory  *createNew2DObject(Args... a)
+  {
+    ObjectFactory *tmp = new SubObjectFactory<T, Args...>(a...);
+
+    tmp->m_is2D = true;
+    tmp->m_isPauseObject = false;
+    return tmp;
+  }
+  template<typename T, class... Args>
+  static ObjectFactory  *createNewPauseObject(Args... a)
+  {
+    ObjectFactory *tmp = new SubObjectFactory<T, Args...>(a...);
+
+    tmp->m_is2D = true;
+    tmp->m_isPauseObject = true;
+    return tmp;
+  }
+
+  bool  m_isPauseObject;
+  bool  m_is2D;
 };
 
 template<typename T, class... Args>
 class SubObjectFactory : public ObjectFactory
 {
 public:
-  SubObjectFactory(Args... a) : ObjectFactory(),
+  SubObjectFactory(Args... a) :
     args(a...)
   {
   }
@@ -68,7 +93,11 @@ private:
   template <std::size_t... Indices>
   myGLWidget *creation(index_tuple<Indices...>, std::tuple<Args...>&ar)
   {
-    return creator<T>(std::forward<Args>(std::get<Indices>(ar))...);
+    myGLWidget *tmp = creator<T>(std::forward<Args>(std::get<Indices>(ar))...);
+
+    if (tmp)
+      tmp->setRender2D(m_is2D);
+    return tmp;
   }
   std::tuple<Args...>  args;
 };

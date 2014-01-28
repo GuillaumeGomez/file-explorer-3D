@@ -6,6 +6,7 @@
 #include "../HandleError.hpp"
 #include "../Utils/MyException.hpp"
 #include <cmath>
+#include "../shaders/ShaderHandler.hpp"
 
 #include "../glm/gtc/matrix_transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
@@ -50,7 +51,7 @@ Button::~Button()
 void    Button::initializeGL()
 {
     m_buttonText->initializeGL();
-    m_shader = new Shader;
+
     std::string vert, frag;
 
     if (m_hasTexture) {
@@ -100,9 +101,8 @@ void    Button::initializeGL()
                 "out_Color = vec4(color, 1.0);"
                 "}\n";
     }
-    m_shader->setVertexSource(vert);
-    m_shader->setFragmentSource(frag);
-    if (!m_shader->load()){
+    m_shader = ShaderHandler::getInstance()->createShader(vert, frag);
+    if (!m_shader){
         HandleError::showError("Shader didn't load in Button");
         exit(-1);
     }

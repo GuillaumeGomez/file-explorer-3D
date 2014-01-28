@@ -54,7 +54,7 @@ public:
   void        mouseReleaseEvent(int, int posx, int posy);
   void        repeatKey();
   void        update();
-  void        addObject(myGLWidget*, bool is2D = false);
+  void        addObject(myGLWidget*, bool isPauseObject = false);
   void        picking();
   void        setDisplaySentence(std::string);
   void        setDisplaySentence(const char*);
@@ -74,6 +74,7 @@ private:
   WinList             objectList;
   WinList             _2D_objectList;
   WinList             m_pickObjects;
+  WinList             m_pauseObjectList;
   Camera              *m_camera;
   KeyHandler          *m_key;
   clock_t             actual;

@@ -29,6 +29,8 @@ public:
     std::string getError(GLuint);
     void        setVertexSource(std::string);
     void        setFragmentSource(std::string);
+    std::string const &getVertexSource() const;
+    std::string const &getFragmentSource() const;
 
     static std::string getStandardVertexShader(bool hasTexture);
     static std::string getStandardFragmentShader(bool hasTexture);

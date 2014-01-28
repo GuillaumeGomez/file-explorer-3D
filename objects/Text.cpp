@@ -3,6 +3,7 @@
 #include "../String_utils.hpp"
 #include "../HandleError.hpp"
 #include <cmath>
+#include "../shaders/ShaderHandler.hpp"
 
 #include "../glm/gtc/matrix_transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
@@ -19,7 +20,6 @@ Text::Text(string text, Color c, float x, float y, float font_size)
     }
   m_size = 0.017f * m_text.length();
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
-  m_shader = new Shader;
   m_render2D = true;
 }
 
@@ -33,7 +33,6 @@ Text::Text(const char *text, Color c, float x, float y, float font_size)
     }
   m_size = 0.017f * m_text.length();
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
-  m_shader = new Shader;
   m_render2D = true;
 }
 
@@ -47,7 +46,6 @@ Text::Text(string text, Color c, Vector3D v, Rotation r, float font_size)
     }
   m_size = 5 * m_text.length();
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
-  m_shader = new Shader;
 }
 
 Text::Text(const char *text, Color c, Vector3D v, Rotation r, float font_size)
@@ -60,7 +58,6 @@ Text::Text(const char *text, Color c, Vector3D v, Rotation r, float font_size)
     }
   m_size = 5 * m_text.length();
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
-  m_shader = new Shader;
 }
 
 Text::Text(Texture const &s, std::string text, Vector3D v, Rotation r, float font_size)
@@ -68,7 +65,6 @@ Text::Text(Texture const &s, std::string text, Vector3D v, Rotation r, float fon
 {
   m_size = m_text.length() * 5;
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
-  m_shader = new Shader;
 }
 
 Text::Text(Texture const &s, float length, int lines, Vector3D v, Rotation r, float font_size)
@@ -76,7 +72,6 @@ Text::Text(Texture const &s, float length, int lines, Vector3D v, Rotation r, fl
 {
   m_size = length;
   m_lines = (lines <= 0 ? 1 : lines);
-  m_shader = new Shader;
 }
 
 Text::Text(Texture const &s, std::string text, float x, float y, float font_size)
@@ -84,7 +79,6 @@ Text::Text(Texture const &s, std::string text, float x, float y, float font_size
 {
   m_size = m_text.length() * 5;
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
-  m_shader = new Shader;
 }
 
 Text::Text(Texture const &s, float length, int lines, float x, float y, float font_size)
@@ -92,7 +86,6 @@ Text::Text(Texture const &s, float length, int lines, float x, float y, float fo
 {
   m_size = length;
   m_lines = (lines <= 0 ? 1 : lines);
-  m_shader = new Shader;
 }
 
 Text::~Text()
@@ -166,9 +159,8 @@ void    Text::initializeGL()
           "}";
     }
 
-  m_shader->setVertexSource(vert);
-  m_shader->setFragmentSource(frag);
-  if (!m_shader->load()){
+  m_shader = ShaderHandler::getInstance()->createShader(vert, frag);
+  if (!m_shader){
       HandleError::showError("Shader didn't load in Text");
       exit(-1);
     }

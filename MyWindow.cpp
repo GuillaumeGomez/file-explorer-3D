@@ -110,6 +110,10 @@ MyWindow::~MyWindow()
       delete (*_2D_objectList.begin());
       _2D_objectList.erase(_2D_objectList.begin());
     }
+  while (m_pauseObjectList.size() > 0){
+      delete (*m_pauseObjectList.begin());
+      m_pauseObjectList.erase(m_pauseObjectList.begin());
+    }
   if (this->m_disp)
     delete m_disp;
   if (this->m_key)
@@ -236,7 +240,6 @@ void MyWindow::keyPressEvent(int key)
           break;
         case SDLK_RETURN:
           this->m_printInfo = !this->m_printInfo;
-          //this->setDisplaySentence("test les d'jeuns\net voila la phase 2 hahahahaha\na\nb\nc\nd");
           break;
         case SDLK_TAB:
           this->m_tetrisMode = !this->m_tetrisMode;
@@ -250,6 +253,7 @@ void MyWindow::keyPressEvent(int key)
           break;
         case SDLK_ESCAPE:
           pause = !pause;
+          sdl->displayCursor(pause);
           break;
         default:
           m_key->lock();
@@ -295,15 +299,16 @@ void MyWindow::initializeGL()
   glEnable(GL_DEPTH_TEST);
   m_loader.loadDatas();
 
-  myGLWidget *tmp = new Object::Button("Test", RED, BLUE, Vector3D(-0.25f, -0.1f), 0.5f, 0.2f);
+  /*myGLWidget *tmp = new Object::Button("Test", RED, BLUE, Vector3D(-0.25f, -0.1f), 0.5f, 0.2f);
 
   tmp->initializeGL();
-  this->addObject(tmp, true);
+  this->addObject(tmp, true);*/
   //tmp = new Object::GraphicFile(Vector3D(0.f, 2.f, -6.f), Rotation(), GREEN, "./GraphicHandler.cpp");
   //tmp->setPickingAllowed(true);
   //tmp->initializeGL();
   //this->addObject(tmp);
 
+  sdl->displayCursor(false);
   m_disp = new Object::Cube(Vector3D(-3.f, 2.f, -6.f), Rotation(), "", 2.f);
   m_disp->setTexture(1);
   m_disp->initializeGL();
@@ -350,10 +355,13 @@ void MyWindow::paintGL()
       m_displayList[4]->paintGL(view_mat, proj2d_mat);
     }
 
+  for (WinList::iterator it = _2D_objectList.begin(); it != _2D_objectList.end(); ++it){
+      (*it)->paintGL(view_mat, proj2d_mat);
+    }
+
   if (pause)
-    for (WinList::iterator it = _2D_objectList.begin(); it != _2D_objectList.end(); ++it){
-        (*it)->paintGL(view_mat, proj2d_mat);
-      }
+    for (auto it = m_pauseObjectList.begin(); it != m_pauseObjectList.end(); ++it)
+      (*it)->paintGL(view_mat, proj2d_mat);
 
   //display_sentence = "";
 
@@ -370,15 +378,19 @@ void  MyWindow::paintGL2(const glm::mat4 &view, const glm::mat4 &pers)
     }
 }
 
-void  MyWindow::addObject(myGLWidget *s, bool is2D)
+void  MyWindow::addObject(myGLWidget *s, bool isPauseObject)
 {
   if (!s)
     return;
   s->setMainWindow(this);
-  if (!is2D) {
+  if (isPauseObject) {
+      m_pauseObjectList.push_back(s);
+    }
+  else if (!s->is2D()) {
       objectList.push_back(s);
       m_physics->addObject(s);
-    } else {
+    }
+  else {
       _2D_objectList.push_back(s);
     }
   if (s->isPickingAllowed())
@@ -453,7 +465,7 @@ void  MyWindow::picking()
 
   if (w)
     w->setSelected(false);
-  w = m_physics->pick(mouseX, mouseY, sdl->width(), sdl->height());
+  w = m_physics->pick(sdl->width() / 2, sdl->height() / 2, sdl->width(), sdl->height());
   if (!w) {
       return;
     }

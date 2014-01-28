@@ -483,6 +483,15 @@ bool  HandleSDL::displayInformationMessage(const char *title, const char *msg)
   return !SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title, msg, NULL);
 }
 
+void  HandleSDL::displayCursor(bool display)
+{
+#ifdef WIN32
+  SDL_ShowCursor(display ? SDL_ENABLE : SDL_DISABLE);
+#else
+  SDL_SetRelativeMouseMode(display);
+#endif
+}
+
 #ifdef WIN32
 
 /*Image* Icon2Image(HICON hIcon)

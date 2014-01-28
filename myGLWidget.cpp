@@ -1,6 +1,7 @@
 #include "myGLWidget.hpp"
 #include "../String_utils.hpp"
 #include "../HandleError.hpp"
+#include "shaders/ShaderHandler.hpp"
 #include <cmath>
 #include <cstring>
 
@@ -84,7 +85,7 @@ myGLWidget::~myGLWidget()
   if (m_primaryShader)
     delete m_primaryShader;
   if (m_shader)
-    delete m_shader;
+    ShaderHandler::getInstance()->destroyShader(m_shader);
 }
 
 void myGLWidget::setTexture(const string s)
@@ -274,7 +275,7 @@ void  myGLWidget::initVertexBufferObject(GLenum option)
   // Deverrouillage de l'objet
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  std::string vert = "#version 150 core\n"
+  /*std::string vert = "#version 150 core\n"
       "in vec3 in_Vertex;\n"
 
       "uniform mat4 projection;\n"
@@ -315,7 +316,7 @@ void  myGLWidget::initVertexBufferObject(GLenum option)
   glBindBuffer(GL_ARRAY_BUFFER, m_primary_vboID);
   glBufferData(GL_ARRAY_BUFFER, m_verticesSize, 0, GL_STATIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, m_verticesSize, &m_vertices[0]);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);*/
 }
 
 void  myGLWidget::bindVertexBufferObject()

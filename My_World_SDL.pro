@@ -78,7 +78,6 @@ SOURCES += main.cpp \
     objects/GraphicFile.cpp \
     objects/VertexBuffer.cpp \
     shaders/Shader.cpp \
-    objects/Box.cpp \
     VertexContainer.cpp \
     Texture.cpp \
     FrameBuffer.cpp \
@@ -88,7 +87,8 @@ SOURCES += main.cpp \
     objects/Model.cpp \
     objects/Line.cpp \
     HandlePhysics.cpp \
-    VertexBufferObject.cpp
+    VertexBufferObject.cpp \
+    shaders/ShaderHandler.cpp
 
 HEADERS += \
     HandleSDL.hpp \
@@ -126,7 +126,6 @@ HEADERS += \
     objects/GraphicFile.hpp \
     objects/VertexBuffer.hpp \
     shaders/Shader.hpp \
-    objects/Box.hpp \
     VertexContainer.hpp \
     Texture.hpp \
     FrameBuffer.hpp \
@@ -136,4 +135,5 @@ HEADERS += \
     objects/Model.hpp \
     objects/Line.hpp \
     HandlePhysics.hpp \
-    VertexBufferObject.hpp
+    VertexBufferObject.hpp \
+    shaders/ShaderHandler.hpp

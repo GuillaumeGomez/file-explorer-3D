@@ -38,6 +38,7 @@ public:
   GLuint          loadIconFile(const char *s);
   bool            destroyTexture(GLuint id);
   int             getEvent(SDL_Event*);
+  void            displayCursor(bool display);
 
 private:
   GLuint  internTextureLoad(SDL_Surface *picture_surface, const char *name, bool useMipMap, GLuint *width, GLuint *height);

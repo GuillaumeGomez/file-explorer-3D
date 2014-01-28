@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include "../shaders/ShaderHandler.hpp"
 
 using namespace Object;
 
@@ -13,14 +14,12 @@ using namespace Object;
 Cylinder::Cylinder(Vector3D p, Rotation r, Color c, float rayon, float height)
   : myGLWidget(p, r, c), m_rayon(rayon), m_height(height), m_uSlices(32)
 {
-  m_shader = new Shader;
   m_pointsNumber = 0;
 }
 
 Cylinder::Cylinder(Vector3D p, Rotation r, std::string tex, float rayon, float height)
   : myGLWidget(p, r, tex), m_rayon(rayon), m_height(height), m_uSlices(32)
 {
-  m_shader = new Shader;
   m_pointsNumber = 0;
 }
 
@@ -28,9 +27,9 @@ void Cylinder::initializeGL()
 {
   loadTexture();
 
-  m_shader->setVertexSource(Shader::getStandardVertexShader(m_hasTexture));
-  m_shader->setFragmentSource(Shader::getStandardFragmentShader(m_hasTexture));
-  if (!m_shader->load()){
+  m_shader = ShaderHandler::getInstance()->createShader(Shader::getStandardVertexShader(m_hasTexture),
+                                                        Shader::getStandardFragmentShader(m_hasTexture));
+  if (!m_shader){
       HandleError::showError("Shader didn't load in Cylinder");
       exit(-1);
     }
