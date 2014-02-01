@@ -110,3 +110,9 @@ void                HandleFile::close()
         return;
     m_stream.close();
 }
+
+void  HandleFile::flush()
+{
+  if (this->isOpen())
+    m_stream.flush();
+}

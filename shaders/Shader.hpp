@@ -11,6 +11,10 @@
 #include <GL/glew.h>
 #endif
 
+#include "../glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #include <string>
 
 class Shader
@@ -31,6 +35,21 @@ public:
     void        setFragmentSource(std::string);
     std::string const &getVertexSource() const;
     std::string const &getFragmentSource() const;
+    GLint       getUniform(std::string const&);
+    void        setUniform(std::string const &s, glm::vec2 const &v);
+    void        setUniform(GLint loc, glm::vec2 const &v);
+    void        setUniform(std::string const &s, glm::vec3 const &v);
+    void        setUniform(GLint loc, glm::vec3 const &v);
+    void        setUniform(std::string const &s, glm::vec4 const &v);
+    void        setUniform(GLint loc, glm::vec4 const &v);
+    void        setUniform(std::string const &s, glm::mat3 const &m);
+    void        setUniform(GLint loc, glm::mat3 const &m);
+    void        setUniform(std::string const &s, glm::mat4 const &m);
+    void        setUniform(GLint loc, glm::mat4 const &m);
+    void        setUniform(std::string const &s, int i);
+    void        setUniform(GLint loc, int i);
+    void        setUniform(std::string const &s, float const &f);
+    void        setUniform(GLint loc, float const &f);
 
     static std::string getStandardVertexShader(bool hasTexture);
     static std::string getStandardFragmentShader(bool hasTexture);

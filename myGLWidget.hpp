@@ -27,7 +27,8 @@ using namespace std;
 enum {
   VERTEX_COORD,
   COLOR_COORD,
-  TEXTURE_COORD
+  TEXTURE_COORD,
+  NORMAL_COORD
 };
 
 class myGLWidget
@@ -100,6 +101,7 @@ protected:
   Shader                  *m_shader;
   GLuint                  m_vboID;
   GLuint                  m_vaoID;
+  GLuint                  m_normalsSize;
   GLuint                  m_verticesSize;
   GLuint                  m_colorsSize;
   GLuint                  m_texturesSize;

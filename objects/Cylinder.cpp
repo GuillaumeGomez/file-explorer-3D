@@ -145,8 +145,6 @@ void Cylinder::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matri
     }
 
   glBindVertexArray(0);
-
-  // Desactivation du shader
   glUseProgram(0);
 }
 

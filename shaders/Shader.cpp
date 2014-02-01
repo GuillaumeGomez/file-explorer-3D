@@ -76,7 +76,7 @@ bool  Shader::load()
   glBindAttribLocation(m_programID, 0, "in_Vertex");
   glBindAttribLocation(m_programID, 1, "in_Color");
   glBindAttribLocation(m_programID, 2, "in_TexCoord0");
-  glBindAttribLocation(m_programID, 3, "in_normal");
+  glBindAttribLocation(m_programID, 3, "in_Normal");
 
   // Linkage du programme
   glLinkProgram(m_programID);
@@ -203,6 +203,7 @@ std::string Shader::getStandardVertexShader(bool hasTexture)
 
           "in vec3 in_Vertex;\n"
           "in vec2 in_TexCoord0;\n"
+          "in vec3 in_Normal;\n"
 
           "uniform mat4 projection;\n"
           "uniform mat4 modelview;\n"
@@ -210,6 +211,7 @@ std::string Shader::getStandardVertexShader(bool hasTexture)
           "uniform vec3 _pos;\n"
 
           "out vec2 coordTexture;\n"
+          "out vec3 vNormal;\n"
 
           "mat4 my_translate(mat4 ori, vec3 t_pos){\n"
           "mat4 tmp = ori;\n"
@@ -253,6 +255,7 @@ std::string Shader::getStandardVertexShader(bool hasTexture)
           "void main(){\n"
           "gl_Position = projection * my_transform(modelview, _pos, _rot) * vec4(in_Vertex, 1.0);\n"
           "coordTexture = in_TexCoord0;\n"
+          "vNormal = in_Normal;\n"
           "}";
     } else {
       vert =
@@ -312,6 +315,7 @@ std::string Shader::getStandardVertexShader(bool hasTexture)
           "void main(){\n"
           "gl_Position = projection * my_transform(modelview, _pos, _rot) * vec4(in_Vertex, 1.0);\n"
           "color = in_Color;\n"
+          "vNormal = in_Normal;\n"
           "}";
     }
   return vert;
@@ -351,4 +355,86 @@ std::string Shader::getStandardFragmentShader(bool hasTexture)
           "}";
     }
   return frag;
+}
+
+GLint Shader::getUniform(const std::string &s)
+{
+  return glGetUniformLocation(this->m_programID, s.c_str());
+}
+
+void        Shader::setUniform(std::string const &s, glm::vec2 const &v)
+{
+  int iLoc = glGetUniformLocation(m_programID, s.c_str());
+  glUniform2fv(iLoc, 1, glm::value_ptr(v));
+}
+
+void        Shader::setUniform(GLint loc, glm::vec2 const &v)
+{
+  glUniform2fv(loc, 1, glm::value_ptr(v));
+}
+
+void        Shader::setUniform(std::string const &s, glm::vec3 const &v)
+{
+  int iLoc = glGetUniformLocation(m_programID, s.c_str());
+  glUniform3fv(iLoc, 1, glm::value_ptr(v));
+}
+
+void        Shader::setUniform(GLint loc, glm::vec3 const &v)
+{
+  glUniform3fv(loc, 1, glm::value_ptr(v));
+}
+
+void        Shader::setUniform(std::string const &s, glm::vec4 const &v)
+{
+  int iLoc = glGetUniformLocation(m_programID, s.c_str());
+  glUniform4fv(iLoc, 1, glm::value_ptr(v));
+}
+
+void        Shader::setUniform(GLint loc, glm::vec4 const &v)
+{
+  glUniform4fv(loc, 1, glm::value_ptr(v));
+}
+
+void        Shader::setUniform(std::string const &s, glm::mat3 const &m)
+{
+  int iLoc = glGetUniformLocation(m_programID, s.c_str());
+  glUniformMatrix3fv(iLoc, 1, GL_FALSE, glm::value_ptr(m));
+}
+
+void        Shader::setUniform(GLint loc, glm::mat3 const &m)
+{
+  glUniformMatrix3fv(loc, 1, GL_FALSE, glm::value_ptr(m));
+}
+
+void        Shader::setUniform(std::string const &s, glm::mat4 const &m)
+{
+  int iLoc = glGetUniformLocation(m_programID, s.c_str());
+  glUniformMatrix4fv(iLoc, 1, GL_FALSE, glm::value_ptr(m));
+}
+
+void        Shader::setUniform(GLint loc, glm::mat4 const &m)
+{
+  glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(m));
+}
+
+void        Shader::setUniform(std::string const &s, int i)
+{
+  int iLoc = glGetUniformLocation(m_programID, s.c_str());
+  glUniform1i(iLoc, i);
+}
+
+void        Shader::setUniform(GLint loc, int i)
+{
+  glUniform1i(loc, i);
+}
+
+void        Shader::setUniform(std::string const &s, float const &f)
+{
+  int iLoc = glGetUniformLocation(m_programID, s.c_str());
+  glUniform1fv(iLoc, 1, &f);
+}
+
+void        Shader::setUniform(GLint loc, float const &f)
+{
+  glUniform1fv(loc, 1, &f);
 }

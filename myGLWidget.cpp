@@ -38,7 +38,7 @@ Color &myGLWidget::getStaticPickColor()
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
-    m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
+    m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0), m_normalsSize(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
     m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
@@ -48,7 +48,7 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot)
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, Color co)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(co), m_selected(false),
-    m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
+    m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0), m_normalsSize(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
     m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
@@ -58,7 +58,7 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, Color co)
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
-    m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
+    m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0), m_normalsSize(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false), m_texture(tex),
     m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
@@ -68,7 +68,7 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, Texture const &tex)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
-    m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0),
+    m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0), m_normalsSize(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
     m_texture(tex), m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
@@ -257,13 +257,14 @@ void  myGLWidget::initVertexBufferObject(GLenum option)
   m_verticesSize = m_vertices.size() * sizeof(GLfloat);
   m_colorsSize = m_couleurs.size() * sizeof(GLfloat);
   m_texturesSize = m_textures.size() * sizeof(GLfloat);
+  m_normalsSize = m_normals.size() * sizeof(GLfloat);
 
   glGenBuffers(1, &m_vboID);
   //verrouillage de l'objet
   glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
 
   // Allocation de la memoire video
-  glBufferData(GL_ARRAY_BUFFER, m_verticesSize + m_texturesSize + m_colorsSize, 0, option);
+  glBufferData(GL_ARRAY_BUFFER, m_verticesSize + m_texturesSize + m_colorsSize + m_normalsSize, 0, option);
 
   // Transfert des donnees
   glBufferSubData(GL_ARRAY_BUFFER, 0, m_verticesSize, &m_vertices[0]);
@@ -271,6 +272,8 @@ void  myGLWidget::initVertexBufferObject(GLenum option)
     glBufferSubData(GL_ARRAY_BUFFER, m_verticesSize, m_texturesSize, &m_textures[0]);
   if (m_colorsSize > 0)
     glBufferSubData(GL_ARRAY_BUFFER, m_verticesSize + m_texturesSize, m_colorsSize, &m_couleurs[0]);
+  if (m_normalsSize > 0)
+    glBufferSubData(GL_ARRAY_BUFFER, m_verticesSize + m_texturesSize + m_colorsSize, m_normalsSize, &m_normals[0]);
 
   // Deverrouillage de l'objet
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -332,15 +335,17 @@ void  myGLWidget::bindVertexBufferObject()
   glEnableVertexAttribArray(VERTEX_COORD);
 
 
-  if (m_textures.size() > 0){
-      //envoi des coordonnees des textures
+  if (m_texturesSize > 0){
       glVertexAttribPointer(TEXTURE_COORD, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(m_verticesSize));
       glEnableVertexAttribArray(TEXTURE_COORD);
     }
-  if (m_couleurs.size() > 0){
-      // Envoi de la couleur
+  if (m_colorsSize > 0){
       glVertexAttribPointer(COLOR_COORD, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(m_verticesSize + m_texturesSize));
       glEnableVertexAttribArray(COLOR_COORD);
+    }
+  if (m_normalsSize > 0){
+      glVertexAttribPointer(NORMAL_COORD, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(m_verticesSize + m_texturesSize + m_colorsSize));
+      glEnableVertexAttribArray(NORMAL_COORD);
     }
 
   // Deverrouillage du VBO

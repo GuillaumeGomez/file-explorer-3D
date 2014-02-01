@@ -88,7 +88,8 @@ SOURCES += main.cpp \
     objects/Line.cpp \
     HandlePhysics.cpp \
     VertexBufferObject.cpp \
-    shaders/ShaderHandler.cpp
+    shaders/ShaderHandler.cpp \
+    objects/HeightMap.cpp
 
 HEADERS += \
     HandleSDL.hpp \
@@ -136,4 +137,5 @@ HEADERS += \
     objects/Line.hpp \
     HandlePhysics.hpp \
     VertexBufferObject.hpp \
-    shaders/ShaderHandler.hpp
+    shaders/ShaderHandler.hpp \
+    objects/HeightMap.hpp

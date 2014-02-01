@@ -39,6 +39,10 @@ public:
   bool            destroyTexture(GLuint id);
   int             getEvent(SDL_Event*);
   void            displayCursor(bool display);
+  static SDL_Surface      *loadImage(std::string img);
+  static SDL_Surface      *loadImage(const char*);
+  static void             freeImage(SDL_Surface*);
+  static Color            getPixelColor(SDL_Surface*, unsigned int x, unsigned int y);
 
 private:
   GLuint  internTextureLoad(SDL_Surface *picture_surface, const char *name, bool useMipMap, GLuint *width, GLuint *height);

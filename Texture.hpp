@@ -22,6 +22,7 @@ public:
   GLuint            height() const;
   GLuint            width() const;
   void              bind();
+  void              bindTexture(int);
   void              unbind();
   void              destroy();
   void              setRepeat(bool);

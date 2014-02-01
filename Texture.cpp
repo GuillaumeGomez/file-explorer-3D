@@ -166,3 +166,10 @@ void  Texture::operator=(Texture const &t)
   m_emptyTexture = t.m_emptyTexture;
   m_repeat = t.m_repeat;
 }
+
+void  Texture::bindTexture(int i)
+{
+  glActiveTexture(GL_TEXTURE0 + i);
+  glBindTexture(GL_TEXTURE_2D, m_id);
+  //glBindSampler(i, uiSampler);
+}

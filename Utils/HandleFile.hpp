@@ -19,6 +19,7 @@ public:
     bool                isOpen();
     bool                open();
     void                close();
+    void                flush();
     std::string const   &getLastError() const;
 
 protected:

@@ -14,8 +14,10 @@
 #include "../objects/Line.hpp"
 #include "../objects/Button.hpp"
 #include "../Utils/Directory.hpp"
+#include "../objects/HeightMap.hpp"
 
 #include <iostream>
+#include <string>
 
 using namespace std;
 using namespace Object;
@@ -36,6 +38,7 @@ Loader::Loader(MyWindow *w) : m_win(w)
   objList.push_back(ObjectFactory::createNewObject<Line, Vector3D, Vector3D, Color>(Vector3D(2.f, 2.f, 9.f), Vector3D(0.f, -70.f, 100.f), WHITE));
   objList.push_back(ObjectFactory::createNew2DObject<Object::Plane, Vector3D, Rotation, const char*, float, float, bool>(Vector3D(-0.05f, -0.05f), Rotation(), "textures/cross.png", 0.1f, 0.1f, false));
   objList.push_back(ObjectFactory::createNewPauseObject<Button, const char*, Color, Color, Vector3D>("Test", RED, BLUE, Vector3D(-0.25f, -0.1f), 0.5f, 0.2f));
+  objList.push_back(ObjectFactory::createNewObject<HeightMap, Vector3D, std::string>(Vector3D(50.f, -10.f, 5.f), "textures/heightmap/description.bmp"));
 
   const int MAX(15);
   int z = 0;

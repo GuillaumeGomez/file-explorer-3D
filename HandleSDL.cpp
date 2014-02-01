@@ -231,6 +231,24 @@ Texture  *HandleSDL::createTextTexture(const char* text, Texture *texture, Color
   return texture;
 }
 
+SDL_Surface *HandleSDL::loadImage(std::string img)
+{
+  return IMG_Load(img.c_str());
+}
+
+SDL_Surface *HandleSDL::loadImage(const char *s)
+{
+  if (s)
+    return IMG_Load(s);
+  return 0;
+}
+
+void  HandleSDL::freeImage(SDL_Surface *s)
+{
+  if (s)
+    SDL_FreeSurface(s);
+}
+
 GLuint   HandleSDL::loadTexture(std::string const &s, bool useMipMap, GLuint *width, GLuint *height)
 {
   return HandleSDL::loadTexture(s.c_str(), useMipMap, width, height);
@@ -424,10 +442,10 @@ bool  HandleSDL::handleEvents()
           break;
         case SDL_MOUSEMOTION:
           if (!m_win->isPaused() && !m_win->isPlayingTetris()) {
+              m_win->mouseMoveEvent(event.motion.x, event.motion.y);
               if (event.motion.x >= screenWidth - MOUSE_MARGIN || event.motion.x <= MOUSE_MARGIN ||
                   event.motion.y >= screenHeight - MOUSE_MARGIN || event.motion.y <= MOUSE_MARGIN)
                 SDL_WarpMouseInWindow(screen, screenWidth / 2, screenHeight / 2);
-              m_win->mouseMoveEvent(event.motion.x, event.motion.y);
             }
           break;
         case SDL_MOUSEBUTTONUP:
@@ -570,6 +588,43 @@ int HandleSDL::height()
 int HandleSDL::width()
 {
   return screenWidth;
+}
+
+Color HandleSDL::getPixelColor(SDL_Surface *s, unsigned int x, unsigned int y)
+{
+  if (!s || int(x) >= s->w || int(y) >= s->h)
+    return Color();
+  SDL_LockSurface(s);
+
+  int bpp = s->format->BytesPerPixel;
+  /* Here p is the address to the pixel we want to retrieve */
+  Uint8 *p = (Uint8 *)s->pixels + y * s->pitch + x * bpp;
+  Uint8 r = 0, g = 0, b = 0;
+
+  switch(bpp) {
+    case 1:
+      SDL_GetRGB(*p, s->format, &r, &g, &b);
+      break;
+    case 2:
+      SDL_GetRGB(*(Uint16 *)p, s->format, &r, &g, &b);
+      break;
+    case 3:
+      if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+        SDL_GetRGB(p[0] << 16 | p[1] << 8 | p[2], s->format, &r, &g, &b);
+      else
+        SDL_GetRGB(p[0] | p[1] << 8 | p[2] << 16, s->format, &r, &g, &b);
+      break;
+    case 4:
+      SDL_GetRGB(*(Uint32 *)p, s->format, &r, &g, &b);
+    }
+
+  SDL_UnlockSurface(s);
+  Color tmp;
+
+  tmp.setRed(r);
+  tmp.setGreen(g);
+  tmp.setBlue(b);
+  return tmp;
 }
 
 GLuint HandleSDL::loadIconFile(std::string s)
