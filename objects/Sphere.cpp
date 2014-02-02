@@ -129,6 +129,7 @@ void  Sphere::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
 
   if (m_hasTexture)
     m_texture.bind();
+  glDrawArrays(m_drawMode, 0, m_pointsNumber);
 
   glBindVertexArray(0);
   glUseProgram(0);

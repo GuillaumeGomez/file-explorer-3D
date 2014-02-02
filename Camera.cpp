@@ -23,11 +23,11 @@ glm::mat4 Camera::m_view;
 glm::mat4 Camera::m_proj;
 glm::mat4 Camera::m_2Dproj;
 glm::vec3 Camera::m_vecPos;
-float     Camera::distanceView = 1000.f;
+float     Camera::distanceView = 10000.f;
 float     Camera::m_ratio = 1.f;
 
 Camera::Camera()
-  : m_speed(0.1f), m_sensivity(0.2f), m_phi(-24.f), m_theta(-120.f), m_position(0.f, 1.f, 0.f),
+  : m_speed(1.f), m_sensivity(0.2f), m_phi(-24.f), m_theta(-120.f), m_position(0.f, 1.f, 0.f),
     m_up(0.f, 1.f, 0.f), m_target(-1.f, -1.f, -1.f), m_win(0), m_oldX(0), m_oldY(0),
     m_y(m_position.y()), tmpSpeed(1.f)
 {

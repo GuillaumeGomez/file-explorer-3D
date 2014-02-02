@@ -38,14 +38,14 @@ Loader::Loader(MyWindow *w) : m_win(w)
   objList.push_back(ObjectFactory::createNewObject<Line, Vector3D, Vector3D, Color>(Vector3D(2.f, 2.f, 9.f), Vector3D(0.f, -70.f, 100.f), WHITE));
   objList.push_back(ObjectFactory::createNew2DObject<Object::Plane, Vector3D, Rotation, const char*, float, float, bool>(Vector3D(-0.05f, -0.05f), Rotation(), "textures/cross.png", 0.1f, 0.1f, false));
   objList.push_back(ObjectFactory::createNewPauseObject<Button, const char*, Color, Color, Vector3D>("Test", RED, BLUE, Vector3D(-0.25f, -0.1f), 0.5f, 0.2f));
-  objList.push_back(ObjectFactory::createNewObject<HeightMap, Vector3D, std::string>(Vector3D(50.f, -10.f, 5.f), "textures/heightmap/description.bmp"));
+  objList.push_back(ObjectFactory::createNewObject<HeightMap, Vector3D, std::string, float>(Vector3D(50.f, -10.f, 5.f), "textures/heightmap/description.bmp", 10.f));
 
-  const int MAX(15);
+  const int MAX(17);
   int z = 0;
   for (int i = 0; i < MAX; ++i)
     for (int j = 0; j < MAX; j++)
       for (z = 0; z < MAX; ++z)
-        objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, Color, float>(Vector3D(j * 24 + 50, i * 24, z * -24), Rotation(), Color(j / 5.f, i / 5.f, z / 5.f), 10.f));
+        objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, Color, float>(Vector3D(j * 24 + 50, i * 24, z * -24), Rotation(), Color(j / float(MAX), i / float(MAX), z / float(MAX)), 10.f));
 
   m_load = new LoadingMenu(objList.size(), m_win);
 }

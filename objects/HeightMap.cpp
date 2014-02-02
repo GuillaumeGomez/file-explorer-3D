@@ -4,24 +4,26 @@
 #include "../shaders/ShaderHandler.hpp"
 #include "../String_utils.hpp"
 
-#define _PAD  4.f
-
 using namespace Object;
 
-HeightMap::HeightMap(Vector3D v, unsigned int size) : myGLWidget(v, Rotation()), m_width(size), m_height(size)
+HeightMap::HeightMap(Vector3D v, unsigned int width, unsigned int height, float case_size)
+  : myGLWidget(v, Rotation()), m_width(width), m_height(height), m_case_size(case_size), m_tex_repeat(m_case_size * 5.f / 4.f)
 {
   for (int i = 0; i < 5; ++i)
     m_tex[i] = 0;
 }
 
-HeightMap::HeightMap(Vector3D v, string img) : myGLWidget(v, Rotation()), m_width(0), m_height(0), m_img(img)
+HeightMap::HeightMap(Vector3D v, string img, float case_size)
+  : myGLWidget(v, Rotation()), m_width(0), m_height(0), m_case_size(case_size), m_tex_repeat(m_case_size * 5.f / 4.f), m_img(img)
 {
-  for (int i = 0; i < 5; ++i)
+  for (int i = 0; i < 4; ++i)
     m_tex[i] = 0;
 }
 
 HeightMap::~HeightMap()
 {
+  for (int i = 0; i < 4; ++i)
+    delete m_tex[i];
 }
 
 void createTriangle(std::vector<GLfloat> &m_vertices, glm::vec3 s1, glm::vec3 s2, glm::vec3 s3)
@@ -86,17 +88,32 @@ void  HeightMap::initializeGL()
       "const float fRange3 = 0.65f;\n"
       "const float fRange4 = 0.85f;\n"
 
+      "outputColor = vec4(0.0);\n"
+
       "if(fScale <= fRange1)\n"
       "outputColor = texture(gSampler[0], coordTexture);\n"
       //"vTexColor = texture2D(gSampler[0], coordTexture);\n"
-      "else if(fScale <= fRange2){\n"
-      "outputColor = mix(texture(gSampler[0], coordTexture), texture(gSampler[1], coordTexture), (fScale - fRange1) / (fRange2 - fRange1));}\n"
-      "else if(fScale <= fRange3){\n"
-      "outputColor = mix(texture(gSampler[1], coordTexture), texture(gSampler[2], coordTexture), (fScale - fRange2) / (fRange3 - fRange2));}\n"
-      "else if(fScale <= fRange4){\n"
-      "outputColor = mix(texture(gSampler[2], coordTexture), texture(gSampler[3], coordTexture), (fScale - fRange3) / (fRange4 - fRange3));}\n"
+      "else if(fScale <= fRange2 - 0.01){\n"
+      "float f1 = (fScale - fRange1) / (fRange2 - fRange1);\n"
+      "float f2 = 1 - f1;\n"
+      "outputColor += texture(gSampler[0], coordTexture) * f2;\n"
+      "outputColor += texture(gSampler[1], coordTexture) * f1;}\n"
+      //"outputColor = mix(texture(gSampler[0], coordTexture), texture(gSampler[1], coordTexture), (fScale - fRange1) / (fRange2 - fRange1));}\n"
+      "else if(fScale <= fRange3 - 0.01){\n"
+      "float f1 = (fScale - fRange2) / (fRange3 - fRange2);\n"
+      "float f2 = 1 - f1;\n"
+      "outputColor += texture(gSampler[1], coordTexture) * f2;\n"
+      "outputColor += texture(gSampler[2], coordTexture) * f1;}\n"
+      //"outputColor = mix(texture(gSampler[1], coordTexture), texture(gSampler[2], coordTexture), (fScale - fRange2) / (fRange3 - fRange2));}\n"
+      "else if(fScale <= fRange4 - 0.01){\n"
+      "float f1 = (fScale - fRange3) / (fRange4 - fRange3);\n"
+      "float f2 = 1 - f1;\n"
+      "outputColor += texture(gSampler[2], coordTexture) * f2;\n"
+      "outputColor += texture(gSampler[3], coordTexture) * f1;}\n"
+      //"outputColor = mix(texture(gSampler[2], coordTexture), texture(gSampler[3], coordTexture), (fScale - fRange3) / (fRange4 - fRange3));}\n"
       "else\n"
-      "outputColor = texture(gSampler[3], coordTexture);\n}\n";
+      "outputColor = texture(gSampler[3], coordTexture);\n"
+      "}\n";
 
 
   /*vert = Shader::getStandardVertexShader(true);
@@ -112,7 +129,7 @@ void  HeightMap::initializeGL()
   m_uniloc_height = glGetUniformLocation(m_shader->getProgramID(), "fRenderHeight");
 
 
-  std::string tex_name[] = {"sand_grass_02.jpg", "sand.jpg", "fungus.jpg", "rock_2_4w.jpg"};
+  std::string tex_name[] = {"sand.jpg", "sand_grass_02.jpg", "fungus.jpg", "rock_2_4w.jpg"};
 
   for (auto &tmp : tex_name)
     tmp = "textures/heightmap/" + tmp;
@@ -137,13 +154,14 @@ void  HeightMap::initializeGL()
 
   std::vector<std::vector<glm::vec3> >  tmp_v(m_height, std::vector<glm::vec3>(m_width));
   float min(0.f), max(0.f);
+  const float fscaleX = m_tex_repeat / m_width, fscaleY = m_tex_repeat / m_height;
 
   for (unsigned int i = 0; i < m_width; ++i)
     for (unsigned int j = 0; j < m_height; ++j) {
         Color tmp = HandleSDL::getPixelColor(img, i, j);
 
-        float tmp_h = (tmp.blue() + tmp.green() + tmp.red()) * 10.f * _PAD;
-        tmp_v[j][i] = glm::vec3(i * _PAD, tmp_h, j * _PAD);
+        float tmp_h = (tmp.blue() + tmp.green() + tmp.red()) * 10.f * m_case_size;
+        tmp_v[j][i] = glm::vec3(i * m_case_size, tmp_h, j * m_case_size);
         if (tmp_h < min)
           min = tmp_h;
         else if (tmp_h > max)
@@ -152,40 +170,28 @@ void  HeightMap::initializeGL()
   HandleSDL::freeImage(img);
 
   height = max - min;
-  for (unsigned int y = 0; y < m_height - 1; ++y)
-    for (unsigned int x = 0; x < m_width - 1; ++x) {
-        createTriangle(m_vertices, tmp_v[y][x], tmp_v[y][x + 1], tmp_v[y + 1][x]);
-        m_textures.push_back(0.f); m_textures.push_back(0.f);
-        m_textures.push_back(1.f); m_textures.push_back(0.f);
-        m_textures.push_back(0.f); m_textures.push_back(1.f);
-        createTriangle(m_vertices, tmp_v[y + 1][x], tmp_v[y + 1][x + 1], tmp_v[y][x + 1]);
-        m_textures.push_back(0.f); m_textures.push_back(1.f);
-        m_textures.push_back(1.f); m_textures.push_back(1.f);
-        m_textures.push_back(1.f); m_textures.push_back(0.f);
-      }
+  float tmp_x(0.f), tmp_y(0.f);
+  for (unsigned int y = 0; y < m_height - 1; ++y) {
+      for (unsigned int x = 0; x < m_width - 1; ++x) {
+          createTriangle(m_vertices, tmp_v[y][x], tmp_v[y][x + 1], tmp_v[y + 1][x]);
+          m_textures.push_back(tmp_x); m_textures.push_back(tmp_y);
+          m_textures.push_back(tmp_x + fscaleX); m_textures.push_back(tmp_y);
+          m_textures.push_back(tmp_x); m_textures.push_back(tmp_y + fscaleY);
+          createTriangle(m_vertices, tmp_v[y + 1][x], tmp_v[y + 1][x + 1], tmp_v[y][x + 1]);
+          m_textures.push_back(tmp_x); m_textures.push_back(tmp_y + fscaleY);
+          m_textures.push_back(tmp_x + fscaleX); m_textures.push_back(tmp_y + fscaleY);
+          m_textures.push_back(tmp_x + fscaleX); m_textures.push_back(tmp_y);
+
+          tmp_x += fscaleX;
+        }
+      tmp_x = 0.f;
+      tmp_y += fscaleY;
+    }
 
   /*HandleFile f("res.txt", std::ios_base::trunc | std::ios_base::out);
   f.open();
-  for (int t = 1; t < m_vertices.size(); t += 3) {
-      float fScale = m_vertices[t] / height;
-
-      const float fRange1 = 0.15f;
-      const float fRange2 = 0.3f;
-      const float fRange3 = 0.65f;
-      const float fRange4 = 0.85f;
-      f.write(Utility::toString<float>(m_vertices[t]) + " / " + Utility::toString<float>(height) + " = " +
-              Utility::toString<float>(fScale) + " => ");
-
-      if(fScale <= fRange1)
-        f.write(" < " + Utility::toString<float>(fRange1) + " -> 1\n");
-      else if(fScale <= fRange2)
-        f.write(" < " + Utility::toString<float>(fRange2) + " -> " + Utility::toString<float>((fScale - fRange1) / (fRange2 - fRange1)) + "\n");
-      else if(fScale <= fRange3)
-        f.write(" < " + Utility::toString<float>(fRange3) + " -> " + Utility::toString<float>((fScale - fRange2) / (fRange3 - fRange2)) + "\n");
-      else if(fScale <= fRange4)
-        f.write(" < " + Utility::toString<float>(fRange4) + " -> " + Utility::toString<float>((fScale - fRange3) / (fRange4 - fRange3)) + "\n");
-      else
-        f.write(" > " + Utility::toString<float>(fRange4) + " -> 1\n");
+  for (int t = 0; t < m_textures.size(); t += 2) {
+      f.write(Utility::toString<float>(m_textures[t]) + " - " + Utility::toString<float>(m_textures[t + 1]) + "\n");
     }*/
 
   m_pointsNumber = m_vertices.size() / 3;
