@@ -170,7 +170,7 @@ void  Texture::operator=(Texture const &t)
 void  Texture::bindTexture(int i)
 {
   glActiveTexture(GL_TEXTURE0 + i);
-  glBindTexture(GL_TEXTURE_2D, i);
+  glBindTexture(GL_TEXTURE_2D, m_id);
 }
 
 void  Texture::unbindTexture(int i)

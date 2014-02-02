@@ -169,16 +169,11 @@ void  Rectangle::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_mat
   glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(view_matrix));
   glUniform3fv(m_uniloc_pos, 1, glm::value_ptr(glm::vec3(m_pos.x(), m_pos.y(), m_pos.z())));
   //if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
-    glUniform4fv(m_uniloc_rot, 1, glm::value_ptr(glm::vec4(m_rot.x(), m_rot.y(), m_rot.z(), m_rot.rotation())));
+  glUniform4fv(m_uniloc_rot, 1, glm::value_ptr(glm::vec4(m_rot.x(), m_rot.y(), m_rot.z(), m_rot.rotation())));
 
-  if (m_hasTexture){
-      m_texture.bind();
-      glDrawArrays(m_drawMode, 0, m_pointsNumber);
-      m_texture.unbind();
-    }
-  else{
-      glDrawArrays(m_drawMode, 0, m_pointsNumber);
-    }
+  if (m_hasTexture)
+    m_texture.bind();
+  glDrawArrays(m_drawMode, 0, m_pointsNumber);
 
   glBindVertexArray(0);
   glUseProgram(0);

@@ -101,7 +101,7 @@ void Sphere::initializeGL()
           tmp_v.push_back(Vector3D(sinftemp2 * sinCache1a[i], sinftemp2 * cosCache1a[i], zHigh));
 
           if (m_hasTexture)
-              tmp_t.push_back(Vector3D(1 - (float) i / slices, 1 - (float) j / stacks));
+            tmp_t.push_back(Vector3D(1 - (float) i / slices, 1 - (float) j / stacks));
           tmp_v.push_back(Vector3D(sinftemp1 * sinCache1a[i], sinftemp1 * cosCache1a[i], zLow));
         }
     }
@@ -127,14 +127,8 @@ void  Sphere::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
   glUniform3fv(m_uniloc_pos, 1, glm::value_ptr(glm::vec3(m_pos.x(), m_pos.y(), m_pos.z())));
   glUniform4fv(m_uniloc_rot, 1, glm::value_ptr(glm::vec4(m_rot.x(), m_rot.y(), m_rot.z(), m_rot.rotation())));
 
-  if (m_hasTexture){
-      m_texture.bind();
-      glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
-      m_texture.unbind();
-    }
-  else{
-      glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
-    }
+  if (m_hasTexture)
+    m_texture.bind();
 
   glBindVertexArray(0);
   glUseProgram(0);

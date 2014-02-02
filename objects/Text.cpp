@@ -212,13 +212,11 @@ void    Text::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
       glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
 
       glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
-    } else {
-
     }
 
   m_texture.bind();
   glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
-  m_texture.unbind();
+  //m_texture.unbind();
 
   glBindVertexArray(0);
   glUseProgram(0);

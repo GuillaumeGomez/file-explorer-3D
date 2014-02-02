@@ -60,7 +60,7 @@ void  HeightMap::initializeGL()
       "gl_Position = projection * my_translate(modelview, _pos) * vec4(in_Vertex, 1.0);\n"
       "coordTexture = in_TexCoord0;\n"
       "vNormal = in_Normal;\n"
-      "_height = _pos.y;"
+      "_height = in_Vertex.y;"
       "}";
 
 
@@ -90,11 +90,11 @@ void  HeightMap::initializeGL()
       "outputColor = texture(gSampler[0], coordTexture);\n"
       //"vTexColor = texture2D(gSampler[0], coordTexture);\n"
       "else if(fScale <= fRange2){\n"
-      "outputColor = mix(texture(gSampler[0], coordTexture), texture(gSampler[1], coordTexture), 1 - (fRange2 - fScale) / fRange1);}\n"
+      "outputColor = mix(texture(gSampler[0], coordTexture), texture(gSampler[1], coordTexture), (fScale - fRange1) / (fRange2 - fRange1));}\n"
       "else if(fScale <= fRange3){\n"
-      "outputColor = mix(texture(gSampler[1], coordTexture), texture(gSampler[2], coordTexture), 1 - (fRange3 - fScale) / fRange2);}\n"
+      "outputColor = mix(texture(gSampler[1], coordTexture), texture(gSampler[2], coordTexture), (fScale - fRange2) / (fRange3 - fRange2));}\n"
       "else if(fScale <= fRange4){\n"
-      "outputColor = mix(texture(gSampler[2], coordTexture), texture(gSampler[3], coordTexture), 1 - (fRange4 - fScale) / fRange3);}\n"
+      "outputColor = mix(texture(gSampler[2], coordTexture), texture(gSampler[3], coordTexture), (fScale - fRange3) / (fRange4 - fRange3));}\n"
       "else\n"
       "outputColor = texture(gSampler[3], coordTexture);\n}\n";
 
@@ -112,7 +112,7 @@ void  HeightMap::initializeGL()
   m_uniloc_height = glGetUniformLocation(m_shader->getProgramID(), "fRenderHeight");
 
 
-  std::string tex_name[] = {"fungus.jpg", "sand_grass_02.jpg", "rock_2_4w.jpg", "sand.jpg"};
+  std::string tex_name[] = {"sand_grass_02.jpg", "sand.jpg", "fungus.jpg", "rock_2_4w.jpg"};
 
   for (auto &tmp : tex_name)
     tmp = "textures/heightmap/" + tmp;
@@ -164,6 +164,30 @@ void  HeightMap::initializeGL()
         m_textures.push_back(1.f); m_textures.push_back(0.f);
       }
 
+  /*HandleFile f("res.txt", std::ios_base::trunc | std::ios_base::out);
+  f.open();
+  for (int t = 1; t < m_vertices.size(); t += 3) {
+      float fScale = m_vertices[t] / height;
+
+      const float fRange1 = 0.15f;
+      const float fRange2 = 0.3f;
+      const float fRange3 = 0.65f;
+      const float fRange4 = 0.85f;
+      f.write(Utility::toString<float>(m_vertices[t]) + " / " + Utility::toString<float>(height) + " = " +
+              Utility::toString<float>(fScale) + " => ");
+
+      if(fScale <= fRange1)
+        f.write(" < " + Utility::toString<float>(fRange1) + " -> 1\n");
+      else if(fScale <= fRange2)
+        f.write(" < " + Utility::toString<float>(fRange2) + " -> " + Utility::toString<float>((fScale - fRange1) / (fRange2 - fRange1)) + "\n");
+      else if(fScale <= fRange3)
+        f.write(" < " + Utility::toString<float>(fRange3) + " -> " + Utility::toString<float>((fScale - fRange2) / (fRange3 - fRange2)) + "\n");
+      else if(fScale <= fRange4)
+        f.write(" < " + Utility::toString<float>(fRange4) + " -> " + Utility::toString<float>((fScale - fRange3) / (fRange4 - fRange3)) + "\n");
+      else
+        f.write(" > " + Utility::toString<float>(fRange4) + " -> 1\n");
+    }*/
+
   m_pointsNumber = m_vertices.size() / 3;
 
   this->initVertexBufferObject();
@@ -183,28 +207,14 @@ void  HeightMap::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_mat
   glUniform3fv(m_uniloc_pos, 1, glm::value_ptr(glm::vec3(m_pos.x(), m_pos.y(), m_pos.z())));
   glUniform1f(m_uniloc_height, height);
 
-  /*HandleFile f("res.txt", std::ios_base::trunc | std::ios_base::out);
-  f.open();*/
-
   for (int i = 0; i < 4; ++i) {
 
-      //glBindMultiTextureEXT(GL_TEXTURE0 + i, GL_TEXTURE_2D, m_tex[i]->getTextureID());
-      m_tex[i]->bindTexture(m_tex[i]->getTextureID());
+      glBindMultiTextureEXT(GL_TEXTURE0 + i, GL_TEXTURE_2D, m_tex[i]->getTextureID());
+      //m_tex[i]->bindTexture(i);
       m_shader->setUniform(s[i], i);
     }
-  //m_tex[0]->bind();
-
-  /*f.write(Utility::toString<float>(m_vertices[1]) + " / " + Utility::toString<float>(height) + " = " +
-      Utility::toString<float>(m_vertices[1] / height));
-  f.close();
-  exit(0);*/
 
   glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
-
-  /*for (int i = 0; i < 4; ++i) {
-      m_tex[i]->unbindTexture(i);
-    }*/
-  //m_tex[0]->unbind();
 
   glBindVertexArray(0);
   glUseProgram(0);

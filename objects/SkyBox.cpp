@@ -152,7 +152,7 @@ void  SkyBox::paintGL(float &x, float &y)
     glEnable(GL_TEXTURE_CUBE_MAP_ARB);
     m_texture.bind();
     glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
-    m_texture.unbind();
+    //m_texture.unbind();
     glDisable(GL_TEXTURE_CUBE_MAP_ARB);
 
     glDepthMask(GL_TRUE);

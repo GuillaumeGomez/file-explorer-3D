@@ -135,14 +135,9 @@ void Cylinder::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matri
   glUniform4fv(m_uniloc_rot, 1, glm::value_ptr(glm::vec4(m_rot.x(), m_rot.y(), m_rot.z(), m_rot.rotation())));
 
   // Rendu
-  if (m_hasTexture){
-      m_texture.bind();
-      glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
-      m_texture.unbind();
-    }
-  else{
-      glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
-    }
+  if (m_hasTexture)
+    m_texture.bind();
+  glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
 
   glBindVertexArray(0);
   glUseProgram(0);

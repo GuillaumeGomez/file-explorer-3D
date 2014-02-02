@@ -209,14 +209,9 @@ void  Plane::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
     }
 
   // Rendu
-  if (m_hasTexture){
-      m_texture.bind();
-      glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
-      m_texture.unbind();
-    }
-  else{
-      glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
-    }
+  if (m_hasTexture)
+    m_texture.bind();
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
 
   glBindVertexArray(0);
   glUseProgram(0);
