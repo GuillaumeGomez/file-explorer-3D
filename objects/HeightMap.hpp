@@ -18,6 +18,8 @@ namespace Object {
     unsigned int m_height;
     std::string m_img;
     Texture     *m_tex[5];
+    GLint       m_uniloc_height;
+    float       height;
   };
 }
 

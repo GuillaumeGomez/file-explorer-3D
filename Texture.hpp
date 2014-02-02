@@ -23,6 +23,7 @@ public:
   GLuint            width() const;
   void              bind();
   void              bindTexture(int);
+  void              unbindTexture(int);
   void              unbind();
   void              destroy();
   void              setRepeat(bool);
