@@ -3,6 +3,7 @@
 #include "./objects/Text.hpp"
 #include "./String_utils.hpp"
 #include <ctime>
+#include "../shaders/ShaderHandler.hpp"
 
 #include "HandleSDL.hpp"
 
@@ -151,7 +152,6 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   m_pieces[6].tex_coord[0] = 1.f / 8.f * 7.f;
   m_pieces[6].tex_coord[1] = 1.f / 8.f * 8.f;
 
-  m_shader = new Shader;
   m_texts.push_back(new Object::Text("0", RED, -0.99f, 0.65f));
   m_texts.push_back(new Object::Text("0", RED, -0.99f, 0.25f));
   m_texts.push_back(new Object::Text("1", RED, -0.99f, -0.15f));
@@ -345,9 +345,8 @@ void  Tetris::initializeGL()
       "out_Color = texture(tex, coordTexture);\n"
       "}";
 
-  m_shader->setVertexSource(vert);
-  m_shader->setFragmentSource(frag);
-  if (!m_shader->load()){
+  m_shader = ShaderHandler::getInstance()->createShader(vert, frag);
+  if (!m_shader){
       HandleError::showError("Shader didn't load in Tetris");
       exit(-1);
     }
@@ -782,4 +781,5 @@ void  Tetris::keyPressEvent(int key)
 
 void  Tetris::keyReleaseEvent(int key)
 {
+  (void)key;
 }

@@ -76,9 +76,7 @@ SOURCES += main.cpp \
     objects/TextureHandler.cpp \
     objects/Wall.cpp \
     objects/GraphicFile.cpp \
-    objects/VertexBuffer.cpp \
     shaders/Shader.cpp \
-    VertexContainer.cpp \
     Texture.cpp \
     FrameBuffer.cpp \
     objects/Button.cpp \
@@ -87,7 +85,6 @@ SOURCES += main.cpp \
     objects/Model.cpp \
     objects/Line.cpp \
     HandlePhysics.cpp \
-    VertexBufferObject.cpp \
     shaders/ShaderHandler.cpp \
     objects/HeightMap.cpp
 
@@ -125,9 +122,7 @@ HEADERS += \
     objects/Wall.hpp \
     objects/Plane.hpp \
     objects/GraphicFile.hpp \
-    objects/VertexBuffer.hpp \
     shaders/Shader.hpp \
-    VertexContainer.hpp \
     Texture.hpp \
     FrameBuffer.hpp \
     objects/Button.hpp \
@@ -136,6 +131,5 @@ HEADERS += \
     objects/Model.hpp \
     objects/Line.hpp \
     HandlePhysics.hpp \
-    VertexBufferObject.hpp \
     shaders/ShaderHandler.hpp \
     objects/HeightMap.hpp

@@ -104,7 +104,7 @@ void    Text::initializeGL()
 
   if (m_render2D) {
       vert =
-          "#version 150 core\n"
+          "#version 330\n"
 
           "in vec2 in_Vertex;\n"
           "in vec2 in_TexCoord0;\n"
@@ -117,7 +117,7 @@ void    Text::initializeGL()
           "coordTexture = in_TexCoord0;\n"
           "}";
       frag =
-          "#version 150 core\n"
+          "#version 330\n"
 
           "in vec2 coordTexture;\n"
           "uniform sampler2D tex;\n"
@@ -128,7 +128,7 @@ void    Text::initializeGL()
           "}\n";
     } else {
       vert =
-          "#version 150 core\n"
+          "#version 330\n"
 
           "in vec3 in_Vertex;\n"
           "in vec2 in_TexCoord0;\n"
@@ -145,7 +145,7 @@ void    Text::initializeGL()
           "}";
 
       frag =
-          "#version 150 core\n"
+          "#version 330\n"
 
           "in vec2 coordTexture;\n"
 

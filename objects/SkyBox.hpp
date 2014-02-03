@@ -13,8 +13,6 @@ namespace Object
     void  initializeGL();
     void  initializeGLNoList();
     void  paintGL(float&x, float&y);
-    void  bindVertexBufferObject();
-    void  initVertexBufferObject();
     virtual std::string getClassName() const;
 
   private:

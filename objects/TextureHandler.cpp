@@ -14,8 +14,11 @@ void  clearTextureHandler()
 TextureHandler *TextureHandler::getInstance()
 {
   if (!instance) {
+      static bool t(true);
       instance = new TextureHandler;
-      atexit(clearTextureHandler);
+      if (t)
+        atexit(clearTextureHandler);
+      t = false;
     }
   return instance;
 }
@@ -26,9 +29,9 @@ TextureHandler::TextureHandler()
 
 TextureHandler::~TextureHandler()
 {
-  for (auto it = textures.begin(); it != textures.end(); ++it){
-      glDeleteTextures(1, &it->second.first);
-    }
+  for (auto it : textures)
+    glDeleteTextures(1, &it.second.first);
+  instance = 0;
 }
 
 GLuint        TextureHandler::add(const char *s, GLuint id)

@@ -94,45 +94,6 @@ void  SkyBox::initializeGL()
     this->initVertexArrayObject();
 }
 
-void  SkyBox::initVertexBufferObject()
-{
-    m_verticesSize = m_vertices.size() * sizeof(GLfloat);
-    m_texturesSize = m_textures.size() * sizeof(GLfloat);
-
-    glGenBuffers(1, &m_vboID);
-    //verrouillage de l'objet
-    glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
-
-    // Allocation de la memoire video
-    glBufferData(GL_ARRAY_BUFFER, m_verticesSize + m_texturesSize, 0, GL_STATIC_DRAW);
-
-    // Transfert des donnees
-    glBufferSubData(GL_ARRAY_BUFFER, 0, m_verticesSize, &m_vertices[0]);
-    glBufferSubData(GL_ARRAY_BUFFER, m_verticesSize, m_texturesSize, &m_textures[0]);
-
-    glEnableVertexAttribArray(vertex);
-    glVertexAttribPointer(vertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-    // Deverrouillage de l'objet
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void  SkyBox::bindVertexBufferObject()
-{
-    // Verrouillage du VBO
-    glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
-
-    // Acces aux vertices dans la memoire video
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(0);
-
-    //envoi des coordonnees des textures
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(m_verticesSize));
-    glEnableVertexAttribArray(2);
-    // Deverrouillage du VBO
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
 void  SkyBox::initializeGLNoList()
 {
 }

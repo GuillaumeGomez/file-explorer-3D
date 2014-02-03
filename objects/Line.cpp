@@ -27,17 +27,7 @@ void Line::initializeGL()
 
       "color = in_Color;\n"
       "}";
-  std::string frag =
-      "#version 150 core\n"
-
-      "in vec3 color;\n"
-      "out vec4 out_Color;\n"
-
-      "void main()\n"
-      "{\n"
-      "out_Color = vec4(color, 1.0);\n"
-      "}";
-  m_shader = ShaderHandler::getInstance()->createShader(vert, frag);
+  m_shader = ShaderHandler::getInstance()->createShader(vert, Shader::getStandardFragmentShader(false));
   if (!m_shader){
       HandleError::showError("Shader didn't load in Line");
       exit(-1);

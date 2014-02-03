@@ -83,7 +83,6 @@ public:
   virtual void    bindVertexBufferObject();
   virtual void    updateVertexBufferObject(void *donnees, int tailleBytes, int decalage);
   virtual void    initVertexArrayObject();
-  Color const     &getPrimaryColor() const;
   virtual std::string getClassName() const;
   void            setDrawMode(GLenum);
   GLenum          drawMode() const;
@@ -114,20 +113,14 @@ protected:
   GLint                   m_uniloc_rot;
   GLint                   m_uniloc_pos;
   Color                   m_pickingColor;
-  Color                 m_primaryColor;
-  Shader                *m_primaryShader;
-  GLint                 m_primaryLoc_modelView;
-  GLint                 m_primaryLoc_projection;
-  GLuint                m_primary_vboID;
-  GLuint                m_primary_vaoID;
 
   std::vector<GLfloat>  m_vertices;
   std::vector<GLfloat>  m_couleurs;
   std::vector<GLfloat>  m_textures;
   std::vector<GLfloat>  m_normals;
 
-  static Color  pick_color;
-  static Color  &getStaticPickColor();
+  //static Color  pick_color;
+  //static Color  &getStaticPickColor();
 };
 
 #endif // MYGLWIDGET_H

@@ -97,30 +97,26 @@ MyWindow::~MyWindow()
     delete this->m_camera;
   if (m_tetris)
     delete m_tetris;
+  if (this->m_disp)
+    delete m_disp;
   if (m_fbo)
     delete this->m_fbo;
   for (unsigned int i(0); i < 5; ++i){
       delete m_displayList[i];
     }
-  while (objectList.size() > 0){
-      delete (*objectList.begin());
-      objectList.erase(objectList.begin());
-    }
-  while (_2D_objectList.size() > 0){
-      delete (*_2D_objectList.begin());
-      _2D_objectList.erase(_2D_objectList.begin());
-    }
-  while (m_pauseObjectList.size() > 0){
-      delete (*m_pauseObjectList.begin());
-      m_pauseObjectList.erase(m_pauseObjectList.begin());
-    }
-  if (this->m_disp)
-    delete m_disp;
+  for (auto tmp : objectList)
+    delete tmp;
+  for (auto tmp : _2D_objectList)
+    delete tmp;
+  for (auto tmp : m_pauseObjectList)
+    delete tmp;
+  objectList.clear();
+  _2D_objectList.clear();
+  m_pauseObjectList.clear();
   if (this->m_key)
     delete this->m_key;
   if (this->sdl)
     delete this->sdl;
-  this->sdl = 0;
 }
 
 void  MyWindow::repeatKey()
@@ -310,7 +306,7 @@ void MyWindow::initializeGL()
 
   sdl->displayCursor(false);
   m_disp = new Object::Cube(Vector3D(-3.f, 2.f, -6.f), Rotation(), "", 2.f);
-  m_disp->setTexture(1);
+  m_disp->setTexture(m_fbo->getTextureID(0));
   m_disp->initializeGL();
 
   m_tetris->initializeGL();

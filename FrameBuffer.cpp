@@ -62,7 +62,15 @@ bool  FrameBuffer::load()
 
   m_colorBuffer = new Texture(m_largeur, m_hauteur, GL_RGBA, GL_RGBA, true);
 
-  m_colorBuffer->load();
+  if (!m_colorBuffer || !m_colorBuffer->load()) {
+      if (m_colorBuffer){
+          delete m_colorBuffer;
+          m_colorBuffer = 0;
+        }
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+      return false;
+    }
+
   m_colorBuffers.push_back(m_colorBuffer);
   this->createRenderBuffer(m_depthBufferID, GL_DEPTH24_STENCIL8);
 
@@ -99,6 +107,8 @@ GLuint      FrameBuffer::getFrameBufferID() const
 
 GLuint      FrameBuffer::getTextureID(unsigned int index) const
 {
+  if (index >= m_colorBuffers.size())
+    return 0;
   return m_colorBuffers[index]->getTextureID();
 }
 

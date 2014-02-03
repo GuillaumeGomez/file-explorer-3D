@@ -19,7 +19,6 @@ GraphicFile::GraphicFile(Vector3D v, Rotation r, Color c, const char *fileName)
   tmpRotation = m_rot;
   tmpRotation.setSpeed(0.f);
   tmpRotation.setRotX(1.f);
-  m_shader_color = new Shader;
 }
 
 GraphicFile::GraphicFile(Vector3D v, Rotation r, Color c, std::string fileName)
@@ -31,12 +30,11 @@ GraphicFile::GraphicFile(Vector3D v, Rotation r, Color c, std::string fileName)
   tmpRotation = m_rot;
   tmpRotation.setSpeed(10.f);
   tmpRotation.setRotX(1.f);
-  m_shader_color = new Shader;
 }
 
 GraphicFile::~GraphicFile()
 {
-  delete m_shader_color;
+  ShaderHandler::getInstance()->destroyShader(m_shader_color);
 }
 
 std::string const &GraphicFile::getFileName() const
@@ -115,10 +113,8 @@ void  GraphicFile::initializeGL()
       "{\n"
       "out_Color = vec4(color, 1.0);\n"
       "}";
-
-  m_shader_color->setVertexSource(vert);
-  m_shader_color->setFragmentSource(frag);
-  if (!m_shader_color->load()){
+  m_shader_color = ShaderHandler::getInstance()->createShader(vert, frag);
+  if (!m_shader_color){
       HandleError::showError("Shader didn't load in GraphicFile");
       exit(-1);
     }

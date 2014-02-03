@@ -8,7 +8,6 @@
 #include <glm/glm.hpp>
 #include "Color.hpp"
 #include "Vector3D.hpp"
-#include "VertexBuffer.hpp"
 #include "Utils/HandleFile.hpp"
 #include "Texture.hpp"
 

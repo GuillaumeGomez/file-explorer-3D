@@ -5,10 +5,10 @@
 #include <cmath>
 #include <cstring>
 
-Color myGLWidget::pick_color = Color(0.f, 0.f, 0.f);
+//Color myGLWidget::pick_color = Color(0.f, 0.f, 0.f);
 
 //TODO create a way to avoid double values
-Color &myGLWidget::getStaticPickColor()
+/*Color &myGLWidget::getStaticPickColor()
 {
   static float  add_value(1.f / 255.f);
   float         tmp;
@@ -34,7 +34,7 @@ Color &myGLWidget::getStaticPickColor()
     }
   pick_color.setRed(tmp);
   return pick_color;
-}
+}*/
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
@@ -42,8 +42,6 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot)
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
     m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
-  m_primaryColor = myGLWidget::getStaticPickColor();
-  m_primaryShader = 0;
 }
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, Color co)
@@ -52,8 +50,6 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, Color co)
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
     m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
-  m_primaryColor = myGLWidget::getStaticPickColor();
-  m_primaryShader = 0;
 }
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
@@ -62,8 +58,6 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false), m_texture(tex),
     m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
-  m_primaryColor = myGLWidget::getStaticPickColor();
-  m_primaryShader = 0;
 }
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, Texture const &tex)
@@ -72,8 +66,6 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, Texture const &tex)
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
     m_texture(tex), m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
-  m_primaryColor = myGLWidget::getStaticPickColor();
-  m_primaryShader = 0;
 }
 
 myGLWidget::~myGLWidget()
@@ -82,10 +74,7 @@ myGLWidget::~myGLWidget()
     glDeleteBuffers(1, &m_vboID);
   if (m_vaoID)
     glDeleteVertexArrays(1, &m_vaoID);
-  if (m_primaryShader)
-    delete m_primaryShader;
-  if (m_shader)
-    ShaderHandler::getInstance()->destroyShader(m_shader);
+  ShaderHandler::getInstance()->destroyShader(m_shader);
 }
 
 void myGLWidget::setTexture(const string s)
@@ -204,11 +193,13 @@ bool  myGLWidget::hasBeenPicked(int c)
 
 void  myGLWidget::pick(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix)
 {
-  if (!m_pickAllow)
-    return;
+  (void)view_matrix;
+  (void)proj_matrix;
+  /*if (!m_pickAllow)
+    return;*/
   //glLoadName(x++);
   //this->paintGL(view_matrix, proj_matrix);
-  glUseProgram(m_primaryShader->getProgramID());
+  /*glUseProgram(m_primaryShader->getProgramID());
 
   glBindVertexArray(m_primary_vaoID);
 
@@ -224,7 +215,7 @@ void  myGLWidget::pick(const glm::mat4 &view_matrix, const glm::mat4 &proj_matri
   glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
 
   glBindVertexArray(0);
-  glUseProgram(0);
+  glUseProgram(0);*/
 }
 
 int myGLWidget::objectSize()
@@ -277,49 +268,6 @@ void  myGLWidget::initVertexBufferObject(GLenum option)
 
   // Deverrouillage de l'objet
   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  /*std::string vert = "#version 150 core\n"
-      "in vec3 in_Vertex;\n"
-
-      "uniform mat4 projection;\n"
-      "uniform mat4 modelview;\n"
-
-      "out vec3 color;\n"
-      "void main()\n"
-      "{\n"
-      "gl_Position = projection * modelview * vec4(in_Vertex, 1.0);\n"
-      "color = vec3("
-      + Utility::toString<float>(m_primaryColor.red()) + ","
-      + Utility::toString<float>(m_primaryColor.green()) + ","
-      + Utility::toString<float>(m_primaryColor.blue()) + ");\n"
-      "}";
-  std::string frag =
-      "#version 150 core\n"
-
-      "in vec3 color;\n"
-
-      "out vec4 out_Color;\n"
-      "void main()\n"
-      "{\n"
-      "out_Color = vec4(color, 1.0);\n"
-      "}";
-
-  if (!m_primaryShader)
-    m_primaryShader = new Shader;
-  m_primaryShader->setVertexSource(vert);
-  m_primaryShader->setFragmentSource(frag);
-  if (!m_primaryShader->load()){
-      HandleError::showError("Primary shader didn't load");
-      exit(-1);
-    }
-  m_primaryLoc_projection = glGetUniformLocation(m_primaryShader->getProgramID(), "projection");
-  m_primaryLoc_modelView = glGetUniformLocation(m_primaryShader->getProgramID(), "modelview");
-
-  glGenBuffers(1, &m_primary_vboID);
-  glBindBuffer(GL_ARRAY_BUFFER, m_primary_vboID);
-  glBufferData(GL_ARRAY_BUFFER, m_verticesSize, 0, GL_STATIC_DRAW);
-  glBufferSubData(GL_ARRAY_BUFFER, 0, m_verticesSize, &m_vertices[0]);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);*/
 }
 
 void  myGLWidget::bindVertexBufferObject()
@@ -389,16 +337,6 @@ void  myGLWidget::initVertexArrayObject()
   this->bindVertexBufferObject();
 
   glBindVertexArray(0);
-
-  glGenVertexArrays(1, &m_primary_vaoID);
-  glBindVertexArray(m_primary_vaoID);
-  glBindBuffer(GL_ARRAY_BUFFER, m_primary_vboID);
-  if (m_render2D)
-    glVertexAttribPointer(VERTEX_COORD, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-  else
-    glVertexAttribPointer(VERTEX_COORD, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-  glEnableVertexAttribArray(VERTEX_COORD);
-  glBindVertexArray(0);
 }
 
 std::vector<GLfloat> &myGLWidget::getColors()
@@ -448,11 +386,6 @@ void    myGLWidget::update(const float &n)
 
 void    myGLWidget::initializeGLNoList()
 {
-}
-
-Color const &myGLWidget::getPrimaryColor() const
-{
-  return m_primaryColor;
 }
 
 void  myGLWidget::convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const &tmp_vertices, std::vector<Vector3D> const &tmp_textures)

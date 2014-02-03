@@ -4,6 +4,8 @@
 #include "String_utils.hpp"
 #include "Utils/MyException.hpp"
 #include "Utils/Utils.hpp"
+#include "shaders/ShaderHandler.hpp"
+#include "TextureHandler.hpp"
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
@@ -107,6 +109,8 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
 
 HandleSDL::~HandleSDL()
 {
+  delete ShaderHandler::getInstance();
+  delete TextureHandler::getInstance();
   if (m_font)
     TTF_CloseFont(m_font);
   TTF_Quit();

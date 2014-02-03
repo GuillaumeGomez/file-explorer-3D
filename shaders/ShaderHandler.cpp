@@ -6,14 +6,21 @@ ShaderHandler *ShaderHandler::m_instance = 0;
 
 void  clearShaders()
 {
-  delete ShaderHandler::getInstance();
+  ShaderHandler *i = ShaderHandler::getInstance();
+
+  if (i)
+    delete i;
 }
 
 ShaderHandler *ShaderHandler::getInstance()
 {
   if (!m_instance) {
+      static bool t(true);
+
       m_instance = new ShaderHandler;
-      atexit(clearShaders);
+      if (t)
+        atexit(clearShaders);
+      t = false;
     }
   return m_instance;
 }
@@ -29,6 +36,7 @@ ShaderHandler::~ShaderHandler()
         delete tmp.second;
     }
   m_list.clear();
+  m_instance = 0;
 }
 
 Shader  *ShaderHandler::createShader(const char *vertexShader, const char *fragmentShader)
