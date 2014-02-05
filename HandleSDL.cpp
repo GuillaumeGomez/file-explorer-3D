@@ -122,11 +122,12 @@ HandleSDL::~HandleSDL()
 
 float  HandleSDL::getElapsedTime()
 {
-  int old_time = m_elapsedTime;
+  unsigned int old_time = m_elapsedTime;
 
   m_elapsedTime = SDL_GetTicks();
-  float tmp = (m_elapsedTime - old_time) / 1000.f;
-  return 1000.f - (1000.f - tmp);
+  return (m_elapsedTime - old_time) / 1000.f;
+  //float tmp = (m_elapsedTime - old_time) / 1000.f;
+  //return 1000.f - (1000.f - tmp);
 }
 
 SDL_Surface  *renderText(TTF_Font *m_font, const char *s, SDL_Color const &textColor, int w)

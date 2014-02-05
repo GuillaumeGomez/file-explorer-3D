@@ -135,6 +135,11 @@ void  Sphere::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
   glUseProgram(0);
 }
 
+float const &Sphere::getRadius() const
+{
+  return m_rayon;
+}
+
 string Sphere::getClassName() const
 {
   return std::string("Sphere");

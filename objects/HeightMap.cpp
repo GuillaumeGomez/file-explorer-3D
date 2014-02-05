@@ -7,14 +7,14 @@
 using namespace Object;
 
 HeightMap::HeightMap(Vector3D v, unsigned int width, unsigned int height, float case_size)
-  : myGLWidget(v, Rotation()), m_width(width), m_height(height), m_case_size(case_size), m_tex_repeat(m_case_size * 5.f / 4.f)
+  : myGLWidget(v, Rotation()), m_width(width), m_height(height), m_case_size(case_size), m_tex_repeat(m_case_size * 3.f / 4.f)
 {
-  for (int i = 0; i < 5; ++i)
+  for (int i = 0; i < 4; ++i)
     m_tex[i] = 0;
 }
 
 HeightMap::HeightMap(Vector3D v, string img, float case_size)
-  : myGLWidget(v, Rotation()), m_width(0), m_height(0), m_case_size(case_size), m_tex_repeat(m_case_size * 5.f / 4.f), m_img(img)
+  : myGLWidget(v, Rotation()), m_width(0), m_height(0), m_case_size(case_size), m_tex_repeat(m_case_size * 3.f / 4.f), m_img(img)
 {
   for (int i = 0; i < 4; ++i)
     m_tex[i] = 0;
@@ -153,7 +153,7 @@ void  HeightMap::initializeGL()
   m_height = img->h;
 
   std::vector<std::vector<glm::vec3> >  tmp_v(m_height, std::vector<glm::vec3>(m_width));
-  float min(0.f), max(0.f);
+  min_height = max_height = 0.f;
   const float fscaleX = m_tex_repeat / m_width, fscaleY = m_tex_repeat / m_height;
 
   for (unsigned int i = 0; i < m_width; ++i)
@@ -162,14 +162,15 @@ void  HeightMap::initializeGL()
 
         float tmp_h = (tmp.blue() + tmp.green() + tmp.red()) * 10.f * m_case_size;
         tmp_v[j][i] = glm::vec3(i * m_case_size, tmp_h, j * m_case_size);
-        if (tmp_h < min)
-          min = tmp_h;
-        else if (tmp_h > max)
-          max = tmp_h;
+        if (tmp_h < min_height)
+          min_height = tmp_h;
+        else if (tmp_h > max_height)
+          max_height = tmp_h;
       }
   HandleSDL::freeImage(img);
 
-  height = max - min;
+  //convert into GL_TRIANGLE_STRIP after
+  height = max_height - min_height;
   float tmp_x(0.f), tmp_y(0.f);
   for (unsigned int y = 0; y < m_height - 1; ++y) {
       for (unsigned int x = 0; x < m_width - 1; ++x) {
@@ -224,4 +225,34 @@ void  HeightMap::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_mat
 
   glBindVertexArray(0);
   glUseProgram(0);
+}
+
+float const &HeightMap::getMinHeight() const
+{
+  return min_height;
+}
+
+float const &HeightMap::getMaxHeight() const
+{
+  return max_height;
+}
+
+unsigned int HeightMap::getWidth() const
+{
+  return m_width;
+}
+
+unsigned int HeightMap::getHeight() const
+{
+  return m_height;
+}
+
+float const &HeightMap::getCaseSize() const
+{
+  return m_case_size;
+}
+
+std::string HeightMap::getClassName() const
+{
+  return std::string("HeightMap");
 }

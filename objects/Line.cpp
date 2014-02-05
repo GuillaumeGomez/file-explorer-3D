@@ -56,7 +56,6 @@ void Line::initializeGL()
 
 void  Line::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 {
-  // Activation du shader
   glUseProgram(m_shader->getProgramID());
 
   glBindVertexArray(m_vaoID);

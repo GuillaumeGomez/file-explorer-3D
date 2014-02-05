@@ -23,6 +23,7 @@ private:
   btSequentialImpulseConstraintSolver *solver;
   btDiscreteDynamicsWorld *dynamicsWorld;
   std::vector<btRigidBody*> rigidBodies;
+  std::vector<btRigidBody*> dynBodies;
 };
 
 #endif // HANDLEPHYSICS_HPP

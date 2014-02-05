@@ -1,7 +1,7 @@
 #ifndef KEYHANDLER_HPP
 #define KEYHANDLER_HPP
 
-#define MAX_KEY_SIZE  4
+#define MAX_KEY_SIZE  6
 
 class HandleMutex;
 

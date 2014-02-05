@@ -86,7 +86,8 @@ SOURCES += main.cpp \
     objects/Line.cpp \
     HandlePhysics.cpp \
     shaders/ShaderHandler.cpp \
-    objects/HeightMap.cpp
+    objects/HeightMap.cpp \
+    objects/Point.cpp
 
 HEADERS += \
     HandleSDL.hpp \
@@ -132,4 +133,5 @@ HEADERS += \
     objects/Line.hpp \
     HandlePhysics.hpp \
     shaders/ShaderHandler.hpp \
-    objects/HeightMap.hpp
+    objects/HeightMap.hpp \
+    objects/Point.hpp
