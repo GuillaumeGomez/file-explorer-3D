@@ -97,7 +97,7 @@ public:
     glUniformMatrix4fv(m_uniLoc_projection, 1, GL_FALSE, glm::value_ptr(Camera::getProjectionMatrix()));
     glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(Camera::getViewMatrix()));
 
-    glDrawArrays(GL_LINES, 0, lines.size() / 3);
+    glDrawArrays(GL_POINTS, 0, lines.size() / 3);
 
     glBindVertexArray(0);
     glUseProgram(0);
@@ -137,7 +137,7 @@ public:
         lines.push_back(to.z());
 
         pos += 6;
-        re_init = true;
+        re_init = false;
       }
   }
   void drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,btScalar distance,int lifeTime,const btVector3& color){
@@ -244,24 +244,28 @@ bool  HandlePhysics::addObject(myGLWidget *obj)
   if (obj->getClassName() == "HeightMap") {
       Object::HeightMap *t = static_cast<Object::HeightMap*>(obj);
       std::vector<GLfloat>  &tmp = t->getVertices();
-      static std::vector<GLfloat> tmp2;
+      //static std::vector<GLfloat> tmp2;
 
       static std::vector<int>  ss;
 
       int x = 0;
-      for (unsigned int i = 0; i < tmp.size() / 3; i += 6) {
+      ss.push_back(x);
+      ss.push_back(x + 1);
+      ss.push_back(x + 2);
+
+      ss.push_back(x + 1);
+      ss.push_back(x + 2);
+      ss.push_back(x + 3);
+      x += 4;
+      for (unsigned int i = 2; i < tmp.size() / 3; ++i) {
+          ss.push_back(x - 2);
+          ss.push_back(x - 1);
           ss.push_back(x);
-          ss.push_back(x + 1);
-          ss.push_back(x + 2);
 
-          ss.push_back(x + 3);
-          ss.push_back(x + 2);
-          ss.push_back(x + 1);
-
-          x += 2;
+          x++;
         }
       btTriangleIndexVertexArray  *caca = new btTriangleIndexVertexArray(ss.size() / 3, &ss[0], sizeof(ss[0]) * 3,
-          tmp.size(), &tmp[0], sizeof(tmp[0]) * 3);
+          tmp.size() / 3, &tmp[0], sizeof(tmp[0]) * 3);
       /*btIndexedMesh part;
 
       part.m_vertexBase = (const unsigned char*)LandscapeVtx[i];
@@ -352,7 +356,7 @@ bool  HandlePhysics::addObject(myGLWidget *obj)
       rigidBody->setUserPointer(obj);
     }
   else {
-      static btCollisionShape* sphereCollisionShape = new btSphereShape(static_cast<Object::Sphere*>(obj)->getRadius());
+      btCollisionShape* sphereCollisionShape = new btSphereShape(static_cast<Object::Sphere*>(obj)->getRadius());
 
       btDefaultMotionState* motionstate = new btDefaultMotionState(btTransform(
                                                                      btQuaternion(rot.y(), rot.x(), rot.z(), 1),

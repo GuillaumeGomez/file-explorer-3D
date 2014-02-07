@@ -29,6 +29,7 @@ Loader::Loader(MyWindow *w) : m_win(w)
   objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, Color, float>(Vector3D(-30.f, 10.f, 100.f), Rotation(45.f, 0.f, 0.f, 0.f), Color(0.9f, 0.1f, 0.1f), 20.f));
   objList.push_back(ObjectFactory::createNewObject<Cylinder, Vector3D, Rotation, const char*, float, float>(Vector3D(), Rotation(), "textures/box.jpg", 10.f, 80.f));
   objList.push_back(ObjectFactory::createNewObject<Sphere, Vector3D, Rotation, Color, float>(Vector3D(15.f, 20.f, 100.f), Rotation(), Color(0.9f, 0.18f, 0.7f), 9.f));
+  objList.push_back(ObjectFactory::createNewObject<Sphere, Vector3D, Rotation, Color, float>(Vector3D(2.f, 90.f, 100.f), Rotation(0.f, 10.f, 1.f, 1.f, 0.f), BLUE, 10.f));
   objList.push_back(ObjectFactory::createNewObject<Sphere, Vector3D, Rotation, const char*, float>(Vector3D(0.f, 70.f, 100.f), Rotation(0.f, 10.f, 1.f, 1.f, 0.f), "textures/burn.jpg", 20.f));
   objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, const char*, float>(Vector3D(-60.f, 10.f, 100.f), Rotation(45.f, 0.f, 1.f, 0.f), "textures/grass.jpg", 10.f));
   objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, const char*, float>(Vector3D(0.f, 10.f, 100.f), Rotation(45.f, 7.f, 1.f, 0.f), "textures/box.jpg", 20.f));

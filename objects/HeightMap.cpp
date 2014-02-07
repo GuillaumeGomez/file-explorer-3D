@@ -172,19 +172,45 @@ void  HeightMap::initializeGL()
   //convert into GL_TRIANGLE_STRIP after
   height = max_height - min_height;
   float tmp_x(0.f), tmp_y(0.f);
-  for (unsigned int y = 0; y < m_height - 1; ++y) {
-      for (unsigned int x = 0; x < m_width - 1; ++x) {
-          createTriangle(m_vertices, tmp_v[y][x], tmp_v[y][x + 1], tmp_v[y + 1][x]);
+  for (unsigned int y = 0; y < m_height - 1;) {
+      for (unsigned int x = 0; x < m_width; ++x) {
+          /*createTriangle(m_vertices, tmp_v[y][x], tmp_v[y][x + 1], tmp_v[y + 1][x]);
           m_textures.push_back(tmp_x); m_textures.push_back(tmp_y);
           m_textures.push_back(tmp_x + fscaleX); m_textures.push_back(tmp_y);
           m_textures.push_back(tmp_x); m_textures.push_back(tmp_y + fscaleY);
           createTriangle(m_vertices, tmp_v[y + 1][x], tmp_v[y + 1][x + 1], tmp_v[y][x + 1]);
           m_textures.push_back(tmp_x); m_textures.push_back(tmp_y + fscaleY);
           m_textures.push_back(tmp_x + fscaleX); m_textures.push_back(tmp_y + fscaleY);
-          m_textures.push_back(tmp_x + fscaleX); m_textures.push_back(tmp_y);
+          m_textures.push_back(tmp_x + fscaleX); m_textures.push_back(tmp_y);*/
+          m_vertices.push_back(tmp_v[y][x][0]);
+          m_vertices.push_back(tmp_v[y][x][1]);
+          m_vertices.push_back(tmp_v[y][x][2]);
+          m_textures.push_back(tmp_x); m_textures.push_back(tmp_y);
+
+          m_vertices.push_back(tmp_v[y + 1][x][0]);
+          m_vertices.push_back(tmp_v[y + 1][x][1]);
+          m_vertices.push_back(tmp_v[y + 1][x][2]);
+          m_textures.push_back(tmp_x); m_textures.push_back(tmp_y + fscaleY);
 
           tmp_x += fscaleX;
         }
+      ++y;
+      tmp_y += fscaleY;
+      if (y < m_height - 1)
+        for (int x = m_width - 1; x >= 0; --x) {
+            tmp_x -= fscaleX;
+
+            m_vertices.push_back(tmp_v[y][x][0]);
+            m_vertices.push_back(tmp_v[y][x][1]);
+            m_vertices.push_back(tmp_v[y][x][2]);
+            m_textures.push_back(tmp_x); m_textures.push_back(tmp_y);
+
+            m_vertices.push_back(tmp_v[y + 1][x][0]);
+            m_vertices.push_back(tmp_v[y + 1][x][1]);
+            m_vertices.push_back(tmp_v[y + 1][x][2]);
+            m_textures.push_back(tmp_x); m_textures.push_back(tmp_y + fscaleY);
+          }
+      ++y;
       tmp_x = 0.f;
       tmp_y += fscaleY;
     }
@@ -221,7 +247,7 @@ void  HeightMap::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_mat
       m_shader->setUniform(s[i], i);
     }
 
-  glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
 
   glBindVertexArray(0);
   glUseProgram(0);
