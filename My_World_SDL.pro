@@ -3,25 +3,26 @@ CONFIG -= console
 CONFIG -= qt
 
 INCLUDEPATH += objects/
-INCLUDEPATH += Bullet/
 INCLUDEPATH += SDL2/
 INCLUDEPATH += include/
 
 unix {
     QMAKE_CXXFLAGS += -std=c++0x
+    INCLUDEPATH += /usr/local/include/bullet/
 
-    LIBS += -lGLU -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_ttf -lGLEW -lm -lpthread -lassimp \
+    LIBS += -lGLU -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_ttf -lGLEW -lm -lpthread -lassimp -lBulletDynamics -lBulletCollision -lLinearMath \
 }
 
 win32 {
     INCLUDEPATH += ./assimp/include/
+    INCLUDEPATH += Bullet/include/
     CONFIG += c++11
     DEFINES += WIN32
     DEFINES += GLEW_STATIC _USE_MATH_DEFINES
 
     LIBS += -L./SDL2/ \
             -L./assimp/ \
-            -L./Bullet/ \
+            -L./Bullet/lib/ \
             -L./ \
             -lwinmm \
             -lmingw32 \
@@ -87,7 +88,8 @@ SOURCES += main.cpp \
     HandlePhysics.cpp \
     shaders/ShaderHandler.cpp \
     objects/HeightMap.cpp \
-    objects/Point.cpp
+    objects/Point.cpp \
+    Utils/MyMath.cpp
 
 HEADERS += \
     HandleSDL.hpp \
@@ -134,4 +136,5 @@ HEADERS += \
     HandlePhysics.hpp \
     shaders/ShaderHandler.hpp \
     objects/HeightMap.hpp \
-    objects/Point.hpp
+    objects/Point.hpp \
+    Utils/MyMath.hpp

@@ -69,6 +69,7 @@ public:
   virtual void    setMainWindow(MyWindow*);
   MyWindow        *getMainWindow() const;
   Rotation        &rotation();
+  void            setRotation(Rotation);
   Texture         &getTexture();
   void            setRender2D(bool);
   bool            is2D() const;
@@ -115,7 +116,7 @@ protected:
   Color                   m_pickingColor;
 
   std::vector<GLfloat>  m_vertices;
-  std::vector<GLfloat>  m_couleurs;
+  std::vector<GLfloat>  m_colors;
   std::vector<GLfloat>  m_textures;
   std::vector<GLfloat>  m_normals;
 

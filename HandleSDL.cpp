@@ -511,7 +511,8 @@ void  HandleSDL::displayCursor(bool display)
 #ifdef WIN32
   SDL_ShowCursor(display ? SDL_ENABLE : SDL_DISABLE);
 #else
-  SDL_SetRelativeMouseMode(display);
+  SDL_ShowCursor(display ? SDL_ENABLE : SDL_DISABLE);
+  SDL_SetRelativeMouseMode(display ? SDL_bool(SDL_DISABLE) : SDL_bool(SDL_ENABLE));
 #endif
 }
 

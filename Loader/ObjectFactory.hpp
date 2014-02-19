@@ -48,6 +48,7 @@ public:
 
     tmp->m_is2D = false;
     tmp->m_isPauseObject = false;
+    tmp->m_isMainCharacter = false;
     return tmp;
   }
   template<typename T, class... Args>
@@ -57,6 +58,7 @@ public:
 
     tmp->m_is2D = true;
     tmp->m_isPauseObject = false;
+    tmp->m_isMainCharacter = false;
     return tmp;
   }
   template<typename T, class... Args>
@@ -66,11 +68,24 @@ public:
 
     tmp->m_is2D = true;
     tmp->m_isPauseObject = true;
+    tmp->m_isMainCharacter = false;
+    return tmp;
+  }
+
+  template<typename T, class... Args>
+  static ObjectFactory  *createCharacter(Args... a)
+  {
+    ObjectFactory *tmp = new SubObjectFactory<T, Args...>(a...);
+
+    tmp->m_is2D = false;
+    tmp->m_isPauseObject = false;
+    tmp->m_isMainCharacter = true;
     return tmp;
   }
 
   bool  m_isPauseObject;
   bool  m_is2D;
+  bool  m_isMainCharacter;
 };
 
 template<typename T, class... Args>

@@ -185,9 +185,9 @@ void  GraphicFile::initializeGL()
       m_textures.push_back(tmpTex[i]);
     }
   for (unsigned int i(0); i < sizeof(tmpCol) / sizeof(tmpCol[0]); ++i) {
-      m_couleurs.push_back(tmpCol[i]);
+      m_colors.push_back(tmpCol[i]);
     }
-  while (m_tmpColor.size() < m_couleurs.size()) {
+  while (m_tmpColor.size() < m_colors.size()) {
       m_tmpColor.push_back(m_pickingColor.red());
       m_tmpColor.push_back(m_pickingColor.green());
       m_tmpColor.push_back(m_pickingColor.blue());
@@ -269,7 +269,7 @@ void  GraphicFile::setSelected(bool b)
   if (b)
     this->updateVertexBufferObject(&m_tmpColor[0], m_colorsSize, m_verticesSize + m_texturesSize);
   else
-    this->updateVertexBufferObject(&m_couleurs[0], m_colorsSize, m_verticesSize + m_texturesSize);
+    this->updateVertexBufferObject(&m_colors[0], m_colorsSize, m_verticesSize + m_texturesSize);
   m_selected = b;
 }
 

@@ -13,6 +13,8 @@
 class MyWindow;
 class HandleMutex;
 
+class myGLWidget;
+
 namespace Object
 {
   class SkyBox;
@@ -37,6 +39,7 @@ public:
   void                setView(MyWindow *v);
   int                 mouseX() const;
   int                 mouseY() const;
+  void                setCharacter(myGLWidget*);
 
   static glm::mat4 const &getViewMatrix();
   static glm::mat4 const &getProjectionMatrix();
@@ -60,6 +63,7 @@ private:
   int         m_oldY;
   float       m_y;
   float       tmpSpeed;
+  myGLWidget  *m_character;
   Object::SkyBox      *m_skybox;
   float       r_temp;
   Vector3D    m_forward;

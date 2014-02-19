@@ -180,7 +180,7 @@ void Plane::initializeGL()
                        m_color.red(), m_color.green(), m_color.blue()};
 
       for (unsigned int i = 0; i < sizeof(col) / sizeof(col[0]); ++i){
-          m_couleurs.push_back(col[i]);
+          m_colors.push_back(col[i]);
         }
     }
 

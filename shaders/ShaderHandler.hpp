@@ -12,12 +12,16 @@ class ShaderHandler
 public:
   static ShaderHandler *getInstance();
   virtual ~ShaderHandler();
-  Shader  *createShader(std::string vertexShader, std::string fragmentShader);
-  Shader  *createShader(const char *vertexShader, const char *fragmentShader);
-  void    destroyShader(Shader*);
+
+  static Shader  *createShader(std::string vertexShader, std::string fragmentShader);
+  static Shader  *createShader(const char *vertexShader, const char *fragmentShader);
+  static void    destroyShader(Shader*);
 
 private:
   ShaderHandler();
+  Shader  *_createShader(std::string vertexShader, std::string fragmentShader);
+  Shader  *_createShader(const char *vertexShader, const char *fragmentShader);
+  void    _destroyShader(Shader*);
 
   std::vector<std::pair<unsigned int, Shader*> > m_list;
   static ShaderHandler    *m_instance;

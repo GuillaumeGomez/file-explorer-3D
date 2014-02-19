@@ -3,6 +3,7 @@
 #include "Camera.hpp"
 #include "objects/Line.hpp"
 #include "objects/Sphere.hpp"
+#include "objects/Rectangle.hpp"
 #include "Utils/HandleFile.hpp"
 #include "String_utils.hpp"
 #include "objects/HeightMap.hpp"
@@ -85,7 +86,12 @@ public:
       }
     else if (!re_init) {
         glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
-        glBufferData(GL_ARRAY_BUFFER, lines.size(), 0, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, lines.size(), &lines[0], GL_DYNAMIC_DRAW);
+        //glBufferSubData(GL_ARRAY_BUFFER, 0, lines.size(), &lines[0]);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        re_init = true;
+      } else {
+        glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
         glBufferSubData(GL_ARRAY_BUFFER, 0, lines.size(), &lines[0]);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
       }
@@ -264,7 +270,7 @@ bool  HandlePhysics::addObject(myGLWidget *obj)
 
           x++;
         }
-      btTriangleIndexVertexArray  *caca = new btTriangleIndexVertexArray(ss.size() / 3, &ss[0], sizeof(ss[0]) * 3,
+      btTriangleIndexVertexArray  *ca = new btTriangleIndexVertexArray(ss.size() / 3, &ss[0], sizeof(ss[0]) * 3,
           tmp.size() / 3, &tmp[0], sizeof(tmp[0]) * 3);
       /*btIndexedMesh part;
 
@@ -275,48 +281,9 @@ bool  HandlePhysics::addObject(myGLWidget *obj)
       part.m_triangleIndexStride = sizeof( short) * 3;
       part.m_numTriangles = ss.size() / 3;
       part.m_indexType = PHY_SHORT;
-      caca->addIndexedMesh(part,PHY_SHORT);*/
+      ca->addIndexedMesh(part,PHY_SHORT);*/
 
-      btBvhTriangleMeshShape* trimeshShape = new btBvhTriangleMeshShape(caca,true);
-
-
-
-      /*for (auto it : tmp)
-        tmp2.push_back(it / t->getMaxHeight());
-      btHeightfieldTerrainShape *groundShape = new btHeightfieldTerrainShape(t->getWidth(), t->getHeight(), &tmp2[0],
-          1, t->getMinHeight(), t->getMaxHeight(), 1, PHY_FLOAT, true);
-
-      groundShape->setUseDiamondSubdivision(true);
-      groundShape->setLocalScaling(btVector3(t->getCaseSize(), 1, t->getCaseSize()));*/
-
-      /*btTriangleMesh  *tri = new btTriangleMesh;
-
-      auto it = obj->getVertices();
-
-      for (unsigned int i = 0; i < it.size(); i += 9) {
-          tri->addTriangle(btVector3(it[i], it[i + 1], it[i + 2]),
-              btVector3(it[i + 3], it[i + 6], it[i + 5]),
-              btVector3(it[i + 6], it[i + 7], it[i + 8]));
-        }
-      btConvexShape *tmpshape = new btConvexTriangleMeshShape(tri);
-      btShapeHull* hull = new btShapeHull(tmpshape);
-      btScalar margin = tmpshape->getMargin();
-      hull->buildHull(margin);*/
-
-      /*btConvexHullShape* convexShape = new btConvexHullShape();
-      bool updateLocalAabb = false;
-
-      for (int i=0;i<hull->numVertices();i++)
-        {
-          convexShape->addPoint(hull->getVertexPointer()[i], updateLocalAabb);
-        }
-      convexShape->recalcLocalAabb();
-
-      bool sEnableSAT = false;
-      if (sEnableSAT)
-        convexShape->initializePolyhedralFeatures();
-      delete tmpshape;
-      delete hull;*/
+      btBvhTriangleMeshShape* trimeshShape = new btBvhTriangleMeshShape(ca,true);
 
       btDefaultMotionState* motionstate = new btDefaultMotionState(btTransform(
                                                                      btQuaternion(rot.y(), rot.x(), rot.z()),
@@ -336,10 +303,12 @@ bool  HandlePhysics::addObject(myGLWidget *obj)
       rigidBody->setUserPointer(obj);
     }
   else if (obj->getClassName() != "Sphere"){
-      static btCollisionShape* boxCollisionShape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
+      btCollisionShape* boxCollisionShape = new btBoxShape(btVector3(static_cast<Object::Rectangle*>(obj)->sizeX,
+                                                                     static_cast<Object::Rectangle*>(obj)->sizeY,
+                                                                     static_cast<Object::Rectangle*>(obj)->sizeZ));
 
       btDefaultMotionState* motionstate = new btDefaultMotionState(btTransform(
-                                                                     btQuaternion(rot.y(), rot.x(), rot.z()),
+                                                                     btQuaternion(rot.y() * rot.rotation(), rot.x() * rot.rotation(), rot.z() * rot.rotation()),
                                                                      btVector3(pos.x(), pos.y(), pos.z())
                                                                      ));
 
@@ -440,15 +409,25 @@ myGLWidget  *HandlePhysics::pick(int mouseX, int mouseY, int screenWidth, int sc
 
 void  HandlePhysics::update(const float &t)
 {
+  for (auto it : rigidBodies) {
+      Rotation &rot = static_cast<myGLWidget*>(it->getUserPointer())->rotation();
+      Vector3D &pos = static_cast<myGLWidget*>(it->getUserPointer())->getPosition();
+      it->getMotionState()->setWorldTransform(btTransform(
+                                                btQuaternion(rot.y(), rot.x(), rot.z(), rot.rotation()),
+                                                btVector3(pos.x(), pos.y(), pos.z())
+                                                ));
+      //it->getMotionState()->update();
+    }
   //dynamicsWorld->updateAabbs();
   dynamicsWorld->stepSimulation(t);
   for (btRigidBody *it : dynBodies) {
       btTransform trans;
       it->getMotionState()->getWorldTransform(trans);
       const btVector3 &p = trans.getOrigin();
-      //const btQuaternion &r = it->getWorldTransform().getRotation();
+      const btQuaternion &r = it->getWorldTransform().getRotation();
 
       static_cast<myGLWidget*>(it->getUserPointer())->setPosition(Vector3D(p.getX(), p.getY(), p.getZ()));
+      static_cast<myGLWidget*>(it->getUserPointer())->setRotation(Rotation(1.f, 0.f, r.getX(), r.getY(), r.getZ()));
       //static_cast<myGLWidget*>(it->getUserPointer())->rotation();
 
       /*static HandleFile f("res.txt");

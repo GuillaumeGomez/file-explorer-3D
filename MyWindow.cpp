@@ -164,15 +164,14 @@ void  MyWindow::update()
 
   float tmp = sdl->getElapsedTime();
   if (tmp != 0.f) {
-      m_physics->update(tmp);
-    }
-  if (tmp != 0.f) {
       if (m_tetrisMode) {
           m_tetris->update(tmp);
         } else {
-          if (!pause)
-            for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it)
-              (*it)->update(tmp);
+          if (!pause) {
+              m_physics->update(tmp);
+              for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it)
+                (*it)->update(tmp);
+            }
           for (WinList::iterator it = _2D_objectList.begin(); it != _2D_objectList.end(); ++it)
             (*it)->update(tmp);
         }
@@ -493,4 +492,11 @@ void  MyWindow::setDisplaySentence(const char *s)
 Vector3D const  &MyWindow::getPlayerPosition() const
 {
   return m_camera->getPosition();
+}
+
+void  MyWindow::setMainCharacter(myGLWidget *w)
+{
+  if (!w)
+    return;
+  m_camera->setCharacter(w);
 }

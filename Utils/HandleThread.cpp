@@ -158,6 +158,7 @@ bool HandleThread::wait(unsigned long ms)
     }
   else
     m_mutex->unlock();
+  return false;
 }
 
 #endif

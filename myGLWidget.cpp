@@ -246,7 +246,7 @@ std::string const &myGLWidget::getTextureName() const
 void  myGLWidget::initVertexBufferObject(GLenum option)
 {
   m_verticesSize = m_vertices.size() * sizeof(GLfloat);
-  m_colorsSize = m_couleurs.size() * sizeof(GLfloat);
+  m_colorsSize = m_colors.size() * sizeof(GLfloat);
   m_texturesSize = m_textures.size() * sizeof(GLfloat);
   m_normalsSize = m_normals.size() * sizeof(GLfloat);
 
@@ -262,7 +262,7 @@ void  myGLWidget::initVertexBufferObject(GLenum option)
   if (m_texturesSize > 0)
     glBufferSubData(GL_ARRAY_BUFFER, m_verticesSize, m_texturesSize, &m_textures[0]);
   if (m_colorsSize > 0)
-    glBufferSubData(GL_ARRAY_BUFFER, m_verticesSize + m_texturesSize, m_colorsSize, &m_couleurs[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, m_verticesSize + m_texturesSize, m_colorsSize, &m_colors[0]);
   if (m_normalsSize > 0)
     glBufferSubData(GL_ARRAY_BUFFER, m_verticesSize + m_texturesSize + m_colorsSize, m_normalsSize, &m_normals[0]);
 
@@ -339,18 +339,23 @@ void  myGLWidget::initVertexArrayObject()
   glBindVertexArray(0);
 }
 
+void  myGLWidget::setRotation(Rotation r)
+{
+  m_rot = r;
+}
+
 std::vector<GLfloat> &myGLWidget::getColors()
 {
-  return m_couleurs;
+  return m_colors;
 }
 
 void  myGLWidget::updateColors(const std::vector<GLfloat> &c)
 {
   if (m_hasTexture)
     return;
-  for (unsigned int i = 0; i < m_couleurs.size() && i < c.size(); ++i)
-    m_couleurs[i] = c[i];
-  this->updateVertexBufferObject(&m_couleurs[0], m_colorsSize, m_verticesSize);
+  for (unsigned int i = 0; i < m_colors.size() && i < c.size(); ++i)
+    m_colors[i] = c[i];
+  this->updateVertexBufferObject(&m_colors[0], m_colorsSize, m_verticesSize);
 }
 
 std::vector<GLfloat> &myGLWidget::getTextures()
@@ -453,9 +458,9 @@ void  myGLWidget::convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const
       m_vertices.push_back(tmp_vertices[pos].y());
       m_vertices.push_back(tmp_vertices[pos].z());
 
-      m_couleurs.push_back(m_color.red());
-      m_couleurs.push_back(m_color.green());
-      m_couleurs.push_back(m_color.blue());
+      m_colors.push_back(m_color.red());
+      m_colors.push_back(m_color.green());
+      m_colors.push_back(m_color.blue());
     }
 
   for (; pos < tmp_vertices.size(); ++pos) {
@@ -485,9 +490,9 @@ void  myGLWidget::convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const
           m_vertices.push_back(tmp_vertices[pos].z());
         }
       for (int i = 0; i < 3; ++i) {
-          m_couleurs.push_back(m_color.red());
-          m_couleurs.push_back(m_color.green());
-          m_couleurs.push_back(m_color.blue());
+          m_colors.push_back(m_color.red());
+          m_colors.push_back(m_color.green());
+          m_colors.push_back(m_color.blue());
         }
     }
 }

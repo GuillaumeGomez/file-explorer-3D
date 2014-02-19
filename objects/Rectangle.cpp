@@ -95,9 +95,9 @@ void Rectangle::initializeGL()
 
       unsigned int size = m_vertices.size() / 3;
       for (unsigned int i(0); i < size; ++i){
-          m_couleurs.push_back(m_color.red());
-          m_couleurs.push_back(m_color.green());
-          m_couleurs.push_back(m_color.blue());
+          m_colors.push_back(m_color.red());
+          m_colors.push_back(m_color.green());
+          m_colors.push_back(m_color.blue());
         }
     }
 

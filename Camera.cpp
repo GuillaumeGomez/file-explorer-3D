@@ -29,9 +29,8 @@ float     Camera::m_ratio = 1.f;
 Camera::Camera()
   : m_speed(.6f), m_sensivity(0.2f), m_phi(-24.f), m_theta(60.f), m_position(0.f, 1.f, 0.f),
     m_up(0.f, 1.f, 0.f), m_target(-1.f, -1.f, -1.f), m_win(0), m_oldX(0), m_oldY(0),
-    m_y(m_position.y()), tmpSpeed(1.f)
+    m_y(m_position.y()), tmpSpeed(1.f), m_character(0), m_skybox(0)
 {
-  m_skybox = 0;
   m_mutex = new HandleMutex;
   vectorsFromAngles();
 }
@@ -42,6 +41,8 @@ Camera::~Camera()
     delete m_skybox;
   if (m_mutex)
     delete m_mutex;
+  if (m_character)
+    delete m_character;
 }
 
 float const &Camera::getDistanceView()
@@ -84,6 +85,8 @@ void Camera::look()
 
   if (m_skybox)
     m_skybox->paintGL(m_phi, m_theta);
+  if (m_character)
+    m_character->paintGL(m_view, m_proj);
 }
 
 void Camera::mouseMoveEvent(int x, int y)
@@ -224,6 +227,11 @@ void  Camera::vectorsFromAngles()
   m_vecPos.x = m_position.x();
   m_vecPos.y = m_position.y();
   m_vecPos.z = m_position.z();
+
+  if (m_character) {
+      //m_character->setPosition(m_target);
+      m_character->setRotation(Rotation(1.f, 0.f, m_theta));
+    }
 }
 
 Vector3D const &Camera::getPosition() const
@@ -273,4 +281,12 @@ glm::mat4 const &Camera::get2DProjectionMatrix()
 float const &Camera::getRatio()
 {
   return m_ratio;
+}
+
+void  Camera::setCharacter(myGLWidget *w)
+{
+  if (w) {
+      m_character = w;
+      m_character->setRotation(Rotation());
+    }
 }

@@ -393,9 +393,9 @@ void  Tetris::initializeGL()
   m_pointsNumber = m_vertices.size() / 2;
 
   /*for (unsigned int i = 0; i < m_pointsNumber; ++i) {
-      m_couleurs.push_back(1.f);
-      m_couleurs.push_back(1.f);
-      m_couleurs.push_back(1.f);
+      m_colors.push_back(1.f);
+      m_colors.push_back(1.f);
+      m_colors.push_back(1.f);
     }*/
 
   this->initVertexBufferObject();
@@ -490,7 +490,7 @@ void    Tetris::update(const float &n)
                 }
             }
         }
-      //this->updateVertexBufferObject(&m_couleurs[0], m_couleurs.size() * sizeof(m_couleurs[0]),
+      //this->updateVertexBufferObject(&m_colors[0], m_colors.size() * sizeof(m_colors[0]),
       //    m_verticesSize);
       this->updateVertexBufferObject(&m_textures[0], m_textures.size() * sizeof(m_textures[0]),
           m_verticesSize);
@@ -504,9 +504,9 @@ void  Tetris::setColor(int x, int y, PieceDatas *c, bool ghost)
   int res = y * 120 + x * 12 + 48;
 
   /*for (int i = 0; i < 6; ++i) {
-      m_couleurs[res] = c.red();
-      m_couleurs[res + 1] = c.green();
-      m_couleurs[res + 2] = c.blue();
+      m_colors[res] = c.red();
+      m_colors[res + 1] = c.green();
+      m_colors[res + 2] = c.blue();
       res += 3;
     }*/
 

@@ -92,7 +92,7 @@ void  HeightMap::initializeGL()
 
       "if(fScale <= fRange1)\n"
       "outputColor = texture(gSampler[0], coordTexture);\n"
-      //"vTexColor = texture2D(gSampler[0], coordTexture);\n"
+      //"vTexColor = texture(gSampler[0], coordTexture);\n"
       "else if(fScale <= fRange2 - 0.01){\n"
       "float f1 = (fScale - fRange1) / (fRange2 - fRange1);\n"
       "float f2 = 1 - f1;\n"

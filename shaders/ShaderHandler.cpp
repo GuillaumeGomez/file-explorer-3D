@@ -41,13 +41,22 @@ ShaderHandler::~ShaderHandler()
 
 Shader  *ShaderHandler::createShader(const char *vertexShader, const char *fragmentShader)
 {
+  return ShaderHandler::getInstance()->_createShader(vertexShader, fragmentShader);
+}
+
+Shader  *ShaderHandler::_createShader(const char *vertexShader, const char *fragmentShader)
+{
   if (!vertexShader || !fragmentShader)
     return 0;
   return this->createShader(std::string(vertexShader), std::string(fragmentShader));
 }
 
-
 Shader  *ShaderHandler::createShader(std::string vertexShader, std::string fragmentShader)
+{
+  return ShaderHandler::getInstance()->_createShader(vertexShader, fragmentShader);
+}
+
+Shader  *ShaderHandler::_createShader(std::string vertexShader, std::string fragmentShader)
 {
   for (auto &tmp : m_list) {
       if (tmp.second) {
@@ -69,6 +78,11 @@ Shader  *ShaderHandler::createShader(std::string vertexShader, std::string fragm
 }
 
 void  ShaderHandler::destroyShader(Shader *s)
+{
+  return ShaderHandler::getInstance()->_destroyShader(s);
+}
+
+void  ShaderHandler::_destroyShader(Shader *s)
 {
   for (auto tmp = m_list.begin(); tmp != m_list.end(); ++tmp) {
       if (tmp->second != s)

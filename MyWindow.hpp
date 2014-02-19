@@ -57,6 +57,7 @@ public:
   void        picking();
   void        setDisplaySentence(std::string);
   void        setDisplaySentence(const char*);
+  void        setMainCharacter(myGLWidget*);
 
   Vector3D const  &getPlayerPosition() const;
 
