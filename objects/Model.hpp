@@ -117,7 +117,7 @@ public:
   // get the animationspeed... in ticks per second
   float GetAnimationSpeed() const { return Animations[CurrentAnimIndex].TicksPerSecond; }
   // get the transforms needed to pass to the vertex shader. This will wrap the dt value passed, so it is safe to pass 50000000 as a valid number
-  std::vector<glm::mat4>& GetTransforms(float dt){ return Animations[CurrentAnimIndex].GetTransforms(dt); }
+  std::vector<glm::mat4>& GetTransforms(float const &dt){ return Animations[CurrentAnimIndex].GetTransforms(dt); }
 
   int32_t GetAnimationIndex() const { return CurrentAnimIndex; }
   std::string GetAnimationName() const { return Animations[CurrentAnimIndex].Name;  }
@@ -163,6 +163,7 @@ namespace Object
     void      initializeGL();
     void      paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix);
     virtual std::string getClassName() const;
+    virtual void update(const float &);
 
   protected:
     bool  load(const aiScene*);
@@ -172,10 +173,11 @@ namespace Object
     std::string modelName;
     float       m_height;
     SceneAnimator *m_scene;
-    std::vector<GLuint> m_indices;
+    GLuint *m_indices;
     std::vector<Vertex> vertices;
     std::vector<std::pair<GLuint, GLuint> >  m_index; //first: index, second: size
     GLuint elementbuffer;
+    float dtime;
   };
 }
 

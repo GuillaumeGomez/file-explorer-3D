@@ -14,12 +14,14 @@ Model::Model(Vector3D v, Rotation r, std::string model, float height)
   : myGLWidget(v, r), modelName(model), m_height(height)
 {
   m_scene = 0;
+  dtime = 0.f;
 }
 
 Model::Model(Vector3D v, Rotation r, const char *model, float height)
   : myGLWidget(v, r), modelName(model ? model : ""), m_height(height)
 {
   m_scene = 0;
+  dtime = 0.f;
 }
 
 
@@ -79,6 +81,11 @@ void  Model::initializeGL()
   this->initVertexArrayObject();*/
 }
 
+void  Model::update(const float &f)
+{
+  dtime += f;
+}
+
 void  Model::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 {
   glUseProgram(m_shader->getProgramID());
@@ -87,14 +94,22 @@ void  Model::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 
   glUniformMatrix4fv(m_uniLoc_projection, 1, GL_FALSE, glm::value_ptr(proj_matrix));
 
-  glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(view_matrix));
   glUniform3fv(m_uniloc_pos, 1, glm::value_ptr(glm::vec3(m_pos.x(), m_pos.y(), m_pos.z())));
   glUniform4fv(m_uniloc_rot, 1, glm::value_ptr(glm::vec4(m_rot.x(), m_rot.y(), m_rot.z(), m_rot.rotation())));
 
   /*for (std::pair<GLuint, GLuint> it : m_index) {
       glDrawArrays(GL_TRIANGLE_STRIP, it.first, it.second / 3);
     }*/
+
+  std::vector<glm::mat4> transformed_bones = m_scene->GetTransforms(dtime);
+
+  int i = 0;
+
   for (std::pair<GLuint, GLuint> it : m_index) {
+      if (i < transformed_bones.size()) {
+          glm::mat4 tmp = view_matrix * transformed_bones[i++];
+          glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
+        }
       glDrawElements(GL_TRIANGLES, it.first, GL_UNSIGNED_INT, (void*)it.second);
     }
 
@@ -184,7 +199,9 @@ bool  Model::load(const aiScene *load)
     }
 
   //m_vertices.resize(numverts);
-  m_indices.resize((stride/2)*numindices);
+  //m_indices.resize((stride/2)*numindices);
+  m_indices = new GLuint[(stride/2)*numindices];
+  memset(m_indices, 0, (stride/2)*numindices * sizeof(*m_indices));
   std::vector<Vertex> tempverts(numverts);
   std::vector<std::string> bonenames;
 
@@ -265,7 +282,7 @@ bool  Model::load(const aiScene *load)
             }
         }
       // check whether we can use 16 bit indices for our format... the ASSIMPOBLARBLA uses 32 bit indices for all theirs..
-      if (stride == 4){
+      /*if (stride == 4){
           uint32_t* pbData = reinterpret_cast<uint32_t*>(&m_indices[currentindex]);
           for (unsigned int x = 0; x < mesh->mNumFaces;++x){
               for (unsigned int a = 0; a < 3 ;++a) {
@@ -279,7 +296,14 @@ bool  Model::load(const aiScene *load)
                   *pbData++ = static_cast<uint16_t>(mesh->mFaces[x].mIndices[a]+ currentvertex);
                 }
             }
+        }*/
+      for (unsigned int x = 0; x < mesh->mNumFaces;++x){
+          for (unsigned int a = 0; a < 3 ;++a) {
+              m_indices[currentindex + a + x * 3] = static_cast<uint32_t>(mesh->mFaces[x].mIndices[a]+ currentvertex);
+            }
         }
+
+
       //load the textures
       auto tmp_v = Utility::split<std::string>(modelName, "/");
       std::string pathtomodel = "";
@@ -360,7 +384,8 @@ bool  Model::load(const aiScene *load)
 
   glGenBuffers(1, &elementbuffer);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLuint), &m_indices[0], GL_STATIC_DRAW);
+  //glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLuint), &m_indices[0], GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, currentindex * sizeof(GLuint), m_indices, GL_STATIC_DRAW);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
   glGenVertexArrays(1, &m_vaoID);
@@ -384,6 +409,8 @@ bool  Model::load(const aiScene *load)
 
   m_uniLoc_projection = glGetUniformLocation(m_shader->getProgramID(), "projection");
   m_uniLoc_modelView = glGetUniformLocation(m_shader->getProgramID(), "modelview");
+  m_uniloc_rot = glGetUniformLocation(m_shader->getProgramID(), "_rot");
+  m_uniloc_pos = glGetUniformLocation(m_shader->getProgramID(), "_pos");
 
   //VB[0].Create(currentvertex, sizeof(Vertex), VERTEX_BUFFER, IMMUTABLE, CPU_NONE, &tempverts[0] );
   //IB.Create(currentindex, stride, INDEX_BUFFER, IMMUTABLE, CPU_NONE, &m_indices[0]); // create index buffer!
