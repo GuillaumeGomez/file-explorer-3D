@@ -512,40 +512,40 @@ void  Tetris::setColor(int x, int y, PieceDatas *c, bool ghost)
 
   if (c) {
       m_textures[res] = c->tex_coord[0]; //up left
-      m_textures[res + 1] = ghost ? 0.5f : 1.f;
+      m_textures[res + 1] = ghost ? 0.49f : 1.f;
 
       m_textures[res + 2] = c->tex_coord[1]; //up right
-      m_textures[res + 3] = ghost ? 0.5f : 1.f;
+      m_textures[res + 3] = ghost ? 0.49f : 1.f;
 
       m_textures[res + 4] = c->tex_coord[0]; //down left
-      m_textures[res + 5] = ghost ? 0.f : 0.5f;
+      m_textures[res + 5] = ghost ? 0.f : 0.51f;
 
       m_textures[res + 6] = c->tex_coord[1]; //up right
-      m_textures[res + 7] = ghost ? 0.5f : 1.f;
+      m_textures[res + 7] = ghost ? 0.49f : 1.f;
 
       m_textures[res + 8] = c->tex_coord[0]; //down left
-      m_textures[res + 9] = ghost ? 0.f : 0.5f;
+      m_textures[res + 9] = ghost ? 0.f : 0.51f;
 
       m_textures[res + 10] = c->tex_coord[1]; //down right
-      m_textures[res + 11] = ghost ? 0.f : 0.5f;
+      m_textures[res + 11] = ghost ? 0.f : 0.51f;
     } else {
-      m_textures[res] = 0.f; //up left
-      m_textures[res + 1] = 0.51f;
+      m_textures[res] = 0.05f; //up left
+      m_textures[res + 1] = 0.4f;
 
-      m_textures[res + 2] = 1.f / 8.f; //up right
-      m_textures[res + 3] = 0.51f;
+      m_textures[res + 2] = 0.1f; //up right
+      m_textures[res + 3] = 0.4f;
 
-      m_textures[res + 4] = 0.f; //down left
-      m_textures[res + 5] = 0.f;
+      m_textures[res + 4] = 0.05f; //down left
+      m_textures[res + 5] = 0.2f;
 
-      m_textures[res + 6] = 1.f / 8.f; //up right
-      m_textures[res + 7] = 0.51f;
+      m_textures[res + 6] = 0.1f; //up right
+      m_textures[res + 7] = 0.4f;
 
-      m_textures[res + 8] = 0.f; //down left
-      m_textures[res + 9] = 0.f;
+      m_textures[res + 8] = 0.05f; //down left
+      m_textures[res + 9] = 0.2f;
 
-      m_textures[res + 10] = 1.f / 8.f; //down right
-      m_textures[res + 11] = 0.51f;
+      m_textures[res + 10] = 0.1f; //down right
+      m_textures[res + 11] = 0.4f;
     }
 }
 
