@@ -1,4 +1,0 @@
-sphere height: 20.1068
-sphere height: -70.2282
-sphere height: 20.145
-sphere height: -73.6662

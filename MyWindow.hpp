@@ -33,6 +33,10 @@ typedef std::vector<myGLWidget*>  WinList;
 //#include "HandleSFML.hpp"
 //#endif
 
+namespace Object {
+  class Model;
+}
+
 class MyWindow
 {
 public:
@@ -71,6 +75,7 @@ private:
   bool                m_wireframe;
   bool                m_tetrisMode;
   HandlePhysics       *m_physics;
+  Object::Model       *m_character;
   WinList             objectList;
   WinList             _2D_objectList;
   WinList             m_pickObjects;

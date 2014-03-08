@@ -105,8 +105,25 @@ void Sphere::initializeGL()
           tmp_v.push_back(Vector3D(sinftemp1 * sinCache1a[i], sinftemp1 * cosCache1a[i], zLow));
         }
     }
-  m_hasTexture ? this->convertTRIANGLE_STRIP_To_TRIANGLES(tmp_v, tmp_t) : this->convertTRIANGLE_STRIP_To_TRIANGLES(tmp_v);
+  for (Vector3D &it : tmp_v) {
+      m_vertices.push_back(it.x());
+      m_vertices.push_back(it.y());
+      m_vertices.push_back(it.z());
+    }
+  if (m_hasTexture)
+    for (Vector3D &it : tmp_t) {
+        m_textures.push_back(it.x());
+        m_textures.push_back(it.y());
+      }
+  else
+    for (Vector3D &it : tmp_v) {
+        m_colors.push_back(m_color.red());
+        m_colors.push_back(m_color.green());
+        m_colors.push_back(m_color.blue());
+      }
+  //m_hasTexture ? this->convertTRIANGLE_STRIP_To_TRIANGLES(tmp_v, tmp_t) : this->convertTRIANGLE_STRIP_To_TRIANGLES(tmp_v);
   m_pointsNumber = m_vertices.size() / 3;
+  m_drawMode = GL_TRIANGLE_STRIP;
 
   this->initVertexBufferObject();
   this->initVertexArrayObject();

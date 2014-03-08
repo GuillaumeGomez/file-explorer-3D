@@ -1,6 +1,12 @@
 #include "HandleFile.hpp"
 #include "MyException.hpp"
 
+#ifdef WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
+
 using namespace std;
 
 HandleFile::HandleFile(string name, ios_base::openmode mode) : m_openMode(mode), m_filename(name)
@@ -115,4 +121,15 @@ void  HandleFile::flush()
 {
   if (this->isOpen())
     m_stream.flush();
+}
+
+bool  HandleFile::exists(const char *s)
+{
+  if (!s)
+    return false;
+#ifdef WIN32
+  return _access_s(s, 0 ) == 0;
+#else
+  return access(s, F_OK | R_OK);
+#endif
 }

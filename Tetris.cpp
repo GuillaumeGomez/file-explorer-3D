@@ -7,7 +7,7 @@
 
 #include "HandleSDL.hpp"
 
-Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f), m_hasNew(false),
+Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_score(0), m_elapsed(0.f), m_hasNew(false),
   m_lines(0), m_end(false)
 {
   m_render2D = true;
@@ -29,8 +29,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[0].rot[3][2], "    ", 4);
   memcpy(m_pieces[0].rot[3][3], "    ", 4);
   m_pieces[0].color = BLUE;
-  m_pieces[0].tex_coord[0] = 1.f / 8.f;
-  m_pieces[0].tex_coord[1] = 1.f / 8.f * 2.f;
+  m_pieces[0].tex_coord[0] = 0.125f;
+  m_pieces[0].tex_coord[1] = 0.25f;
 
   memcpy(m_pieces[1].rot[0][0], " 2  ", 4);
   memcpy(m_pieces[1].rot[0][1], " 2  ", 4);
@@ -49,8 +49,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[1].rot[3][2], "    ", 4);
   memcpy(m_pieces[1].rot[3][3], "    ", 4);
   m_pieces[1].color = RED;
-  m_pieces[1].tex_coord[0] = 1.f / 8.f * 2.f;
-  m_pieces[1].tex_coord[1] = 1.f / 8.f * 3.f;
+  m_pieces[1].tex_coord[0] = 0.25f;
+  m_pieces[1].tex_coord[1] = 0.375f;
 
   memcpy(m_pieces[2].rot[0][0], " 3  ", 4);
   memcpy(m_pieces[2].rot[0][1], "333 ", 4);
@@ -69,8 +69,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[2].rot[3][2], " 3  ", 4);
   memcpy(m_pieces[2].rot[3][3], "    ", 4);
   m_pieces[2].color = WHITE;
-  m_pieces[2].tex_coord[0] = 1.f / 8.f * 3.f;
-  m_pieces[2].tex_coord[1] = 1.f / 8.f * 4.f;
+  m_pieces[2].tex_coord[0] = 0.375f;
+  m_pieces[2].tex_coord[1] = 0.5f;
 
   memcpy(m_pieces[3].rot[0][0], " 44 ", 4);
   memcpy(m_pieces[3].rot[0][1], "44  ", 4);
@@ -89,8 +89,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[3].rot[3][2], "  4 ", 4);
   memcpy(m_pieces[3].rot[3][3], "    ", 4);
   m_pieces[3].color = ORANGE;
-  m_pieces[3].tex_coord[0] = 1.f / 8.f * 4.f;
-  m_pieces[3].tex_coord[1] = 1.f / 8.f * 5.f;
+  m_pieces[3].tex_coord[0] = 0.5f;
+  m_pieces[3].tex_coord[1] = 0.625f;
 
   memcpy(m_pieces[4].rot[0][0], "55  ", 4);
   memcpy(m_pieces[4].rot[0][1], " 55 ", 4);
@@ -109,8 +109,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[4].rot[3][2], " 5  ", 4);
   memcpy(m_pieces[4].rot[3][3], "    ", 4);
   m_pieces[4].color = YELLOW;
-  m_pieces[4].tex_coord[0] = 1.f / 8.f * 5.f;
-  m_pieces[4].tex_coord[1] = 1.f / 8.f * 6.f;
+  m_pieces[4].tex_coord[0] = 0.625f;
+  m_pieces[4].tex_coord[1] = 0.75f;
 
   memcpy(m_pieces[5].rot[0][0], "6   ", 4);
   memcpy(m_pieces[5].rot[0][1], "6   ", 4);
@@ -129,8 +129,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[5].rot[3][2], "    ", 4);
   memcpy(m_pieces[5].rot[3][3], "    ", 4);
   m_pieces[5].color = GREEN;
-  m_pieces[5].tex_coord[0] = 1.f / 8.f * 6.f;
-  m_pieces[5].tex_coord[1] = 1.f / 8.f * 7.f;
+  m_pieces[5].tex_coord[0] = 0.75f;
+  m_pieces[5].tex_coord[1] = 0.875f;
 
   memcpy(m_pieces[6].rot[0][0], " 7   ", 4);
   memcpy(m_pieces[6].rot[0][1], " 7   ", 4);
@@ -149,8 +149,8 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_elapsed(0.f
   memcpy(m_pieces[6].rot[3][2], "    ", 4);
   memcpy(m_pieces[6].rot[3][3], "    ", 4);
   m_pieces[6].color = PURPLE;
-  m_pieces[6].tex_coord[0] = 1.f / 8.f * 7.f;
-  m_pieces[6].tex_coord[1] = 1.f / 8.f * 8.f;
+  m_pieces[6].tex_coord[0] = 0.875f;
+  m_pieces[6].tex_coord[1] = 1.f;
 
   m_texts.push_back(new Object::Text("0", RED, -0.99f, 0.65f));
   m_texts.push_back(new Object::Text("0", RED, -0.99f, 0.25f));
@@ -187,63 +187,63 @@ void  createGrid(std::vector<GLfloat> &tex, std::vector<GLfloat> &vec)
   //left
   vec.push_back(-0.52f);
   vec.push_back(0.92f);
-  tex.push_back(0.01f);
+  tex.push_back(0.f);
   tex.push_back(0.99f);
 
   vec.push_back(-0.5f);
   vec.push_back(0.92f);
-  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.125f);
   tex.push_back(0.99f);
 
   vec.push_back(-0.5f);
   vec.push_back(-0.92f);
-  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.125f);
   tex.push_back(0.51f);
 
   vec.push_back(-0.5f);
   vec.push_back(-0.92f);
-  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.125f);
   tex.push_back(0.51f);
 
   vec.push_back(-0.52f);
   vec.push_back(-0.92f);
-  tex.push_back(0.01f);
+  tex.push_back(0.f);
   tex.push_back(0.51f);
 
   vec.push_back(-0.52f);
   vec.push_back(0.92f);
-  tex.push_back(0.01f);
+  tex.push_back(0.f);
   tex.push_back(0.99f);
 
   //right
   vec.push_back(0.5f);
   vec.push_back(0.92f);
-  tex.push_back(0.01f);
+  tex.push_back(0.f);
   tex.push_back(0.99f);
 
   vec.push_back(0.52f);
   vec.push_back(0.92f);
-  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.125f);
   tex.push_back(0.99f);
 
   vec.push_back(0.52f);
   vec.push_back(-0.92f);
-  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.125f);
   tex.push_back(0.51f);
 
   vec.push_back(0.52f);
   vec.push_back(-0.92f);
-  tex.push_back(1.f / 8.f - 0.01f);
+  tex.push_back(0.125f);
   tex.push_back(0.51f);
 
   vec.push_back(0.5f);
   vec.push_back(-0.92f);
-  tex.push_back(0.01f);
+  tex.push_back(0.f);
   tex.push_back(0.51f);
 
   vec.push_back(0.5f);
   vec.push_back(0.92f);
-  tex.push_back(0.01f);
+  tex.push_back(0.f);
   tex.push_back(0.99f);
 
   //up
@@ -530,22 +530,22 @@ void  Tetris::setColor(int x, int y, PieceDatas *c, bool ghost)
       m_textures[res + 11] = ghost ? 0.f : 0.5f;
     } else {
       m_textures[res] = 0.f; //up left
-      m_textures[res + 1] = 0.48f;
+      m_textures[res + 1] = 0.51f;
 
-      m_textures[res + 2] = 1.f / 8.f - 0.02f; //up right
-      m_textures[res + 3] = 0.48f;
+      m_textures[res + 2] = 1.f / 8.f; //up right
+      m_textures[res + 3] = 0.51f;
 
       m_textures[res + 4] = 0.f; //down left
       m_textures[res + 5] = 0.f;
 
-      m_textures[res + 6] = 1.f / 8.f - 0.02f; //up right
-      m_textures[res + 7] = 0.48f;
+      m_textures[res + 6] = 1.f / 8.f; //up right
+      m_textures[res + 7] = 0.51f;
 
       m_textures[res + 8] = 0.f; //down left
       m_textures[res + 9] = 0.f;
 
-      m_textures[res + 10] = 1.f / 8.f - 0.02f; //down right
-      m_textures[res + 11] = 0.48f;
+      m_textures[res + 10] = 1.f / 8.f; //down right
+      m_textures[res + 11] = 0.51f;
     }
 }
 

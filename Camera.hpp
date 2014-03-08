@@ -63,7 +63,6 @@ private:
   int         m_oldY;
   float       m_y;
   float       tmpSpeed;
-  myGLWidget  *m_character;
   Object::SkyBox      *m_skybox;
   float       r_temp;
   Vector3D    m_forward;

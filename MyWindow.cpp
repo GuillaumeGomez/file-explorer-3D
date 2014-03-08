@@ -8,6 +8,7 @@
 #include "objects/Rectangle.hpp"
 #include "objects/GraphicFile.hpp"
 #include "objects/Cube.hpp"
+#include "objects/Model.hpp"
 #include "FrameBuffer.hpp"
 #include "HandlePhysics.hpp"
 
@@ -37,7 +38,7 @@ void  *repeat_func(void *arg)
 
 MyWindow::MyWindow(std::string winName, int antiali, int fps)
   : m_printInfo(false), MIN(WTIMER / (fps <= 0 ? 40 : fps)), pause(false), m_wireframe(false),
-    m_tetrisMode(false), m_physics(0)
+    m_tetrisMode(false), m_physics(0), m_character(0)
 {
   m_camera = 0;
   m_key = 0;
@@ -175,6 +176,8 @@ void  MyWindow::update()
           for (WinList::iterator it = _2D_objectList.begin(); it != _2D_objectList.end(); ++it)
             (*it)->update(tmp);
         }
+      if (m_character)
+        m_character->update(tmp);
     }
 
   if (m_tetrisMode) {
@@ -325,7 +328,7 @@ void MyWindow::paintGL()
   for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it){
       (*it)->paintGL(view_mat, proj_mat);
     }
-
+  m_character->paintGL(view_mat, proj_mat);
   m_disp->paintGL(view_mat, proj_mat);
 
   /* 2D part */
@@ -498,5 +501,8 @@ void  MyWindow::setMainCharacter(myGLWidget *w)
 {
   if (!w)
     return;
-  m_camera->setCharacter(w);
+  m_character = static_cast<Object::Model*>(w);
+  m_character->cutAnimation("", "walk", 0.f, 400.f);
+  m_character->setCurrentAnimation("walk");
+  m_character->play();
 }
