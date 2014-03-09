@@ -6,6 +6,7 @@ using namespace Object;
 
 Point::Point(Vector3D p, Color c) : myGLWidget(p, Rotation(), c)
 {
+  m_className = "Point";
 }
 
 Point::~Point()

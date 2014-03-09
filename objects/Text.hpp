@@ -19,14 +19,12 @@ namespace Object
     Text(Texture const &s, float length, int lines, float x = 0.f, float y = 0.f, float font_size = 0.2f);
     virtual ~Text();
     virtual void    initializeGL();
-    virtual void    initializeGLNoList();
     virtual void    paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
     virtual void    setTexture(const Texture &);
     void            setText(std::string);
     void            setText(const char*);
     std::string const &getText() const;
     GLfloat const   &getSize() const;
-    virtual std::string getClassName() const;
 
   protected:
     void        fill2DVertices(bool recalc = false);

@@ -17,7 +17,6 @@ namespace Object
         std::string const &getName() const;
         float const       &getSize() const;
         float const       &getHeight() const;
-        virtual std::string getClassName() const;
 
     private:
         std::string m_name;

@@ -6,6 +6,7 @@ using namespace Object;
 
 Line::Line(Vector3D from, Vector3D to, Color c) : myGLWidget(from, Rotation(), c), m_to(to)
 {
+  m_className = "Line";
 }
 
 Line::~Line()
@@ -67,9 +68,4 @@ void  Line::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 
   glBindVertexArray(0);
   glUseProgram(0);
-}
-
-std::string Line::getClassName() const
-{
-  return std::string("Line");
 }

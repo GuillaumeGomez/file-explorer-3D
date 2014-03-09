@@ -19,6 +19,7 @@ GraphicFile::GraphicFile(Vector3D v, Rotation r, Color c, const char *fileName)
   tmpRotation = m_rot;
   tmpRotation.setSpeed(0.f);
   tmpRotation.setRotX(1.f);
+  m_className = "GraphicFile";
 }
 
 GraphicFile::GraphicFile(Vector3D v, Rotation r, Color c, std::string fileName)
@@ -30,6 +31,7 @@ GraphicFile::GraphicFile(Vector3D v, Rotation r, Color c, std::string fileName)
   tmpRotation = m_rot;
   tmpRotation.setSpeed(10.f);
   tmpRotation.setRotX(1.f);
+  m_className = "GraphicFile";
 }
 
 GraphicFile::~GraphicFile()
@@ -198,10 +200,6 @@ void  GraphicFile::initializeGL()
   this->initVertexArrayObject();
 }
 
-void  GraphicFile::initializeGLNoList()
-{
-}
-
 void  GraphicFile::pick(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 {
   if (isPickingAllowed()) {
@@ -271,9 +269,4 @@ void  GraphicFile::setSelected(bool b)
   else
     this->updateVertexBufferObject(&m_colors[0], m_colorsSize, m_verticesSize + m_texturesSize);
   m_selected = b;
-}
-
-std::string GraphicFile::getClassName() const
-{
-  return std::string("GraphicFile");
 }

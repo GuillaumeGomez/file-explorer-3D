@@ -13,12 +13,14 @@ Sphere::Sphere(Vector3D p, Rotation r, Color c, float rayon) : myGLWidget(p, r, 
 {
   m_pickAllow = true;
   m_pointsNumber = 0;
+  m_className = "Sphere";
 }
 
 Sphere::Sphere(Vector3D p, Rotation r, std::string tex, float rayon) : myGLWidget(p, r, tex), m_rayon(rayon)
 {
   m_pickAllow = true;
   m_pointsNumber = 0;
+  m_className = "Sphere";
 }
 
 void Sphere::initializeGL()
@@ -129,10 +131,6 @@ void Sphere::initializeGL()
   this->initVertexArrayObject();
 }
 
-void  Sphere::initializeGLNoList()
-{
-}
-
 void  Sphere::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix)
 {
   glUseProgram(m_shader->getProgramID());
@@ -155,9 +153,4 @@ void  Sphere::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
 float const &Sphere::getRadius() const
 {
   return m_rayon;
-}
-
-string Sphere::getClassName() const
-{
-  return std::string("Sphere");
 }

@@ -28,6 +28,7 @@ SkyBox::SkyBox() : Cube(Vector3D(0.f, 0.f, 0.f), Rotation(), Color(), 1.f)
     MyWindow::getLib()->createSkyBoxTextures(tex);
     glDisable(GL_TEXTURE_CUBE_MAP_ARB);
     m_shader = new Shader;
+    m_className = "SkyBox";
 }
 
 SkyBox::~SkyBox()
@@ -94,10 +95,6 @@ void  SkyBox::initializeGL()
     this->initVertexArrayObject();
 }
 
-void  SkyBox::initializeGLNoList()
-{
-}
-
 void  SkyBox::paintGL(float &x, float &y)
 {
     glUseProgram(m_shader->getProgramID());
@@ -120,9 +117,4 @@ void  SkyBox::paintGL(float &x, float &y)
 
     glBindVertexArray(0);
     glUseProgram(0);
-}
-
-string SkyBox::getClassName() const
-{
-  return std::string("SkyBox");
 }

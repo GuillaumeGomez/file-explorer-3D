@@ -11,7 +11,6 @@ namespace Object
     Cube(Vector3D p, Rotation r, Color c, float size);
     Cube(Vector3D p, Rotation r, std::string tex, float size);
     virtual ~Cube(){}
-    virtual std::string getClassName() const;
   };
 }
 

@@ -12,7 +12,6 @@ namespace Object
     virtual ~Line();
     virtual void    initializeGL();
     virtual void    paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix);
-    virtual std::string getClassName() const;
 
   private:
     Vector3D  m_to;

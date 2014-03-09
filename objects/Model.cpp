@@ -102,6 +102,7 @@ Model::Model(Vector3D v, Rotation r, const char *model, float height) : myGLWidg
     }
   m_sModelPath = model;
   m_pause = false;
+  m_className = "Model";
 
   //m_pLight = new Light(vLightPosition, vLightAmbientColor, vLightDiffuseColor);
   //m_pCamera = new Camera(fCameraDistance, fCameraHeight, fCameraAngle);
@@ -425,8 +426,18 @@ void  Model::pause()
 
 void  Model::update(const float &f)
 {
-  if (!m_pause)
+  if (!m_pause) {
     g_lLastTime = f;
+    //set the bone animation to the specified timestamp
+    if (m_pAnimator != NULL) {
+        //long lTimeNow = SDL_GetTicks();
+        //long lTimeDifference = lTimeNow - g_lLastTime;
+        //g_lLastTime = lTimeNow;
+        g_lElapsedTime += g_lLastTime;
+
+        m_pAnimator->UpdateAnimation(g_lElapsedTime, ANIMATION_TICKS_PER_SECOND);
+      }
+    }
 }
 
 bool  Model::setCurrentAnimation(const char *animationName)
@@ -469,16 +480,6 @@ bool  Model::cutAnimation(const char *animationName, const char *cutAnimationNam
 }
 
 void Model::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix) {
-  //set the bone animation to the specified timestamp
-  if (m_pAnimator != NULL) {
-      //long lTimeNow = SDL_GetTicks();
-      //long lTimeDifference = lTimeNow - g_lLastTime;
-      //g_lLastTime = lTimeNow;
-      g_lElapsedTime += g_lLastTime;
-
-      m_pAnimator->UpdateAnimation(g_lElapsedTime, ANIMATION_TICKS_PER_SECOND);
-    }
-
   //m_pShader->Bind();
   glUseProgram(m_shader->getProgramID());
 
@@ -554,6 +555,7 @@ void Model::RenderNode(aiNode * pNode) {
 
 void Model::DrawMesh(unsigned int uIndex) {
   Mesh* pMesh = m_vMeshes.at(uIndex);
+  Texture *t(0);
 
   glEnableVertexAttribArray(m_uniloc_pos);
   glVertexAttribPointer(m_uniloc_pos, 4, GL_FLOAT, GL_FALSE, 0, pMesh->m_pVertices);
@@ -574,11 +576,12 @@ void Model::DrawMesh(unsigned int uIndex) {
 
   if (m_vTextures[pMesh->m_iMaterialIndex]) {
       //glActiveTexture(GL_TEXTURE0);
-      m_vTextures[pMesh->m_iMaterialIndex]->bind();
+      t = m_vTextures[pMesh->m_iMaterialIndex];
+      t->bind();
       //glBindTexture(GL_TEXTURE_2D, m_vTextures[pMesh->m_iMaterialIndex]);
 
-      glUniform1i(m_uniLoc_tex, 0); //! ERROR ON THIS LINE
       glUniform1i(m_uniLoc_useTex, 1);
+      //glUniform1i(m_uniLoc_tex, 0);
     } else {
       glEnableVertexAttribArray(m_uniLoc_color);
       glVertexAttribPointer(m_uniLoc_color, 4, GL_FLOAT, GL_FALSE, 0, pMesh->m_pColors);
@@ -586,6 +589,8 @@ void Model::DrawMesh(unsigned int uIndex) {
     }
 
   glDrawElements(GL_TRIANGLES, pMesh->m_iNumFaces * 3, GL_UNSIGNED_INT, pMesh->m_pIndices);
+  if (t)
+    t->unbind();
 }
 
 const char *Model::getCurrentAnimationName() const

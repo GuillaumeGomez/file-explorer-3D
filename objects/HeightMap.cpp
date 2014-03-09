@@ -11,6 +11,7 @@ HeightMap::HeightMap(Vector3D v, unsigned int width, unsigned int height, float 
 {
   for (int i = 0; i < 4; ++i)
     m_tex[i] = 0;
+  m_className = "HeightMap";
 }
 
 HeightMap::HeightMap(Vector3D v, string img, float case_size)
@@ -18,6 +19,7 @@ HeightMap::HeightMap(Vector3D v, string img, float case_size)
 {
   for (int i = 0; i < 4; ++i)
     m_tex[i] = 0;
+  m_className = "HeightMap";
 }
 
 HeightMap::~HeightMap()
@@ -276,9 +278,4 @@ unsigned int HeightMap::getHeight() const
 float const &HeightMap::getCaseSize() const
 {
   return m_case_size;
-}
-
-std::string HeightMap::getClassName() const
-{
-  return std::string("HeightMap");
 }

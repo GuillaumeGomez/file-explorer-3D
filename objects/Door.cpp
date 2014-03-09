@@ -20,6 +20,7 @@ Door::Door(Vector3D p, Rotation r, const char *name) : myGLWidget(p, r)
 
   m_texture = (*MyWindow::getLib()->createTextTexture(m_name.c_str(), &m_texture, RED));
   //m_texture.setTextureID(tex);
+  m_className = "Door";
 }
 
 Door::~Door()
@@ -141,9 +142,4 @@ void    Door::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
   glRotatef(m_rot.rotation(), m_rot.x(), m_rot.y(), 0.0f);
   //glCallList(m_glObject);
   glPopMatrix();
-}
-
-string Door::getClassName() const
-{
-  return std::string("Door");
 }

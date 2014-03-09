@@ -13,8 +13,6 @@ namespace Object
     virtual ~Cylinder(){}
     virtual void  initializeGL();
     virtual void  paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
-    virtual void  initializeGLNoList();
-    virtual std::string getClassName() const;
 
   private:
     float       m_rayon;

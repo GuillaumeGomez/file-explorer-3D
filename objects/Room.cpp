@@ -112,6 +112,7 @@ Room::Room(Vector3D p, Rotation r, const char *path) : myGLWidget(p, r)
     } catch (MyException &e){
 
     }
+    m_className = "Room";
 }
 
 Room::~Room()
@@ -248,9 +249,4 @@ void    Room::setMainWindow(MyWindow *w)
     for (std::vector<myGLWidget*>::iterator it = files.begin(); it != files.end(); ++it){
         (*it)->setMainWindow(w);
     }
-}
-
-string Room::getClassName() const
-{
-  return std::string("Room");
 }

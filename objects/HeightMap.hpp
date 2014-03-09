@@ -12,7 +12,6 @@ namespace Object {
     virtual ~HeightMap();
     virtual void  initializeGL();
     virtual void  paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
-    virtual std::string getClassName() const;
     float const   &getMinHeight() const;
     float const   &getMaxHeight() const;
     unsigned int  getWidth() const;

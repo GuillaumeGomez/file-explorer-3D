@@ -16,11 +16,13 @@ using namespace Object;
 Rectangle::Rectangle(Vector3D p, Rotation r, Color c, float sizex, float sizey, float sizez)
   : myGLWidget(p, r, c), sizeX(sizex), sizeY(sizey), sizeZ(sizez)
 {
+  m_className = "Rectangle";
 }
 
 Rectangle::Rectangle(Vector3D p, Rotation r, std::string tex, float sizex, float sizey, float sizez)
   : myGLWidget(p, r, tex), sizeX(sizex), sizeY(sizey), sizeZ(sizez)
 {
+  m_className = "Rectangle";
 }
 
 void Rectangle::initializeGL()
@@ -177,9 +179,4 @@ void  Rectangle::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_mat
 
   glBindVertexArray(0);
   glUseProgram(0);
-}
-
-string Rectangle::getClassName() const
-{
-  return string("Rectangle");
 }

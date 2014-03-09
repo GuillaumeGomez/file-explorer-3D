@@ -12,9 +12,7 @@ namespace Object
     Sphere(Vector3D, Rotation, std::string tex, float rayon);
     virtual ~Sphere(){}
     virtual void    initializeGL();
-    virtual void    initializeGLNoList();
     virtual void    paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
-    virtual std::string getClassName() const;
     float const     &getRadius() const;
 
   protected:

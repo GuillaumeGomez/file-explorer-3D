@@ -20,7 +20,6 @@ namespace Object
         Color const     &getBackgroundColor() const;
         void            setBackgroundTexture(std::string);
         void            setBackgroundTexture(const char*);
-        virtual std::string getClassName() const;
 
     protected:
         void    createButton(std::string &t, Color &c, float &width, float &height, float &font_size);

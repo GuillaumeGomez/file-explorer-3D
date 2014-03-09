@@ -23,6 +23,8 @@ void    Button::createButton(std::string &t, Color &c, float &width, float &heig
   m_buttonText = new Text(t, m_color, m_pos.x() + (width / 2.f - tmp / 2.f),
                           m_pos.y() + (height / 2.f - font_size / 2.f), font_size);
   m_color = c;
+
+  m_className = "Button";
 }
 
 Button::Button(string text, Color c, Color background_color, Vector3D v, float width, float height, float font_size)
@@ -176,9 +178,4 @@ void    Button::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matr
   glUseProgram(0);
 
   m_buttonText->paintGL(view_matrix, proj_matrix);
-}
-
-string Button::getClassName() const
-{
-  return std::string("Button");
 }

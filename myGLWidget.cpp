@@ -42,6 +42,7 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot)
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
     m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
+  m_className = "myGLWidget";
 }
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, Color co)
@@ -50,6 +51,7 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, Color co)
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
     m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
+  m_className = "myGLWidget";
 }
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
@@ -58,6 +60,7 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false), m_texture(tex),
     m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
+  m_className = "myGLWidget";
 }
 
 myGLWidget::myGLWidget(Vector3D p, Rotation rot, Texture const &tex)
@@ -66,6 +69,7 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, Texture const &tex)
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
     m_texture(tex), m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
 {
+  m_className = "myGLWidget";
 }
 
 myGLWidget::~myGLWidget()
@@ -497,9 +501,9 @@ void  myGLWidget::convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const
     }
 }
 
-std::string myGLWidget::getClassName() const
+const string &myGLWidget::getClassName() const
 {
-  return std::string("myGLWidget");
+  return m_className;
 }
 
 void  myGLWidget::setDrawMode(GLenum e)

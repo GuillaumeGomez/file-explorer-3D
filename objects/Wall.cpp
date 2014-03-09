@@ -4,10 +4,12 @@ using namespace Object;
 
 Wall::Wall(Vector3D v, Rotation r, Color c, float width, float height) : Plane(v, r, c, width, height)
 {
+  m_className = "Wall";
 }
 
 Wall::Wall(Vector3D v, Rotation r, std::string tex, float width, float height) : Plane(v, r, tex, width, height)
 {
+  m_className = "Wall";
 }
 
 void Wall::initializeGL()
@@ -101,9 +103,4 @@ void  Wall::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix)
   glRotatef(m_rot.rotation(), m_rot.x(), m_rot.y(), 0.0f);
   //glCallList(m_glObject);
   glPopMatrix();
-}
-
-string Wall::getClassName() const
-{
-  return string("Wall");
 }

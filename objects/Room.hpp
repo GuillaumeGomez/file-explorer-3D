@@ -16,7 +16,6 @@ public:
   virtual bool  hasBeenPicked(int);
   virtual int   objectSize();
   void          setMainWindow(MyWindow*);
-  virtual std::string getClassName() const;
 
 private:
   std::vector<myGLWidget*>  dirs;

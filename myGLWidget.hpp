@@ -84,7 +84,7 @@ public:
   virtual void    bindVertexBufferObject();
   virtual void    updateVertexBufferObject(void *donnees, int tailleBytes, int decalage);
   virtual void    initVertexArrayObject();
-  virtual std::string getClassName() const;
+  std::string const &getClassName() const;
   void            setDrawMode(GLenum);
   GLenum          drawMode() const;
 
@@ -115,6 +115,7 @@ protected:
   GLint                   m_uniloc_pos;
   Color                   m_pickingColor;
 
+  std::string           m_className;
   std::vector<GLfloat>  m_vertices;
   std::vector<GLfloat>  m_colors;
   std::vector<GLfloat>  m_textures;

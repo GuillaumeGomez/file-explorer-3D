@@ -11,9 +11,7 @@ namespace Object
     SkyBox();
     virtual ~SkyBox();
     void  initializeGL();
-    void  initializeGLNoList();
-    void  paintGL(float&x, float&y);
-    virtual std::string getClassName() const;
+    void  paintGL(float &x, float &y);
 
   private:
     GLuint      textures[6];

@@ -11,12 +11,14 @@ Plane::Plane(Vector3D p, Rotation r, Color c, float width, float height, bool re
   : myGLWidget(Vector3D(p.x(), p.y(), p.z()), r, c), width(width), height(height)
 {
   m_texture.setRepeat(repeat);
+  m_className = "Plane";
 }
 
 Plane::Plane(Vector3D p, Rotation r, std::string tex, float width, float height, bool repeat)
   : myGLWidget(Vector3D(p.x(), p.y(), p.z()), r, tex), width(width), height(height)
 {
   m_texture.setRepeat(repeat);
+  m_className = "Plane";
 }
 
 void Plane::initializeGL()
@@ -215,14 +217,4 @@ void  Plane::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 
   glBindVertexArray(0);
   glUseProgram(0);
-}
-
-void  Plane::initializeGLNoList()
-{
-
-}
-
-std::string Plane::getClassName() const
-{
-  return std::string("Plane");
 }

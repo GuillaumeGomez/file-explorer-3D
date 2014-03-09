@@ -15,12 +15,14 @@ Cylinder::Cylinder(Vector3D p, Rotation r, Color c, float rayon, float height)
   : myGLWidget(p, r, c), m_rayon(rayon), m_height(height), m_uSlices(32)
 {
   m_pointsNumber = 0;
+  m_className = "Cylinder";
 }
 
 Cylinder::Cylinder(Vector3D p, Rotation r, std::string tex, float rayon, float height)
   : myGLWidget(p, r, tex), m_rayon(rayon), m_height(height), m_uSlices(32)
 {
   m_pointsNumber = 0;
+  m_className = "Cylinder";
 }
 
 void Cylinder::initializeGL()
@@ -115,11 +117,6 @@ void Cylinder::initializeGL()
   this->initVertexArrayObject();
 }
 
-void  Cylinder::initializeGLNoList()
-{
-
-}
-
 void Cylinder::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix)
 {
   // Activation du shader
@@ -141,9 +138,4 @@ void Cylinder::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matri
 
   glBindVertexArray(0);
   glUseProgram(0);
-}
-
-std::string Cylinder::getClassName() const
-{
-  return std::string("Cylinder");
 }
