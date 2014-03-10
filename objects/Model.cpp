@@ -487,7 +487,7 @@ void Model::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix) 
 
   if (m_rot.rotation() != 0.f)
     tmp = glm::rotate(tmp, m_rot.rotation(), glm::vec3(m_rot.x(), m_rot.y(), m_rot.z()));
-  //set shader uniforms
+
   glUniformMatrix4fv(m_uniLoc_projection, 1, GL_FALSE, glm::value_ptr(proj_matrix));
   glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
   glUniform1f(m_uniLoc_zoom, m_zoom);

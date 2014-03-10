@@ -169,6 +169,8 @@ void  MyWindow::update()
           m_tetris->update(tmp);
         } else {
           if (!pause) {
+              if (m_character)
+                m_character->update(tmp);
               m_physics->update(tmp);
               for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it)
                 (*it)->update(tmp);
@@ -176,8 +178,6 @@ void  MyWindow::update()
           for (WinList::iterator it = _2D_objectList.begin(); it != _2D_objectList.end(); ++it)
             (*it)->update(tmp);
         }
-      if (m_character)
-        m_character->update(tmp);
     }
 
   if (m_tetrisMode) {
