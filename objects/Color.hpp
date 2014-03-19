@@ -37,5 +37,7 @@ protected:
 #define PURPLE  Color(0.6f, 0.01f, 0.23f)
 #define BLACK   Color(0.f, 0.f, 0.f)
 #define WHITE   Color()
+#define GREY    Color(0.61f, 0.58f, 0.56f)
+#define LGREY    Color(0.75f, 0.72f, 0.7f)
 
 #endif // COLOR_HPP

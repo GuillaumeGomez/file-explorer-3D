@@ -21,6 +21,7 @@
 #include "String_utils.hpp"
 #include "Utils/MyException.hpp"
 #include "Tetris.hpp"
+#include "Handle_2048.hpp"
 
 #include <iostream>
 
@@ -38,7 +39,7 @@ void  *repeat_func(void *arg)
 
 MyWindow::MyWindow(std::string winName, int antiali, int fps)
   : m_printInfo(false), MIN(WTIMER / (fps <= 0 ? 40 : fps)), pause(false), m_wireframe(false),
-    m_tetrisMode(false), m_physics(0), m_character(0)
+    m_mode(MODE_NORMAL), m_physics(0), m_character(0)
 {
   m_camera = 0;
   m_key = 0;
@@ -47,6 +48,7 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
   m_fbo = 0;
   m_tetris = 0;
   m_disp = 0;
+  m_2048 = 0;
   (void)antiali;
   try {
     if (!sdl)
@@ -79,6 +81,7 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
         m_displayList[i]->initializeGL();
       }
     m_tetris = new Tetris;
+    m_2048 = new Handle_2048;
     m_physics = new HandlePhysics;
   } catch (std::bad_alloc &err) {
     HandleError::showError(err.what());
@@ -98,6 +101,8 @@ MyWindow::~MyWindow()
     delete this->m_camera;
   if (m_tetris)
     delete m_tetris;
+  if (m_2048)
+    delete m_2048;
   if (this->m_disp)
     delete m_disp;
   if (m_fbo)
@@ -129,7 +134,7 @@ void  MyWindow::repeatKey()
       m_key->lock();
       int s(m_key->getNbKeys() - 1);
 
-      if (!m_tetrisMode) {
+      if (m_mode == MODE_NORMAL) {
           int lat(0);
           int front(0);
 
@@ -148,9 +153,11 @@ void  MyWindow::repeatKey()
             m_camera->keyPressEvent(k[s--]);
           if (front == 1 && lat == 1)
             m_camera->setSpeed(m_camera->speed() / 0.75f);
-        } else {
+        } else if (m_mode == MODE_TETRIS) {
           while (s >= 0)
             m_tetris->keyPressEvent(k[s--]);
+        } else if (m_mode == MODE_2048) {
+
         }
       m_key->unlock();
       Utils::sleep(m_key->getInterval());
@@ -165,9 +172,12 @@ void  MyWindow::update()
 
   float tmp = sdl->getElapsedTime();
   if (tmp != 0.f) {
-      if (m_tetrisMode) {
+      if (m_mode == MODE_TETRIS) {
           m_tetris->update(tmp);
-        } else {
+          glDepthMask(GL_FALSE);
+          m_tetris->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
+          glDepthMask(GL_TRUE);
+        } else if (m_mode == MODE_NORMAL) {
           if (!pause) {
               if (m_character)
                 m_character->update(tmp);
@@ -177,18 +187,17 @@ void  MyWindow::update()
             }
           for (WinList::iterator it = _2D_objectList.begin(); it != _2D_objectList.end(); ++it)
             (*it)->update(tmp);
+          m_camera->look();
+          picking();
+          this->paintGL();
+        } else if (m_mode == MODE_2048) {
+          m_2048->update(tmp);
+          glDepthMask(GL_FALSE);
+          m_2048->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
+          glDepthMask(GL_TRUE);
         }
     }
 
-  if (m_tetrisMode) {
-      glDepthMask(GL_FALSE);
-      m_tetris->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
-      glDepthMask(GL_TRUE);
-    } else {
-      m_camera->look();
-      picking();
-      this->paintGL();
-    }
   //glDisable(GL_COLOR_MATERIAL);
 }
 
@@ -222,65 +231,82 @@ void  MyWindow::keyReleaseEvent(int ev)
   m_key->lock();
   m_key->releaseKey(ev);
   m_key->unlock();
-  if (m_tetrisMode)
-    m_tetris->keyReleaseEvent(ev);
-  else
-    m_camera->keyReleaseEvent(ev);
+  switch (m_mode) {
+    case MODE_TETRIS:
+      m_tetris->keyReleaseEvent(ev);
+      break;
+    case MODE_NORMAL:
+      m_camera->keyReleaseEvent(ev);
+      break;
+    case MODE_2048:
+      m_2048->keyReleaseEvent(ev);
+      break;
+    }
 }
 
 void MyWindow::keyPressEvent(int key)
 {
-  if (!m_tetrisMode) {
-      switch(key)
-        {
-        case SDLK_F11:
-          sdl->switchScreenMode();
-          break;
-        case SDLK_RETURN:
-          this->m_printInfo = !this->m_printInfo;
-          break;
-        case SDLK_TAB:
-          this->m_tetrisMode = !this->m_tetrisMode;
-          m_key->lock();
-          m_key->setInterval(100);
-          m_key->unlock();
-          break;
-        case SDLK_BACKSPACE:
-          m_wireframe = !m_wireframe;
-          glPolygonMode(GL_FRONT_AND_BACK, m_wireframe ? GL_LINE : GL_FILL);
-          break;
-        case SDLK_ESCAPE:
-          pause = !pause;
-          sdl->displayCursor(pause);
-          break;
-        default:
-          m_key->lock();
-          m_key->addKey(key);
-          m_key->unlock();
-        }
-    } else {
-      switch(key)
-        {
-        case SDLK_F11:
-          sdl->switchScreenMode();
-          break;
-          break;
-        case SDLK_TAB:
-          this->m_tetrisMode = !this->m_tetrisMode;
-          m_key->lock();
-          m_key->setInterval(10);
-          m_key->unlock();
-          break;
-          break;
-          /*case SDLK_UP:
+  switch (key) {
+    case SDLK_F11:
+      sdl->switchScreenMode();
+      break;
+    default:
+      if (m_mode == MODE_TETRIS) {
+          switch (key)
+            {
+            case SDLK_TAB:
+              this->m_mode = MODE_NORMAL;
+              m_key->lock();
+              m_key->setInterval(10);
+              m_key->unlock();
+              break;
+              /*case SDLK_UP:
         case SDLK_SPACE:
           m_tetris->keyPressEvent(key);
           break;*/
-        default:
-          m_tetris->keyPressEvent(key);
-          //m_key->lock();
-          //m_key->addKey(key);
-          //m_key->unlock();
+            default:
+              m_tetris->keyPressEvent(key);
+              //m_key->lock();
+              //m_key->addKey(key);
+              //m_key->unlock();
+            }
+        } else if (m_mode == MODE_2048) {
+          if (key == SDLK_TAB) {
+              this->m_mode = MODE_NORMAL;
+              sdl->displayCursor(pause);
+              /*m_key->lock();
+              m_key->setInterval(10);
+              m_key->unlock();*/
+            }
+        } else if (m_mode == MODE_NORMAL) {
+          switch(key)
+            {
+            case SDLK_RETURN:
+              this->m_printInfo = !this->m_printInfo;
+              break;
+            case SDLK_TAB:
+              this->m_mode = MODE_TETRIS;
+              m_key->lock();
+              m_key->setInterval(50);
+              m_key->unlock();
+              break;
+            case SDLK_BACKSPACE:
+              m_wireframe = !m_wireframe;
+              glPolygonMode(GL_FRONT_AND_BACK, m_wireframe ? GL_LINE : GL_FILL);
+              break;
+            case SDLK_ESCAPE:
+              pause = !pause;
+              sdl->displayCursor(pause);
+              break;
+            case SDLK_0:
+              this->m_mode = MODE_2048;
+              sdl->displayCursor(true);
+              break;
+            default:
+              m_key->lock();
+              m_key->addKey(key);
+              m_key->unlock();
+            }
         }
     }
 }
@@ -312,6 +338,7 @@ void MyWindow::initializeGL()
   m_disp->initializeGL();
 
   m_tetris->initializeGL();
+  m_2048->initializeGL();
 }
 
 void MyWindow::paintGL()
@@ -397,7 +424,7 @@ void  MyWindow::addObject(myGLWidget *s, bool isPauseObject)
 
 bool  MyWindow::isPlayingTetris() const
 {
-  return m_tetrisMode;
+  return m_mode == MODE_TETRIS;
 }
 
 void  MyWindow::mouseMoveEvent(int x, int y)
@@ -405,6 +432,7 @@ void  MyWindow::mouseMoveEvent(int x, int y)
   m_camera->mouseMoveEvent(x, y);
   mouseX = x;
   mouseY = y;
+  sdl->resetCursor();
 }
 
 void  MyWindow::setPause(bool b)

@@ -63,6 +63,8 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
 {
   screenWidth = 0;
   screenHeight = 0;
+  mouse_x = 0;
+  mouse_y = 0;
 
   if (!m_win){
       throw MyException("HandleSDL: Invalid null pointer in constructor");
@@ -448,9 +450,8 @@ bool  HandleSDL::handleEvents()
         case SDL_MOUSEMOTION:
           if (!m_win->isPaused() && !m_win->isPlayingTetris()) {
               m_win->mouseMoveEvent(event.motion.x, event.motion.y);
-              if (event.motion.x >= screenWidth - MOUSE_MARGIN || event.motion.x <= MOUSE_MARGIN ||
-                  event.motion.y >= screenHeight - MOUSE_MARGIN || event.motion.y <= MOUSE_MARGIN)
-                SDL_WarpMouseInWindow(screen, screenWidth / 2, screenHeight / 2);
+              mouse_x = event.motion.x;
+              mouse_y = event.motion.y;
             }
           break;
         case SDL_MOUSEBUTTONUP:
@@ -475,6 +476,13 @@ bool  HandleSDL::handleEvents()
         }
     }
   return false;
+}
+
+void  HandleSDL::resetCursor()
+{
+  if (mouse_x >= screenWidth - MOUSE_MARGIN || mouse_x <= MOUSE_MARGIN ||
+      mouse_y >= screenHeight - MOUSE_MARGIN || mouse_y <= MOUSE_MARGIN)
+    SDL_WarpMouseInWindow(screen, screenWidth / 2, screenHeight / 2);
 }
 
 void  HandleSDL::switchScreenMode()

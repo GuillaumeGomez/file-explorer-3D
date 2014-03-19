@@ -664,7 +664,7 @@ struct AnimationNode {
   aiMatrix4x4 mGlobalTransform;
 
   //index in the current animation's channel array.
-  unsigned int uChannelIndex;
+  int uChannelIndex;
 
   //default construction
   AnimationNode() {

@@ -357,6 +357,71 @@ std::string Shader::getStandardFragmentShader(bool hasTexture)
   return frag;
 }
 
+std::string Shader::getStandard2DVertexShader(bool hasTexture)
+{
+  std::string vert;
+
+  if (hasTexture) {
+      vert =
+          "#version 330\n"
+
+          "in vec2 in_Vertex;\n"
+          "in vec2 in_TexCoord0;\n"
+
+          "out vec2 coordTexture;\n"
+          "void main()\n"
+          "{\n"
+          "gl_Position.xy = in_Vertex;\n"
+          "coordTexture = in_TexCoord0;\n"
+          "}";
+    } else {
+      vert =
+          "#version 330\n"
+
+          "in vec2 in_Vertex;\n"
+          "in vec3 in_Color;\n"
+
+          "out vec3 color;\n"
+          "void main()\n"
+          "{\n"
+          "gl_Position.xy = in_Vertex;\n"
+          "color = in_Color;\n"
+          "}";
+    }
+  return vert;
+}
+
+std::string Shader::getStandard2DFragmentShader(bool hasTexture)
+{
+  std::string frag;
+
+  if (hasTexture) {
+      frag =
+          "#version 330\n"
+
+          "in vec2 coordTexture;\n"
+          "uniform sampler2D tex;\n"
+
+          "out vec4 out_Color;\n"
+          "void main()\n"
+          "{\n"
+          "out_Color = texture(tex, coordTexture);\n"
+          "}";
+    } else {
+      frag =
+          "#version 330\n"
+
+          "in vec3 color;\n"
+
+          "out vec4 out_Color;\n"
+          "void main()\n"
+          "{\n"
+          "out_Color = vec4(color, 1.0);\n"
+          "}";
+    }
+  return frag;
+}
+
 GLint Shader::getUniform(const std::string &s)
 {
   return glGetUniformLocation(this->m_programID, s.c_str());
@@ -437,4 +502,14 @@ void        Shader::setUniform(std::string const &s, float const &f)
 void        Shader::setUniform(GLint loc, float const &f)
 {
   glUniform1fv(loc, 1, &f);
+}
+
+void  Shader::bind()
+{
+  glUseProgram(m_programID);
+}
+
+void  Shader::unbind()
+{
+  glUseProgram(0);
 }

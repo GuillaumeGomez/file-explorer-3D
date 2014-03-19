@@ -50,9 +50,13 @@ public:
     void        setUniform(GLint loc, int i);
     void        setUniform(std::string const &s, float const &f);
     void        setUniform(GLint loc, float const &f);
+    void        bind();
 
     static std::string getStandardVertexShader(bool hasTexture);
     static std::string getStandardFragmentShader(bool hasTexture);
+    static std::string getStandard2DVertexShader(bool hasTexture);
+    static std::string getStandard2DFragmentShader(bool hasTexture);
+    static void        unbind();
 
 private:
     GLuint m_vertexID;

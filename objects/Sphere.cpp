@@ -122,6 +122,7 @@ void Sphere::initializeGL()
         m_colors.push_back(m_color.red());
         m_colors.push_back(m_color.green());
         m_colors.push_back(m_color.blue());
+        (void)it;
       }
   //m_hasTexture ? this->convertTRIANGLE_STRIP_To_TRIANGLES(tmp_v, tmp_t) : this->convertTRIANGLE_STRIP_To_TRIANGLES(tmp_v);
   m_pointsNumber = m_vertices.size() / 3;

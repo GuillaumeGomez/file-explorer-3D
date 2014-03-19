@@ -20,6 +20,7 @@ class HandleFpsCount;
 class FrameBuffer;
 class Tetris;
 class HandlePhysics;
+class Handle_2048;
 
 typedef std::vector<myGLWidget*>  WinList;
 
@@ -39,6 +40,12 @@ namespace Object {
 
 class MyWindow
 {
+  enum {
+    MODE_NORMAL,
+    MODE_TETRIS,
+    MODE_2048
+  };
+
 public:
   explicit MyWindow(std::string winName, int antiali = 1, int fps = 30);
   virtual ~MyWindow();
@@ -73,7 +80,7 @@ private:
   const float         MIN;
   bool                pause;
   bool                m_wireframe;
-  bool                m_tetrisMode;
+  int                 m_mode;
   HandlePhysics       *m_physics;
   Object::Model       *m_character;
   WinList             objectList;
@@ -92,6 +99,7 @@ private:
   myGLWidget          *m_disp;
   FrameBuffer         *m_fbo;
   Tetris              *m_tetris;
+  Handle_2048         *m_2048;
   int                 mouseX;
   int                 mouseY;
 

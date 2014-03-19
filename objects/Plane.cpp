@@ -85,54 +85,15 @@ void Plane::initializeGL()
               "out_Color = vec4(color, 1.0);\n"
               "}";
         }
-    } else {
-      if (m_hasTexture) {
-          vert =
-              "#version 150 core\n"
-
-              "in vec2 in_Vertex;\n"
-              "in vec2 in_TexCoord0;\n"
-              "out vec2 coordTexture;\n"
-
-              "void main(){\n"
-              "gl_Position.xy = in_Vertex;\n"
-              "coordTexture = in_TexCoord0;\n"
-              "}";
-          frag =
-              "#version 150 core\n"
-
-              "in vec2 coordTexture;\n"
-              "uniform sampler2D tex;\n"
-              "out vec4 out_Color;\n"
-
-              "void main(){\n"
-              "out_Color = texture(tex, coordTexture);\n"
-              "}\n";
-        } else {
-          vert =
-              "#version 150 core\n"
-
-              "in vec2 in_Vertex;\n"
-              "in vec3 in_Color;\n"
-
-              "out vec3 color;\n"
-
-              "void main(){\n"
-              "gl_Position.xy = in_Vertex;\n"
-              "color = in_Color;\n"
-              "}";
-          frag =
-              "#version 150 core\n"
-
-              "out vec4 out_Color;\n"
-              "in vec3 color;\n"
-
-              "void main(){\n"
-              "out_Color = vec4(color, 1.0);"
-              "}\n";
-        }
     }
-  m_shader = ShaderHandler::getInstance()->createShader(vert, frag);
+  if (!m_render2D)
+    m_shader = ShaderHandler::getInstance()->createShader(vert, frag);
+  else
+    m_shader = ShaderHandler::createShader(Shader::getStandard2DVertexShader(m_hasTexture), Shader::getStandard2DFragmentShader(m_hasTexture));
+  /*if (m_render2D)
+    m_shader = ShaderHandler::createShader(Shader::getStandard2DVertexShader(m_hasTexture), Shader::getStandard2DFragmentShader(m_hasTexture));
+  else
+    m_shader = ShaderHandler::createShader(Shader::getStandardVertexShader(m_hasTexture), Shader::getStandardFragmentShader(m_hasTexture));*/
   if (!m_shader){
       HandleError::showError("Shader didn't load in Plane");
       exit(-1);
@@ -186,7 +147,7 @@ void Plane::initializeGL()
         }
     }
 
-  m_pointsNumber = m_vertices.size() / (m_render2D ? 2.f : 3.f);
+  m_pointsNumber = m_vertices.size() / (m_render2D ? 2 : 3);
 
   this->initVertexBufferObject();
   this->initVertexArrayObject();
@@ -195,7 +156,7 @@ void Plane::initializeGL()
 void  Plane::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 {
   // Activation du shader
-  glUseProgram(m_shader->getProgramID());
+  m_shader->bind();
 
   glBindVertexArray(m_vaoID);
 
@@ -211,10 +172,14 @@ void  Plane::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
     }
 
   // Rendu
-  if (m_hasTexture)
-    m_texture.bind();
-  glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
+  if (m_hasTexture) {
+      m_texture.bind();
+      glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
+      m_texture.unbind();
+    } else {
+      glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
+    }
 
   glBindVertexArray(0);
-  glUseProgram(0);
+  m_shader->unbind();
 }

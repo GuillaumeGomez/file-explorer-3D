@@ -39,6 +39,7 @@ public:
   bool            destroyTexture(GLuint id);
   int             getEvent(SDL_Event*);
   void            displayCursor(bool display);
+  void            resetCursor();
   static SDL_Surface      *loadImage(std::string img);
   static SDL_Surface      *loadImage(const char*);
   static void             freeImage(SDL_Surface*);
@@ -55,6 +56,8 @@ private:
   int                   prev_height;
   int                   screenHeight;
   int                   screenWidth;
+  int                   mouse_x;
+  int                   mouse_y;
   FPSmanager    manager;
   //SDL_Surface   *screen;
   SDL_Window    *screen;

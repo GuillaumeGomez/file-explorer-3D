@@ -32,10 +32,6 @@ namespace Object
     float       m_font_size;
     int         m_lines;
     float       m_size;
-
-    static Shader   *s_m_shader;
-    static GLint    s_m_uniLoc_projection;
-    static GLint    s_m_uniLoc_modelView;
   };
 }
 
