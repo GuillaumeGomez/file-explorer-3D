@@ -34,7 +34,7 @@ public:
   virtual void        setsensivity(float s);
   virtual void        look();
   virtual void        setPosition(const Vector3D &p);
-  const Vector3D      &getPosition() const;
+  Vector3D            &getPosition();
   void                lookAt();
   void                setView(MyWindow *v);
   int                 mouseX() const;

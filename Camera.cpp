@@ -235,7 +235,7 @@ void  Camera::vectorsFromAngles()
     }*/
 }
 
-Vector3D const &Camera::getPosition() const
+Vector3D &Camera::getPosition()
 {
   return m_position;
 }

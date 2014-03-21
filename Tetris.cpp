@@ -171,7 +171,6 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_score(0), m
   for (unsigned int i = 0; i < 11; ++i) {
       m_levels[i] = tmp_levels[i];
     }
-  srand(time(0));
 }
 
 Tetris::~Tetris()
@@ -567,7 +566,8 @@ void  Tetris::createNewPiece()
       ++m_score;
       m_texts[SCORE]->setText(Utility::toString<int>(m_score));
     }
-  m_piece.id = (int)(7.0 * rand() / (RAND_MAX + 1.0));
+  //m_piece.id = (int)(7.0 * rand() / (RAND_MAX + 1.0));
+  m_piece.id = rand() % 7;
   m_piece.rot = 0;
   m_piece.x = 3;
   m_piece.y = 0;

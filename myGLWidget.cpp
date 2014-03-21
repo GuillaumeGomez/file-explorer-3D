@@ -310,7 +310,6 @@ void  myGLWidget::updateVertexBufferObject(void *donnees, int tailleBytes, int d
   glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
 
   // Recuperation de l'adresse du VBO
-
   // remplace glMapBuffer
   void *adresseVBO = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 
@@ -402,53 +401,54 @@ void  myGLWidget::convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const
   unsigned int pos = 0;
 
   for (; pos < 3; ++pos) {
-      m_vertices.push_back(tmp_vertices[pos].x());
-      m_vertices.push_back(tmp_vertices[pos].y());
-      m_vertices.push_back(tmp_vertices[pos].z());
+      m_vertices.push_back(tmp_vertices[pos].getX());
+      m_vertices.push_back(tmp_vertices[pos].getY());
+      m_vertices.push_back(tmp_vertices[pos].getZ());
 
-      m_textures.push_back(tmp_textures[pos].x());
-      m_textures.push_back(tmp_textures[pos].y());
+      m_textures.push_back(tmp_textures[pos].getX());
+      m_textures.push_back(tmp_textures[pos].getY());
     }
 
   for (; pos < tmp_vertices.size(); ++pos) {
+
       if (!(pos & 1)) {
-          m_vertices.push_back(tmp_vertices[pos - 1].x());
-          m_vertices.push_back(tmp_vertices[pos - 1].y());
-          m_vertices.push_back(tmp_vertices[pos - 1].z());
+          m_vertices.push_back(tmp_vertices[pos - 1].getX());
+          m_vertices.push_back(tmp_vertices[pos - 1].getY());
+          m_vertices.push_back(tmp_vertices[pos - 1].getZ());
 
-          m_vertices.push_back(tmp_vertices[pos - 2].x());
-          m_vertices.push_back(tmp_vertices[pos - 2].y());
-          m_vertices.push_back(tmp_vertices[pos - 2].z());
+          m_vertices.push_back(tmp_vertices[pos - 2].getX());
+          m_vertices.push_back(tmp_vertices[pos - 2].getY());
+          m_vertices.push_back(tmp_vertices[pos - 2].getZ());
 
-          m_vertices.push_back(tmp_vertices[pos].x());
-          m_vertices.push_back(tmp_vertices[pos].y());
-          m_vertices.push_back(tmp_vertices[pos].z());
+          m_vertices.push_back(tmp_vertices[pos].getX());
+          m_vertices.push_back(tmp_vertices[pos].getY());
+          m_vertices.push_back(tmp_vertices[pos].getZ());
 
-          m_textures.push_back(tmp_textures[pos - 1].x());
-          m_textures.push_back(tmp_textures[pos - 1].y());
-          m_textures.push_back(tmp_textures[pos - 2].x());
-          m_textures.push_back(tmp_textures[pos - 2].y());
-          m_textures.push_back(tmp_textures[pos].x());
-          m_textures.push_back(tmp_textures[pos].y());
+          m_textures.push_back(tmp_textures[pos - 1].getX());
+          m_textures.push_back(tmp_textures[pos - 1].getY());
+          m_textures.push_back(tmp_textures[pos - 2].getX());
+          m_textures.push_back(tmp_textures[pos - 2].getY());
+          m_textures.push_back(tmp_textures[pos].getX());
+          m_textures.push_back(tmp_textures[pos].getY());
         } else {
-          m_vertices.push_back(tmp_vertices[pos - 2].x());
-          m_vertices.push_back(tmp_vertices[pos - 2].y());
-          m_vertices.push_back(tmp_vertices[pos - 2].z());
+          m_vertices.push_back(tmp_vertices[pos - 2].getX());
+          m_vertices.push_back(tmp_vertices[pos - 2].getY());
+          m_vertices.push_back(tmp_vertices[pos - 2].getZ());
 
-          m_vertices.push_back(tmp_vertices[pos - 1].x());
-          m_vertices.push_back(tmp_vertices[pos - 1].y());
-          m_vertices.push_back(tmp_vertices[pos - 1].z());
+          m_vertices.push_back(tmp_vertices[pos - 1].getX());
+          m_vertices.push_back(tmp_vertices[pos - 1].getY());
+          m_vertices.push_back(tmp_vertices[pos - 1].getZ());
 
-          m_vertices.push_back(tmp_vertices[pos].x());
-          m_vertices.push_back(tmp_vertices[pos].y());
-          m_vertices.push_back(tmp_vertices[pos].z());
+          m_vertices.push_back(tmp_vertices[pos].getX());
+          m_vertices.push_back(tmp_vertices[pos].getY());
+          m_vertices.push_back(tmp_vertices[pos].getZ());
 
-          m_textures.push_back(tmp_textures[pos - 2].x());
-          m_textures.push_back(tmp_textures[pos - 2].y());
-          m_textures.push_back(tmp_textures[pos - 1].x());
-          m_textures.push_back(tmp_textures[pos - 1].y());
-          m_textures.push_back(tmp_textures[pos].x());
-          m_textures.push_back(tmp_textures[pos].y());
+          m_textures.push_back(tmp_textures[pos - 2].getX());
+          m_textures.push_back(tmp_textures[pos - 2].getY());
+          m_textures.push_back(tmp_textures[pos - 1].getX());
+          m_textures.push_back(tmp_textures[pos - 1].getY());
+          m_textures.push_back(tmp_textures[pos].getX());
+          m_textures.push_back(tmp_textures[pos].getY());
         }
     }
 }
@@ -458,9 +458,9 @@ void  myGLWidget::convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const
   unsigned int pos = 0;
 
   for (; pos < 3; ++pos) {
-      m_vertices.push_back(tmp_vertices[pos].x());
-      m_vertices.push_back(tmp_vertices[pos].y());
-      m_vertices.push_back(tmp_vertices[pos].z());
+      m_vertices.push_back(tmp_vertices[pos].getX());
+      m_vertices.push_back(tmp_vertices[pos].getY());
+      m_vertices.push_back(tmp_vertices[pos].getZ());
 
       m_colors.push_back(m_color.red());
       m_colors.push_back(m_color.green());
@@ -469,29 +469,29 @@ void  myGLWidget::convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const
 
   for (; pos < tmp_vertices.size(); ++pos) {
       if (!(pos & 1)) {
-          m_vertices.push_back(tmp_vertices[pos - 1].x());
-          m_vertices.push_back(tmp_vertices[pos - 1].y());
-          m_vertices.push_back(tmp_vertices[pos - 1].z());
+          m_vertices.push_back(tmp_vertices[pos - 1].getX());
+          m_vertices.push_back(tmp_vertices[pos - 1].getY());
+          m_vertices.push_back(tmp_vertices[pos - 1].getZ());
 
-          m_vertices.push_back(tmp_vertices[pos - 2].x());
-          m_vertices.push_back(tmp_vertices[pos - 2].y());
-          m_vertices.push_back(tmp_vertices[pos - 2].z());
+          m_vertices.push_back(tmp_vertices[pos - 2].getX());
+          m_vertices.push_back(tmp_vertices[pos - 2].getY());
+          m_vertices.push_back(tmp_vertices[pos - 2].getZ());
 
-          m_vertices.push_back(tmp_vertices[pos].x());
-          m_vertices.push_back(tmp_vertices[pos].y());
-          m_vertices.push_back(tmp_vertices[pos].z());
+          m_vertices.push_back(tmp_vertices[pos].getX());
+          m_vertices.push_back(tmp_vertices[pos].getY());
+          m_vertices.push_back(tmp_vertices[pos].getZ());
         } else {
-          m_vertices.push_back(tmp_vertices[pos - 2].x());
-          m_vertices.push_back(tmp_vertices[pos - 2].y());
-          m_vertices.push_back(tmp_vertices[pos - 2].z());
+          m_vertices.push_back(tmp_vertices[pos - 2].getX());
+          m_vertices.push_back(tmp_vertices[pos - 2].getY());
+          m_vertices.push_back(tmp_vertices[pos - 2].getZ());
 
-          m_vertices.push_back(tmp_vertices[pos - 1].x());
-          m_vertices.push_back(tmp_vertices[pos - 1].y());
-          m_vertices.push_back(tmp_vertices[pos - 1].z());
+          m_vertices.push_back(tmp_vertices[pos - 1].getX());
+          m_vertices.push_back(tmp_vertices[pos - 1].getY());
+          m_vertices.push_back(tmp_vertices[pos - 1].getZ());
 
-          m_vertices.push_back(tmp_vertices[pos].x());
-          m_vertices.push_back(tmp_vertices[pos].y());
-          m_vertices.push_back(tmp_vertices[pos].z());
+          m_vertices.push_back(tmp_vertices[pos].getX());
+          m_vertices.push_back(tmp_vertices[pos].getY());
+          m_vertices.push_back(tmp_vertices[pos].getZ());
         }
       for (int i = 0; i < 3; ++i) {
           m_colors.push_back(m_color.red());

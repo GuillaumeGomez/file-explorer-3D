@@ -41,6 +41,7 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
   : m_printInfo(false), MIN(WTIMER / (fps <= 0 ? 40 : fps)), pause(false), m_wireframe(false),
     m_mode(MODE_NORMAL), m_physics(0), m_character(0)
 {
+  srand(time(0));
   m_camera = 0;
   m_key = 0;
   m_thread = 0;
@@ -65,8 +66,6 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
 
     // on cache le curseur
     //SDL_ShowCursor(SDL_DISABLE);
-    // curseur bloque dans la fenetre
-    //SDL_WM_GrabInput(SDL_GRAB_ON);
 
     m_camera = new Camera;
 
@@ -259,6 +258,7 @@ void MyWindow::keyPressEvent(int key)
               m_key->lock();
               m_key->setInterval(10);
               m_key->unlock();
+              sdl->resetCursor();
               break;
               /*case SDLK_UP:
         case SDLK_SPACE:
@@ -273,6 +273,7 @@ void MyWindow::keyPressEvent(int key)
         } else if (m_mode == MODE_2048) {
           if (key == SDLK_TAB) {
               this->m_mode = MODE_NORMAL;
+              sdl->resetCursor();
               sdl->displayCursor(pause);
               /*m_key->lock();
               m_key->setInterval(10);
@@ -429,10 +430,12 @@ bool  MyWindow::isPlayingTetris() const
 
 void  MyWindow::mouseMoveEvent(int x, int y)
 {
-  m_camera->mouseMoveEvent(x, y);
+  if (!pause && m_mode == MODE_NORMAL) {
+      m_camera->mouseMoveEvent(x, y);
+      //sdl->resetCursor();
+    }
   mouseX = x;
   mouseY = y;
-  sdl->resetCursor();
 }
 
 void  MyWindow::setPause(bool b)

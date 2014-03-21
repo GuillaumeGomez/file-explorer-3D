@@ -106,7 +106,7 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
   SDL_SetWindowMinimumSize(screen, 400, 400);
   sdl_flags = SDL_GetWindowFlags(screen);
   SDL_GetWindowSize(screen, &screenWidth, &screenHeight);
-  //SDL_SetRelativeMouseMode(SDL_TRUE); -> fps mode for cursor
+  //SDL_SetRelativeMouseMode(SDL_TRUE); //-> fps mode for cursor
 }
 
 HandleSDL::~HandleSDL()
@@ -449,9 +449,14 @@ bool  HandleSDL::handleEvents()
           break;
         case SDL_MOUSEMOTION:
           if (!m_win->isPaused() && !m_win->isPlayingTetris()) {
-              m_win->mouseMoveEvent(event.motion.x, event.motion.y);
+              static bool b(false);
+
               mouse_x = event.motion.x;
               mouse_y = event.motion.y;
+              m_win->mouseMoveEvent(mouse_x, mouse_y);
+              b = !b;
+              if (b)
+                resetCursor();
             }
           break;
         case SDL_MOUSEBUTTONUP:
@@ -693,3 +698,8 @@ GLuint HandleSDL::loadIconFile(const char *s)
 #endif
   return glID;
 }
+
+/*void  HandleSDL::grabInput(bool b)
+{
+  //SDL_WM_GrabInput(b ? SDL_GRAB_ON : SDL_GRAB_OFF);
+}*/

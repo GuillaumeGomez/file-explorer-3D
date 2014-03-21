@@ -6,6 +6,12 @@
 class Vector3D
 {
 public:
+  enum {
+    VEC_X,
+    VEC_Y,
+    VEC_Z
+  };
+
   Vector3D(float x = 0.f, float y = 0.f, float z = 0.f);
   Vector3D(const Vector3D &vector);
   Vector3D  normalized() const;
@@ -20,9 +26,12 @@ public:
   Vector3D  normal(const Vector3D& v1, const Vector3D& v2);
   float     length() const;
   float     lengthSquared() const;
-  float     x() const;
-  float     y() const;
-  float     z() const;
+  float     &x();
+  float     &y();
+  float     &z();
+  float const &getX() const;
+  float const &getY() const;
+  float const &getZ() const;
   void      setX(float);
   void      setY(float);
   void      setZ(float);
@@ -42,7 +51,7 @@ public:
   bool      operator==(const Vector3D &v) const;
   bool      operator!=(const Vector3D &v) const;
   std::string toString() const;
-  float     *getDatas();
+  float const *getDatas() const;
 
 private:
   float   pos[3];
