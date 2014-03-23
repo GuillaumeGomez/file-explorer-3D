@@ -224,7 +224,7 @@ void    Text::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
 
   m_texture.bind();
   glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);
-  //m_texture.unbind();
+  m_texture.unbind();
 
   glBindVertexArray(0);
   glUseProgram(0);
