@@ -147,6 +147,12 @@ Color const &myGLWidget::getColor() const
 void  myGLWidget::setColor(Color c)
 {
   m_color = c;
+  for (unsigned int x = 0; x < m_colors.size(); x += 3) {
+      m_colors[x] = m_color.red();
+      m_colors[x + 1] = m_color.green();
+      m_colors[x + 2] = m_color.blue();
+    }
+  updateColors();
 }
 
 Color const     &myGLWidget::getPikingColor() const
@@ -358,7 +364,13 @@ void  myGLWidget::updateColors(const std::vector<GLfloat> &c)
     return;
   for (unsigned int i = 0; i < m_colors.size() && i < c.size(); ++i)
     m_colors[i] = c[i];
-  this->updateVertexBufferObject(&m_colors[0], m_colorsSize, m_verticesSize);
+  this->updateColors();
+}
+
+void  myGLWidget::updateColors()
+{
+  if (m_colors.size() > 0)
+    this->updateVertexBufferObject(&m_colors[0], m_colorsSize, m_verticesSize);
 }
 
 std::vector<GLfloat> &myGLWidget::getTextures()
@@ -372,7 +384,13 @@ void  myGLWidget::updateTextures(const std::vector<GLfloat> &t)
     return;
   for (unsigned int i = 0; i < m_textures.size() && i < t.size(); ++i)
     m_textures[i] = t[i];
-  this->updateVertexBufferObject(&m_textures[0], m_texturesSize, m_verticesSize);
+  this->updateTextures();
+}
+
+void  myGLWidget::updateTextures()
+{
+  if (m_textures.size() > 0)
+    this->updateVertexBufferObject(&m_textures[0], m_texturesSize, m_verticesSize);
 }
 
 std::vector<GLfloat>   &myGLWidget::getVertices()
@@ -384,7 +402,13 @@ void  myGLWidget::updateVertices(const std::vector<GLfloat> &v)
 {
   for (unsigned int i = 0; i < m_vertices.size() && i < v.size(); ++i)
     m_vertices[i] = v[i];
-  this->updateVertexBufferObject(&m_vertices[0], m_verticesSize, 0);
+  this->updateVertices();
+}
+
+void  myGLWidget::updateVertices()
+{
+  if (m_vertices.size() > 0)
+    this->updateVertexBufferObject(&m_vertices[0], m_verticesSize, 0);
 }
 
 void    myGLWidget::update(const float &n)

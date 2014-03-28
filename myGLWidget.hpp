@@ -75,10 +75,13 @@ public:
   bool            is2D() const;
   std::vector<GLfloat>        &getColors();
   void                        updateColors(std::vector<GLfloat> const&);
+  void                        updateColors();
   std::vector<GLfloat>        &getVertices();
   void                        updateVertices(std::vector<GLfloat> const&);
+  void                        updateVertices();
   std::vector<GLfloat>        &getTextures();
   void                        updateTextures(std::vector<GLfloat> const&);
+  void                        updateTextures();
   std::string const &getTextureName() const;
   virtual void    initVertexBufferObject(GLenum = GL_STATIC_DRAW);
   virtual void    bindVertexBufferObject();

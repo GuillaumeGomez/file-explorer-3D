@@ -4588,7 +4588,10 @@ debug/Handle_2048.o: Handle_2048.cpp Handle_2048.hpp \
 		glm/gtc/quaternion.inl \
 		glm/gtc/type_ptr.inl \
 		objects/Text.hpp \
-		objects/Plane.hpp
+		objects/Plane.hpp \
+		String_utils.hpp \
+		shaders/ShaderHandler.hpp \
+		HandleError.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Handle_2048.o Handle_2048.cpp
 
 ####### Install
