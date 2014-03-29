@@ -30,11 +30,15 @@ void  Handle_2048::create_back_tile(Vector3D v, float size, Color c)
 }
 
 Handle_2048::Handle_2048() : myGLWidget(Vector3D(), Rotation()),
-  tile_s(0.35f), border_s(0.05f)
+  tile_s(0.35f), border_s(0.05f), m_score(0), m_msg(0), m_title(0), m_end(false)
 {
   m_render2D = true;
   m_move = 0.f;
 
+  m_score = new Object::Text("score : 0", WHITE, 0.5f, 0.8f);
+  m_msg = new Object::Text("", RED, 0.f, 0.f);
+  m_title = new Object::Text("2048", LGREY, -0.85f, 0.63f, 0.4f);
+  create_back_tile(Vector3D(-1.f, -1.f), 2.f, BLACK);
   create_back_tile(Vector3D(-0.85f, -0.95f), 1.65f, GREY);
   float decal = tile_s + border_s;
   for (int y = 0; y < 4; ++y) {
@@ -59,12 +63,6 @@ Handle_2048::Handle_2048() : myGLWidget(Vector3D(), Rotation()),
         }
       m_tiles.push_back(tmp);
     }
-
-  //m_background = new Object::Plane(Vector3D(-0.85f, -0.95f), Rotation(), GREY, 1.65f, 1.65f, false);
-
-  /*if (!m_background)
-    exit(-5);
-  m_background->setRender2D(true);*/
 }
 
 Handle_2048::~Handle_2048()
@@ -72,7 +70,11 @@ Handle_2048::~Handle_2048()
   for (auto &it : m_tiles)
     for (auto it2 : it)
       delete it2;
-  //delete m_background;
+  for (auto it : m_move_tiles)
+    delete it;
+  delete m_score;
+  delete m_msg;
+  delete m_title;
 }
 
 void  Handle_2048::initializeGL()
@@ -82,6 +84,10 @@ void  Handle_2048::initializeGL()
       HandleError::showError("Shader didn't load in Handle_2048");
       exit(-1);
     }
+
+  m_score->initializeGL();
+  m_msg->initializeGL();
+  m_title->initializeGL();
 
   m_pointsNumber = m_vertices.size() / 2;
 
@@ -93,10 +99,26 @@ void  Handle_2048::initializeGL()
       it2->initializeGL();
   for (auto it : m_move_tiles)
     it->initializeGL();
-  //m_background->initializeGL();
 
   create_new_number();
   create_new_number();
+}
+
+bool  Handle_2048::checkTile(Tile *t)
+{
+  if (t->x > 0 && t->y > 0 && canMove(t->y - 1, t->x - 1, t->value))
+    return true;
+  if (t->x > 0 && canMove(t->y, t->x - 1, t->value))
+    return true;
+  if (t->y > 0 && canMove(t->y - 1, t->x, t->value))
+    return true;
+  if (t->x < 3 && t->y < 3 && canMove(t->y + 1, t->x + 1, t->value))
+    return true;
+  if (t->x < 3 && canMove(t->y, t->x + 1, t->value))
+    return true;
+  if (t->y < 3 && canMove(t->y + 1, t->x, t->value))
+    return true;
+  return false;
 }
 
 void  Handle_2048::update(const float &t)
@@ -107,28 +129,39 @@ void  Handle_2048::update(const float &t)
       m_move -= t;
       if (m_move <= 0.f) {
           m_move = 0.f;
-          /*for (auto &it : m_tiles)
-            for (auto it2 : it)
-              it2->endMove();*/
           int z;
           for (z = 0; z < 16 && m_move_tiles[z]->value; ++z) {
               Tile *ti = m_move_tiles[z];
               Tile *tt = m_tiles[ti->y][ti->x];
 
-              /*if (tt->value > 0)
-                tt->m_hide = false;*/
+              if (tt->value) {
+                  std::string ts = m_score->getText();
+                  int sc = Utility::getValueFromString<int>(Utility::replace<std::string>(ts, "score : ", ""));
+                  m_score->setText("score : " + Utility::toString<int>(sc + tt->value + tt->value));
+                }
               tt->setValue(ti->value + tt->value);
-              tt->m_valueChanged = false;
               ti->setValue(0);
             }
-          for (auto &it : m_tiles)
-            for (auto it2 : it) {
-                it2->m_hide = false;
-                it2->m_valueChanged = false;
-              }
-          // to add when tiles move will work
-          if (z)
-            create_new_number();
+          if (z) {
+              create_new_number();
+
+              int exist(0);
+              for (auto &it : m_tiles)
+                for (auto it2 : it)
+                  if (!it2->value)
+                    ++exist;
+              if (!exist) {
+                  bool end_loop = false;
+
+                  for (auto &it : m_tiles)
+                    if (!end_loop)
+                      for (auto it2 : it)
+                        end_loop = checkTile(it2);
+                  m_end = !end_loop;
+                  if (m_end)
+                    m_msg->setText("Defeat !\nPress any key to restart");
+                }
+            }
         }
     }
   for (auto &it : m_tiles)
@@ -138,18 +171,14 @@ void  Handle_2048::update(const float &t)
 
 void  Handle_2048::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix)
 {
-  //(void)view_matrix;
-  //(void)proj_matrix;
   glUseProgram(m_shader->getProgramID());
 
   glBindVertexArray(m_vaoID);
 
+  //m_background->paintGL(view_matrix, proj_matrix);
   glEnable(GL_TEXTURE_2D);
-
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  //m_background->paintGL(view_matrix, proj_matrix);
 
   glDrawArrays(GL_TRIANGLES, 0, m_pointsNumber);
 
@@ -160,51 +189,31 @@ void  Handle_2048::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_m
     for (auto it : m_move_tiles)
       it->paintGL(view_matrix, proj_matrix);
   /*for (auto &it : m_backs)
-    for (auto it2 : it)
-      it2->paintGL(view_matrix, proj_matrix);*/
+        for (auto it2 : it)
+          it2->paintGL(view_matrix, proj_matrix);*/
+
+  m_score->paintGL(view_matrix, proj_matrix);
+  m_msg->paintGL(view_matrix, proj_matrix);
+  m_title->paintGL(view_matrix, proj_matrix);
+
   glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
 }
 
-//void  Handle_2048::switchTile(Tile *tile, Tile *tmp, int x, int y)
-void  Handle_2048::switchTile(Tile *tile, Tile *tmp, int &z, int x, int y)
+void  Handle_2048::switchTile(Tile *tile, Tile *tmp, int &z)
 {
-  if (x == tile->x && y == tile->y)
+  if (tmp->x == tile->x && tmp->y == tile->y)
     return;
 
   if (tmp->value && tmp->value != tile->value)
     return;
 
   Tile *move = m_move_tiles[z++];
-  /*tile->to_x = tmp->pos_x;
-  tile->to_y = tmp->pos_y;
-
-  if (x != tile->x) {
-      m_tiles[y][x] = tile;
-      m_tiles[y][tile->x] = tmp;
-    } else {
-      m_tiles[y][tile->x] = tile;
-      m_tiles[tile->y][tile->x] = tmp;
-    }
-
-  tmp->x = tile->x;
-  tmp->y = tile->y;
-  tmp->pos_x = tmp->to_x = tmp->from_x = tile->pos_x;
-  tmp->pos_y = tmp->to_y = tmp->from_y = tile->pos_y;
-  tile->x = x;
-  tile->y = y;*/
-  /*move->setValue(tile->value);
-  move->setPos(tile->pos_x, tile->pos_y, true);*/
   (*move) = (*tile);
   move->to_x = tmp->pos_x;
   move->to_y = tmp->pos_y;
   move->x = tmp->x;
   move->y = tmp->y;
-  /*if (tmp->value)
-    tmp->m_valueChanged = true;*/
-  //tmp->value = tmp->value + tile->value;
-  /*if (tmp->value)
-    tmp->value += tile->value;*/
   tile->setValue(0);
 }
 
@@ -226,10 +235,27 @@ bool Handle_2048::canMove(int y, int x, int value)
   return m_tiles[y][x]->value == value || !m_tiles[y][x]->value;
 }
 
+void  Handle_2048::restart()
+{
+  m_msg->setText("");
+  m_score->setText("score : 0");
+  for (auto &it : m_tiles)
+    for (auto it2 : it)
+      it2->setValue(0);
+  m_end = false;
+
+  create_new_number();
+  create_new_number();
+}
+
 void  Handle_2048::keyReleaseEvent(int key)
 {
   if (m_move > 0.f)
     return;
+  if (m_end) {
+      restart();
+      return;
+    }
   switch (key) {
     case SDLK_RIGHT:
       m_direction = R_MOVE;
@@ -258,23 +284,19 @@ void  Handle_2048::keyReleaseEvent(int key)
               switch (m_direction) {
                 case R_MOVE:
                   for (x = it2->x; x < 3 && canMove(i_y, x + 1, it2->value) == true; ++x);
-                  //switchTile(it2, m_tiles[it2->y][x], x, i_y);
-                  switchTile(it2, m_tiles[i_y][x], z, x, i_y);
+                  switchTile(it2, m_tiles[i_y][x], z);
                   break;
                 case L_MOVE:
                   for (x = it2->x; x > 0 && canMove(i_y, x - 1, it2->value) == true; --x);
-                  //switchTile(it2, m_tiles[it2->y][x], x, i_y);
-                  switchTile(it2, m_tiles[i_y][x], z, x, i_y);
+                  switchTile(it2, m_tiles[i_y][x], z);
                   break;
                 case D_MOVE:
                   for (x = it2->y; x < 3 && canMove(x + 1, i_x, it2->value) == true; ++x);
-                  //switchTile(it2, m_tiles[x][i_x], i_x, x);
-                  switchTile(it2, m_tiles[x][i_x], z, i_x, x);
+                  switchTile(it2, m_tiles[x][i_x], z);
                   break;
                 case U_MOVE:
                   for (x = it2->y; x > 0 && canMove(x - 1, i_x, it2->value) == true; --x);
-                  //switchTile(it2, m_tiles[x][i_x], i_x, x);
-                  switchTile(it2, m_tiles[x][i_x], z, i_x, x);
+                  switchTile(it2, m_tiles[x][i_x], z);
                   break;
                 default:
                   break;
@@ -286,7 +308,7 @@ void  Handle_2048::keyReleaseEvent(int key)
     m_move = TRANS_TIME;
 }
 
-void  Handle_2048::create_new_number()
+bool  Handle_2048::create_new_number()
 {
   std::vector<Tile*>  tmp;
 
@@ -295,16 +317,10 @@ void  Handle_2048::create_new_number()
       if (!it2->value)
         tmp.push_back(it2);
 
-  if (!tmp.size())
-    return;
+  if (tmp.size() < 1)
+    return false;
   int z = rand() % tmp.size();
   int r = rand() % 10;
   tmp[z]->setValue(r >= 9 ? 4 : 2); //90% getting a 2
-
-  /*int z = rand() % 16;
-  int r = rand() % 10;
-  Tile *tmp = m_tiles[z / 4][z % 4];
-
-  if (!tmp->value)
-    tmp->value = r > 8 ? 4 : 2;*/
+  return true;
 }

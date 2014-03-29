@@ -261,13 +261,12 @@ void  myGLWidget::initVertexBufferObject(GLenum option)
   m_normalsSize = m_normals.size() * sizeof(GLfloat);
 
   glGenBuffers(1, &m_vboID);
-  //verrouillage de l'objet
+  // locking object
   glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
 
-  // Allocation de la memoire video
+  // setting up video memory
   glBufferData(GL_ARRAY_BUFFER, m_verticesSize + m_texturesSize + m_colorsSize + m_normalsSize, 0, option);
 
-  // Transfert des donnees
   glBufferSubData(GL_ARRAY_BUFFER, 0, m_verticesSize, &m_vertices[0]);
   if (m_texturesSize > 0)
     glBufferSubData(GL_ARRAY_BUFFER, m_verticesSize, m_texturesSize, &m_textures[0]);
@@ -276,16 +275,15 @@ void  myGLWidget::initVertexBufferObject(GLenum option)
   if (m_normalsSize > 0)
     glBufferSubData(GL_ARRAY_BUFFER, m_verticesSize + m_texturesSize + m_colorsSize, m_normalsSize, &m_normals[0]);
 
-  // Deverrouillage de l'objet
+  // unlocking object
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void  myGLWidget::bindVertexBufferObject()
 {
-  // Verrouillage du VBO
+  // locking VBO
   glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
 
-  // Acces aux vertices dans la memoire video
   if (m_render2D)
     glVertexAttribPointer(VERTEX_COORD, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
   else
@@ -306,35 +304,31 @@ void  myGLWidget::bindVertexBufferObject()
       glEnableVertexAttribArray(NORMAL_COORD);
     }
 
-  // Deverrouillage du VBO
+  // unlocking VBO
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void  myGLWidget::updateVertexBufferObject(void *donnees, int tailleBytes, int decalage)
 {
-  // Verrouillage du VBO
+  // locking VBO
   glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
 
-  // Recuperation de l'adresse du VBO
-  // remplace glMapBuffer
-  void *adresseVBO = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+  // getting VBO's address
+  void *VBO = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 
-  // Si l'adresse retournee est nulle alors on arrete le transfert
-  if (!adresseVBO)
-    {
+  if (!VBO) {
       std::cout << "Error: cannot get VBO" << std::endl;
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       return;
     }
 
-  // Mise a jour des donnees
-  memcpy((char*)adresseVBO + decalage, donnees, tailleBytes);
+  // updating data
+  memcpy((char*)VBO + decalage, donnees, tailleBytes);
 
-  // Annulation du pointeur
   glUnmapBuffer(GL_ARRAY_BUFFER);
-  adresseVBO = 0;
+  VBO = 0;
 
-  // Deverrouillage du VBO
+  // unlocking VBO
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

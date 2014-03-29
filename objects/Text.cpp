@@ -18,7 +18,7 @@ Text::Text(string text, Color c, float x, float y, float font_size)
     } else {
       m_hasTexture = true;
     }
-  m_size = 0.017f * m_text.length();
+  m_size = 0.017f * m_text.length() * font_size * 5.f;
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_render2D = true;
   m_className = "Text";
@@ -32,7 +32,7 @@ Text::Text(const char *text, Color c, float x, float y, float font_size)
     } else {
       m_hasTexture = true;
     }
-  m_size = 0.017f * m_text.length();
+  m_size = 0.017f * m_text.length() * font_size * 5.f;
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_render2D = true;
   m_className = "Text";
@@ -267,6 +267,12 @@ void  Text::fill2DVertices(bool recalc)
   for (unsigned int i(0); i < size; ++i){
       m_vertices.push_back(verticesTmp[i]);
     }
+}
+
+void  Text::updateColors()
+{
+  if (m_text.size() > 0)
+    MyWindow::getLib()->createTextTexture(m_text.c_str(), &m_texture, m_color);
 }
 
 void    Text::setText(const char *s)

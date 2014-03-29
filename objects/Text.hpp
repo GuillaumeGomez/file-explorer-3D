@@ -21,6 +21,7 @@ namespace Object
     virtual void    initializeGL();
     virtual void    paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
     virtual void    setTexture(const Texture &);
+    virtual void    updateColors();
     void            setText(std::string);
     void            setText(const char*);
     std::string const &getText() const;

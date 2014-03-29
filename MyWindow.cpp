@@ -202,8 +202,10 @@ void  MyWindow::update()
 
 void    MyWindow::clearScreen()
 {
-  //glClearColor(0.f, 0.f, 0.f, 1.f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  if (m_mode != MODE_2048)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  else
+    glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void  MyWindow::mousePressEvent(int but, int posx, int posy)
@@ -254,6 +256,7 @@ void MyWindow::keyPressEvent(int key)
           switch (key)
             {
             case SDLK_TAB:
+              glEnable(GL_DEPTH_TEST);
               this->m_mode = MODE_NORMAL;
               m_key->lock();
               m_key->setInterval(10);
@@ -272,6 +275,7 @@ void MyWindow::keyPressEvent(int key)
             }
         } else if (m_mode == MODE_2048) {
           if (key == SDLK_TAB) {
+              glEnable(GL_DEPTH_TEST);
               this->m_mode = MODE_NORMAL;
               sdl->resetCursor();
               sdl->displayCursor(pause);
@@ -286,6 +290,7 @@ void MyWindow::keyPressEvent(int key)
               this->m_printInfo = !this->m_printInfo;
               break;
             case SDLK_TAB:
+              glDisable(GL_DEPTH_TEST);
               this->m_mode = MODE_TETRIS;
               m_key->lock();
               m_key->setInterval(50);
@@ -300,6 +305,7 @@ void MyWindow::keyPressEvent(int key)
               sdl->displayCursor(pause);
               break;
             case SDLK_0:
+              glDisable(GL_DEPTH_TEST);
               this->m_mode = MODE_2048;
               sdl->displayCursor(true);
               break;

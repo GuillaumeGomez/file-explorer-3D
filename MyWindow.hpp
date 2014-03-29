@@ -72,8 +72,8 @@ public:
 
   Vector3D const  &getPlayerPosition() const;
 
-  static HandleSDL   *getLib();
-  static void       clearScreen();
+  static HandleSDL    *getLib();
+  void                clearScreen();
 
 private:
   bool                m_printInfo;
