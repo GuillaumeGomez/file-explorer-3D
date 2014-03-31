@@ -550,16 +550,16 @@ void  Tetris::setColor(int x, int y, PieceDatas *c, bool ghost)
       m_textures[res + 3] = ghost ? 0.49f : 1.f;
 
       m_textures[res + 4] = c->tex_coord[0]; //down left
-      m_textures[res + 5] = ghost ? 0.f : 0.5f;
+      m_textures[res + 5] = ghost ? 0.01f : 0.5f;
 
       m_textures[res + 6] = c->tex_coord[1]; //up right
       m_textures[res + 7] = ghost ? 0.49f : 1.f;
 
       m_textures[res + 8] = c->tex_coord[0]; //down left
-      m_textures[res + 9] = ghost ? 0.f : 0.5f;
+      m_textures[res + 9] = ghost ? 0.01f : 0.5f;
 
       m_textures[res + 10] = c->tex_coord[1]; //down right
-      m_textures[res + 11] = ghost ? 0.f : 0.5f;
+      m_textures[res + 11] = ghost ? 0.01f : 0.5f;
     } else {
       m_textures[res] = 0.05f; //up left
       m_textures[res + 1] = 0.4f;
