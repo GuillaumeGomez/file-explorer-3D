@@ -85,7 +85,7 @@ public:
   std::string const &getTextureName() const;
   virtual void    initVertexBufferObject(GLenum = GL_STATIC_DRAW);
   virtual void    bindVertexBufferObject();
-  virtual void    updateVertexBufferObject(void *donnees, int tailleBytes, int decalage);
+  virtual void    updateVertexBufferObject(void *data, int byteSize, int shift);
   virtual void    initVertexArrayObject();
   std::string const &getClassName() const;
   void            setDrawMode(GLenum);

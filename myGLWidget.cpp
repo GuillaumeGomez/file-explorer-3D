@@ -308,25 +308,25 @@ void  myGLWidget::bindVertexBufferObject()
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void  myGLWidget::updateVertexBufferObject(void *donnees, int tailleBytes, int decalage)
+void  myGLWidget::updateVertexBufferObject(void *data, int byteSize, int shift)
 {
   // locking VBO
   glBindBuffer(GL_ARRAY_BUFFER, m_vboID);
 
   // getting VBO's address
-  void *VBO = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+  void *vbo = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 
-  if (!VBO) {
+  if (!vbo) {
       std::cout << "Error: cannot get VBO" << std::endl;
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       return;
     }
 
   // updating data
-  memcpy((char*)VBO + decalage, donnees, tailleBytes);
+  memcpy((char*)vbo + shift, data, byteSize);
 
   glUnmapBuffer(GL_ARRAY_BUFFER);
-  VBO = 0;
+  vbo = 0;
 
   // unlocking VBO
   glBindBuffer(GL_ARRAY_BUFFER, 0);

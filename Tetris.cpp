@@ -8,7 +8,7 @@
 #include "HandleSDL.hpp"
 
 Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_score(0), m_elapsed(0.f), m_hasNew(false),
-  m_lines(0), m_end(false)
+  m_lines(0), m_end(false), m_oldSize(0)
 {
   m_render2D = true;
 
@@ -152,17 +152,17 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_score(0), m
   m_pieces[6].tex_coord[0] = 0.875f;
   m_pieces[6].tex_coord[1] = 1.f;
 
-  m_texts.push_back(new Object::Text("0", RED, -0.99f, 0.65f));
-  m_texts.push_back(new Object::Text("0", RED, -0.99f, 0.25f));
-  m_texts.push_back(new Object::Text("1", RED, -0.99f, -0.15f));
+  m_texts.push_back(new Object::Text("0", RED, -0.96f, 0.6f));
+  m_texts.push_back(new Object::Text("0", RED, -0.96f, 0.2f));
+  m_texts.push_back(new Object::Text("1", RED, -0.96f, -0.2f));
   m_texts.push_back(new Object::Text("", RED, 0.f, 0.f));
-  m_texts.push_back(new Object::Text("Score :", RED, -0.99f, 0.8f));
-  m_texts.push_back(new Object::Text("Lines :", RED, -0.99f, 0.4f));
-  m_texts.push_back(new Object::Text("Level :", RED, -0.99f, 0.f));
+  m_texts.push_back(new Object::Text("Score :", RED, -0.96f, 0.75f));
+  m_texts.push_back(new Object::Text("Lines :", RED, -0.96f, 0.35f));
+  m_texts.push_back(new Object::Text("Level :", RED, -0.96f, -0.05f));
 
   m_texture.setTexture("./textures/tetris.png");
 
-  float tmp_speeds[12] = {1.f, 0.9f, 0.8f, 0.7f, 0.6f, 0.5f, 0.4f, 0.3f, 0.2f, 0.1f, 0.09f, 0.08f};
+  float tmp_speeds[12] = {1.f, 0.9f, 0.8f, 0.7f, 0.6f, 0.5f, 0.4f, 0.3f, 0.25f, 0.2f, 0.18f, 0.16f};
   int   tmp_levels[11] = {20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220};
 
   for (unsigned int i = 0; i < 12; ++i) {
@@ -180,8 +180,39 @@ Tetris::~Tetris()
     }
 }
 
-void  createGrid(std::vector<GLfloat> &tex, std::vector<GLfloat> &vec)
+void  createGrid(std::vector<GLfloat> &tex, std::vector<GLfloat> &vec, int &oldSize)
 {
+  //background
+  vec.push_back(-1.f);
+  vec.push_back(-1.f);
+  tex.push_back(0.f);
+  tex.push_back(0.f);
+
+  vec.push_back(-1.f);
+  vec.push_back(1.f);
+  tex.push_back(0.f);
+  tex.push_back(0.5f);
+
+  vec.push_back(1.f);
+  vec.push_back(1.f);
+  tex.push_back(1.f / 8.f);
+  tex.push_back(0.5f);
+
+  vec.push_back(1.f);
+  vec.push_back(1.f);
+  tex.push_back(1.f / 8.f);
+  tex.push_back(0.5f);
+
+  vec.push_back(1.f);
+  vec.push_back(-1.f);
+  tex.push_back(1.f / 8.f);
+  tex.push_back(0.f);
+
+  vec.push_back(-1.f);
+  vec.push_back(-1.f);
+  tex.push_back(0.f);
+  tex.push_back(0.f);
+
   //tetris 'grid'
   //left
   vec.push_back(-0.52f);
@@ -306,6 +337,8 @@ void  createGrid(std::vector<GLfloat> &tex, std::vector<GLfloat> &vec)
   vec.push_back(-0.9f);
   tex.push_back(0.01f);
   tex.push_back(0.99f);
+
+  oldSize = vec.size();
 }
 
 void  Tetris::initializeGL()
@@ -350,7 +383,7 @@ void  Tetris::initializeGL()
       exit(-1);
     }
 
-  createGrid(m_textures, m_vertices);
+  createGrid(m_textures, m_vertices, m_oldSize);
 
   const float tmp_space = 22 / 1.8f;
 
@@ -500,7 +533,7 @@ void    Tetris::update(const float &n)
 void  Tetris::setColor(int x, int y, PieceDatas *c, bool ghost)
 {
   //int res = y * 180 + x * 18 + 18;
-  int res = y * 120 + x * 12 + 48;
+  int res = y * 120 + x * 12 + m_oldSize;
 
   /*for (int i = 0; i < 6; ++i) {
       m_colors[res] = c.red();
@@ -517,16 +550,16 @@ void  Tetris::setColor(int x, int y, PieceDatas *c, bool ghost)
       m_textures[res + 3] = ghost ? 0.49f : 1.f;
 
       m_textures[res + 4] = c->tex_coord[0]; //down left
-      m_textures[res + 5] = ghost ? 0.f : 0.51f;
+      m_textures[res + 5] = ghost ? 0.f : 0.5f;
 
       m_textures[res + 6] = c->tex_coord[1]; //up right
       m_textures[res + 7] = ghost ? 0.49f : 1.f;
 
       m_textures[res + 8] = c->tex_coord[0]; //down left
-      m_textures[res + 9] = ghost ? 0.f : 0.51f;
+      m_textures[res + 9] = ghost ? 0.f : 0.5f;
 
       m_textures[res + 10] = c->tex_coord[1]; //down right
-      m_textures[res + 11] = ghost ? 0.f : 0.51f;
+      m_textures[res + 11] = ghost ? 0.f : 0.5f;
     } else {
       m_textures[res] = 0.05f; //up left
       m_textures[res + 1] = 0.4f;

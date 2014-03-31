@@ -152,12 +152,12 @@ void  MyWindow::repeatKey()
             m_camera->keyPressEvent(k[s--]);
           if (front == 1 && lat == 1)
             m_camera->setSpeed(m_camera->speed() / 0.75f);
-        } else if (m_mode == MODE_TETRIS) {
+        }/* else if (m_mode == MODE_TETRIS) {
           while (s >= 0)
             m_tetris->keyPressEvent(k[s--]);
         } else if (m_mode == MODE_2048) {
 
-        }
+        }*/
       m_key->unlock();
       Utils::sleep(m_key->getInterval());
     }
@@ -202,7 +202,7 @@ void  MyWindow::update()
 
 void    MyWindow::clearScreen()
 {
-  if (m_mode != MODE_2048)
+  if (m_mode != MODE_2048 && m_mode != MODE_TETRIS)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   else
     glClear(GL_DEPTH_BUFFER_BIT);
@@ -278,7 +278,7 @@ void MyWindow::keyPressEvent(int key)
               glEnable(GL_DEPTH_TEST);
               this->m_mode = MODE_NORMAL;
               sdl->resetCursor();
-              sdl->displayCursor(pause);
+              //sdl->displayCursor(pause);
               /*m_key->lock();
               m_key->setInterval(10);
               m_key->unlock();*/
@@ -292,9 +292,9 @@ void MyWindow::keyPressEvent(int key)
             case SDLK_TAB:
               glDisable(GL_DEPTH_TEST);
               this->m_mode = MODE_TETRIS;
-              m_key->lock();
+              /*m_key->lock();
               m_key->setInterval(50);
-              m_key->unlock();
+              m_key->unlock();*/
               break;
             case SDLK_BACKSPACE:
               m_wireframe = !m_wireframe;
@@ -307,7 +307,7 @@ void MyWindow::keyPressEvent(int key)
             case SDLK_0:
               glDisable(GL_DEPTH_TEST);
               this->m_mode = MODE_2048;
-              sdl->displayCursor(true);
+              //sdl->displayCursor(true);
               break;
             default:
               m_key->lock();
@@ -429,9 +429,9 @@ void  MyWindow::addObject(myGLWidget *s, bool isPauseObject)
     m_pickObjects.push_back(s);
 }
 
-bool  MyWindow::isPlayingTetris() const
+bool  MyWindow::isPlaying() const
 {
-  return m_mode == MODE_TETRIS;
+  return m_mode != MODE_NORMAL;
 }
 
 void  MyWindow::mouseMoveEvent(int x, int y)

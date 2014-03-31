@@ -55,7 +55,7 @@ public:
   void        paintGL2(glm::mat4 const&view, glm::mat4 const&pers);
   void        setPause(bool b);
   bool        isPaused() const;
-  bool        isPlayingTetris() const;
+  bool        isPlaying() const;
   void        start();
   void        keyPressEvent(int key);
   void        keyReleaseEvent(int);

@@ -35,9 +35,9 @@ Handle_2048::Handle_2048() : myGLWidget(Vector3D(), Rotation()),
   m_render2D = true;
   m_move = 0.f;
 
-  m_score = new Object::Text("score : 0", WHITE, 0.5f, 0.8f);
+  m_score = new Object::Text("score : 0", WHITE, 0.5f, 0.75f);
   m_msg = new Object::Text("", RED, 0.f, 0.f);
-  m_title = new Object::Text("2048", LGREY, -0.85f, 0.63f, 0.4f);
+  m_title = new Object::Text("2048", LGREY, -0.83f, 0.66f, 0.35f);
   create_back_tile(Vector3D(-1.f, -1.f), 2.f, BLACK);
   create_back_tile(Vector3D(-0.85f, -0.95f), 1.65f, GREY);
   float decal = tile_s + border_s;
@@ -140,6 +140,10 @@ void  Handle_2048::update(const float &t)
                   m_score->setText("score : " + Utility::toString<int>(sc + tt->value + tt->value));
                 }
               tt->setValue(ti->value + tt->value);
+              if (tt->value == 2048) {
+                  m_end = true;
+                  m_msg->setText("You win !\nPress any key to restart");
+                }
               ti->setValue(0);
             }
           if (z) {

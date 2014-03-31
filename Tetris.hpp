@@ -56,6 +56,7 @@ private:
   bool        m_hasNew;
   int         m_lines;
   bool        m_end;
+  int         m_oldSize;
   char        map[22][10];
   float       m_speeds[12];
   int         m_levels[11];

@@ -448,7 +448,7 @@ bool  HandleSDL::handleEvents()
           m_win->keyReleaseEvent(event.key.keysym.sym);
           break;
         case SDL_MOUSEMOTION:
-          if (!m_win->isPaused() && !m_win->isPlayingTetris()) {
+          if (!m_win->isPaused() && !m_win->isPlaying()) {
               static bool b(false);
 
               mouse_x = event.motion.x;

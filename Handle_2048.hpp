@@ -167,8 +167,16 @@ class Handle_2048 : public myGLWidget
           m_back->setColor(Color(0.93f, 0.8f, 0.38f));
           m_text->setColor(WHITE);
           break;
+        case 512:
+          m_back->setColor(Color(0.93f, 0.78f, 0.36f));
+          m_text->setColor(WHITE);
+          break;
+        case 1024:
+          m_back->setColor(Color(0.93f, 0.76f, 0.32f));
+          m_text->setColor(WHITE);
+          break;
         default:
-          m_back->setColor(Color(0.93f, 0.78f, 0.31f));
+          m_back->setColor(Color(0.93f, 0.75f, 0.29f));
           m_text->setColor(WHITE);
           break;
         }
