@@ -7,8 +7,14 @@
 
 #include "HandleSDL.hpp"
 
+//ajouter class module dont tetris et 2048 herite
+/*class Module : public myGLWidget
+{
+
+};*/
+
 Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_score(0), m_elapsed(0.f), m_hasNew(false),
-  m_lines(0), m_end(false), m_oldSize(0)
+  m_lines(0), m_end(false), m_pause(false), m_oldSize(0)
 {
   m_render2D = true;
 
@@ -464,6 +470,8 @@ void  Tetris::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix
 
 void    Tetris::update(const float &n)
 {
+  if (m_pause)
+    return;
   if (!m_end) {
       m_elapsed -= n;
       if (m_elapsed <= 0.f) {
@@ -480,7 +488,7 @@ void    Tetris::update(const float &n)
             } else {
               createNewPiece();
             }
-          m_elapsed = m_speeds[m_level];
+          m_elapsed = m_speeds[m_level - 1] - m_elapsed;
         }
       if (!m_hasNew)
         return;
@@ -720,8 +728,10 @@ void  Tetris::restart()
   m_piece.id = -1;
   m_level = 1;
   m_score = 0;
-  m_texts[LVL]->setText(Utility::toString<int>(m_level));
-  m_texts[SCORE]->setText(Utility::toString<int>(m_score));
+  m_lines = 0;
+  m_texts[LVL]->setText("1");
+  m_texts[SCORE]->setText("0");
+  m_texts[LINE]->setText("0");
   createNewPiece();
   m_hasNew = true;
 }
@@ -736,6 +746,9 @@ void  Tetris::keyPressEvent(int key)
       return;
     }
   switch (key) {
+    case SDLK_ESCAPE:
+      m_pause = !m_pause;
+      break;
     case SDLK_RIGHT:
       tmp = m_piece.x;
 
