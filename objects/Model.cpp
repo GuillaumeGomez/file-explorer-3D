@@ -952,7 +952,7 @@ void Animator::UpdateAnimation(float lElapsedTime, double dTicksPerSecond) {
           aiQuaternion qPresentRotation(1, 0, 0, 0);
 
           if (pChannel->mNumRotationKeys > 0) {
-              unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].y : 0;
+              unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].y : m_from;
 
               while (uFrame < pChannel->mNumRotationKeys - 1) {
                   if (dTimeInTicks < pChannel->mRotationKeys[uFrame + 1].mTime) {
@@ -987,7 +987,7 @@ void Animator::UpdateAnimation(float lElapsedTime, double dTicksPerSecond) {
           aiVector3D vPresentScaling(1, 1, 1);
 
           if (pChannel->mNumScalingKeys > 0) {
-              unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].z : 0;
+              unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].z : m_from;
 
               while (uFrame < pChannel->mNumScalingKeys - 1) {
                   if (dTimeInTicks < pChannel->mScalingKeys[uFrame + 1].mTime) {

@@ -1,0 +1,26 @@
+MODULE FEATURES
+
+- add model viewer perspective (a possibility to open a model inside my world)
+- create a menu to chose game when TAB key is pressed
+- create menu for each module, in it add a "how to play" option
+- create module class for tetris, 2048 and other future games (and a new folder for each module's class)
+
+class Module : public myGLWidget;
+
+- add a vector<Module*> to MyWindow class to store every module
+- don't load module until the user launch it
+
+GENERAL FEATURES
+
+- create an option menu (change keys, mouse sensibility and all the stuff)
+- create a sqlite3 class (for score in games, saved keys, etc...)
+- update sdl2 to its latest version to see if its SDL_SetRelativeMouseMode works now (what a pain in the ass...)
+- add an icon for the window, it's ugly for the moment
+
+TEXT CLASS FEATURES
+
+- add option to have text center, align to right/left
+
+MODEL CLASS FEATURES
+
+- update the cutAnimation function, not really working for the moment...

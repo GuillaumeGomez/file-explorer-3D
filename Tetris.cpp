@@ -748,6 +748,7 @@ void  Tetris::keyPressEvent(int key)
   switch (key) {
     case SDLK_ESCAPE:
       m_pause = !m_pause;
+      m_texts[TETRIS_MSG]->setText(m_pause ? "Pause" : "");
       break;
     case SDLK_RIGHT:
       tmp = m_piece.x;
