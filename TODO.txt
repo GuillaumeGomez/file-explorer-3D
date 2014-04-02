@@ -24,3 +24,7 @@ TEXT CLASS FEATURES
 MODEL CLASS FEATURES
 
 - update the cutAnimation function, not really working for the moment...
+
+TETRIS CLASS FEATURES
+
+- split sprites into textures (1 sprite for 1 texture), it will solve the texture issue definitely
