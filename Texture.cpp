@@ -43,13 +43,12 @@ bool  Texture::load()
 {
   if (m_id)
     return true;
-  this->destroy();
+  //this->destroy();
   if (m_textureName.empty()){
       if (m_width == 0 || m_height == 0)
         return false;
       glGenTextures(1, &m_id);
 
-      // Verrouillage
       glBindTexture(GL_TEXTURE_2D, m_id);
 
       if (m_repeat) {
@@ -58,13 +57,13 @@ bool  Texture::load()
         }
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
       glTexImage2D(GL_TEXTURE_2D, 0, m_internFormat, m_width, m_height, 0, m_format, GL_UNSIGNED_BYTE, 0);
 
-      // Deverrouillage
       glBindTexture(GL_TEXTURE_2D, 0);
-      return true;
+    } else {
+      m_id = MyWindow::getLib()->loadTexture(m_textureName, true, &m_width, &m_height);
     }
-  m_id = MyWindow::getLib()->loadTexture(m_textureName, true, &m_width, &m_height);
   return m_id != 0;
 }
 

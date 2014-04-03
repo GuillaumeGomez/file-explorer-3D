@@ -40,6 +40,11 @@ public:
   int             getEvent(SDL_Event*);
   void            displayCursor(bool display);
   void            resetCursor();
+  bool            saveImage(SDL_Surface *s, const char *filename);
+  bool            saveImage(SDL_Surface *s, std::string filename);
+  bool            saveImage(Texture*, const char *filename);
+  bool            saveImage(Texture*, std::string filename);
+  SDL_Surface     *convertTextureToSurface(Texture*);
   static SDL_Surface      *loadImage(std::string img);
   static SDL_Surface      *loadImage(const char*);
   static void             freeImage(SDL_Surface*);

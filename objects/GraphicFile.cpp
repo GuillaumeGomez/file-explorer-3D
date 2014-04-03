@@ -162,11 +162,11 @@ void  GraphicFile::initializeGL()
                       0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
                       0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
 
-                      0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-                      1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+                      0.f, 0.f, 1.f, 0.f, 1.f, 1.f,
+                      1.f, 1.f, 0.f, 1.f, 0.f, 0.f,
 
-                      0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-                      1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f};
+                      0.f, 0.f, 1.f, 0.f, 1.f, 1.f,
+                      1.f, 1.f, 0.f, 1.f, 0.f, 0.f};
 
   GLfloat tmpCol[] = {m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),
                       m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(), m_color.red(), m_color.green(), m_color.blue(),

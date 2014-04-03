@@ -69,6 +69,7 @@ public:
   void        setDisplaySentence(std::string);
   void        setDisplaySentence(const char*);
   void        setMainCharacter(myGLWidget*);
+  void        takeScreenshot(std::string filename = "");
 
   Vector3D const  &getPlayerPosition() const;
 

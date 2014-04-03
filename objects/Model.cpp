@@ -111,16 +111,17 @@ Model::Model(Vector3D v, Rotation r, const char *model, float height) : myGLWidg
 }
 
 Model::~Model() {
+  for (auto it : m_vTextures)
+    delete it;
+  for (auto it : m_animations)
+    delete it.second;
   if (m_pScene != NULL) {
       aiReleaseImport(m_pScene);
       if (m_pStore)
         aiReleasePropertyStore(m_pStore);
     }
-  if (m_vMeshes.size() > 0) {
-      for (unsigned int i = 0; i < m_vMeshes.size(); i++) {
-          delete m_vMeshes[i];
-        }
-    }
+  for (auto it : m_vMeshes)
+    delete it;
   /*for (int i = 0; i < m_iNumMeshes; i++) {
       if (m_vTextures[i] != -1) {
           glDeleteTextures(1, &m_vTextures[i]);
@@ -427,16 +428,16 @@ void  Model::pause()
 void  Model::update(const float &f)
 {
   if (!m_pause) {
-    g_lLastTime = f;
-    //set the bone animation to the specified timestamp
-    if (m_pAnimator != NULL) {
-        //long lTimeNow = SDL_GetTicks();
-        //long lTimeDifference = lTimeNow - g_lLastTime;
-        //g_lLastTime = lTimeNow;
-        g_lElapsedTime += g_lLastTime;
+      g_lLastTime = f;
+      //set the bone animation to the specified timestamp
+      if (m_pAnimator != NULL) {
+          //long lTimeNow = SDL_GetTicks();
+          //long lTimeDifference = lTimeNow - g_lLastTime;
+          //g_lLastTime = lTimeNow;
+          g_lElapsedTime += g_lLastTime;
 
-        m_pAnimator->UpdateAnimation(g_lElapsedTime, ANIMATION_TICKS_PER_SECOND);
-      }
+          m_pAnimator->UpdateAnimation(g_lElapsedTime, ANIMATION_TICKS_PER_SECOND);
+        }
     }
 }
 
@@ -952,7 +953,7 @@ void Animator::UpdateAnimation(float lElapsedTime, double dTicksPerSecond) {
           aiQuaternion qPresentRotation(1, 0, 0, 0);
 
           if (pChannel->mNumRotationKeys > 0) {
-              unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].y : m_from;
+              unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].y : 0;
 
               while (uFrame < pChannel->mNumRotationKeys - 1) {
                   if (dTimeInTicks < pChannel->mRotationKeys[uFrame + 1].mTime) {
@@ -987,7 +988,7 @@ void Animator::UpdateAnimation(float lElapsedTime, double dTicksPerSecond) {
           aiVector3D vPresentScaling(1, 1, 1);
 
           if (pChannel->mNumScalingKeys > 0) {
-              unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].z : m_from;
+              unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].z : 0;
 
               while (uFrame < pChannel->mNumScalingKeys - 1) {
                   if (dTimeInTicks < pChannel->mScalingKeys[uFrame + 1].mTime) {

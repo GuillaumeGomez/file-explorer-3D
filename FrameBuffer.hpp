@@ -11,7 +11,7 @@ public:
   FrameBuffer();
   FrameBuffer(GLuint largeur, GLuint hauteur);
   ~FrameBuffer();
-  void        createRenderBuffer(GLuint &id, GLenum formatInterne);
+  void        createRenderBuffer(GLuint &id, GLenum internFormat);
   bool        load();
   GLuint      getFrameBufferID() const;
   GLuint      getTextureID(unsigned int index) const;
@@ -19,13 +19,13 @@ public:
   void        setHeight(GLuint);
   GLuint      getWidth() const;
   void        setWidth(GLuint);
-  void        bind();
-  void        unbind();
+  void        bind() const;
+  void        unbind() const;
 
 private:
   GLuint                  m_id;
-  GLuint                  m_largeur;
-  GLuint                  m_hauteur;
+  GLuint                  m_width;
+  GLuint                  m_height;
   std::vector<Texture*>   m_colorBuffers;
   GLuint                  m_depthBufferID;
   Texture                 *m_colorBuffer;

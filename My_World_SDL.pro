@@ -89,7 +89,8 @@ SOURCES += main.cpp \
     shaders/ShaderHandler.cpp \
     objects/HeightMap.cpp \
     objects/Point.cpp \
-    Handle_2048.cpp
+    Handle_2048.cpp \
+    objects/Menu.cpp
 
 HEADERS += \
     HandleSDL.hpp \
@@ -137,4 +138,5 @@ HEADERS += \
     shaders/ShaderHandler.hpp \
     objects/HeightMap.hpp \
     objects/Point.hpp \
-    Handle_2048.hpp
+    Handle_2048.hpp \
+    objects/Menu.hpp

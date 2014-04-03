@@ -61,8 +61,8 @@ SDL_Surface *flipSurface(SDL_Surface * surface)
 HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int anti_ali)
   : m_name(winName), m_win(win), fullscreen(false), m_elapsedTime(0), m_anti_ali(anti_ali)
 {
-  screenWidth = 0;
-  screenHeight = 0;
+  screenWidth = 800;
+  screenHeight = 600;
   mouse_x = 0;
   mouse_y = 0;
 
@@ -78,7 +78,7 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
       exit(-1);
     }
   if (!(screen = SDL_CreateWindow(winName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                  800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE)))
+                                  screenWidth, screenHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE)))
     {
       HandleError::showError(SDL_GetError());
       TTF_Quit();
@@ -107,10 +107,18 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
   sdl_flags = SDL_GetWindowFlags(screen);
   SDL_GetWindowSize(screen, &screenWidth, &screenHeight);
   //SDL_SetRelativeMouseMode(SDL_TRUE); //-> fps mode for cursor
+
+  /* if needed...
+  int flags = IMG_INIT_JPG|IMG_INIT_PNG;
+  int initted = IMG_Init(flags);
+  if (initted&flags != flags) {
+      std::cerr << "IMG_Init error !" << std::endl;
+    }*/
 }
 
 HandleSDL::~HandleSDL()
 {
+  //IMG_Quit();
   delete ShaderHandler::getInstance();
   delete TextureHandler::getInstance();
   if (m_font)
@@ -703,3 +711,72 @@ GLuint HandleSDL::loadIconFile(const char *s)
 {
   //SDL_WM_GrabInput(b ? SDL_GRAB_ON : SDL_GRAB_OFF);
 }*/
+
+bool  HandleSDL::saveImage(SDL_Surface *s, const char *filename)
+{
+  if (!s || !filename)
+    return false;
+
+  //return !SDL_SaveBMP(s, filename);
+  return !IMG_SavePNG(s, filename);
+}
+
+bool  HandleSDL::saveImage(SDL_Surface *s, std::string filename)
+{
+  return saveImage(s, filename.c_str());
+}
+
+bool  HandleSDL::saveImage(Texture *t, const char *filename)
+{
+  if (!t || !filename)
+    return false;
+  SDL_Surface *tmp = this->convertTextureToSurface(t);
+  if (!tmp)
+    return false;
+  bool ret = saveImage(tmp, filename);
+  SDL_FreeSurface(tmp);
+  return ret;
+}
+
+bool  HandleSDL::saveImage(Texture *t, std::string filename)
+{
+  return saveImage(t, filename.c_str());
+}
+
+SDL_Surface *HandleSDL::convertTextureToSurface(Texture *t)
+{
+  if (!t)
+    return 0;
+  t->bind();
+  GLint width, height;
+  Uint32 rmask, gmask, bmask, amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+  rmask = 0xff000000;
+  gmask = 0x00ff0000;
+  bmask = 0x0000ff00;
+  amask = 0x000000ff;
+#else
+  rmask = 0x000000ff;
+  gmask = 0x0000ff00;
+  bmask = 0x00ff0000;
+  amask = 0xff000000;
+#endif
+
+
+  glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
+  glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
+
+  int size = width * height * 4;
+  char *pixels = new char[size];
+
+  glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+  SDL_Surface *tmp = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 32, rmask, gmask, bmask, amask);
+  for (int x = 0; x < size; ++x)
+    ((char*)tmp->pixels)[x] = pixels[x];
+  tmp = flipSurface(tmp);
+  t->unbind();
+  delete[] pixels;
+  return tmp;
+}

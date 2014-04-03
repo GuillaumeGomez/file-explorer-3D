@@ -64,7 +64,7 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
         exit(-1);
       }
 
-    // on cache le curseur
+    // hiding cursor
     //SDL_ShowCursor(SDL_DISABLE);
 
     m_camera = new Camera;
@@ -152,52 +152,10 @@ void  MyWindow::repeatKey()
             m_camera->keyPressEvent(k[s--]);
           if (front == 1 && lat == 1)
             m_camera->setSpeed(m_camera->speed() / 0.75f);
-        }/* else if (m_mode == MODE_TETRIS) {
-          while (s >= 0)
-            m_tetris->keyPressEvent(k[s--]);
-        } else if (m_mode == MODE_2048) {
-
-        }*/
+        }
       m_key->unlock();
       Utils::sleep(m_key->getInterval());
     }
-}
-
-void  MyWindow::update()
-{
-  //glEnable(GL_COLOR_MATERIAL);
-
-  this->clearScreen();
-
-  float tmp = sdl->getElapsedTime();
-  if (tmp != 0.f) {
-      if (m_mode == MODE_TETRIS) {
-          m_tetris->update(tmp);
-          glDepthMask(GL_FALSE);
-          m_tetris->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
-          glDepthMask(GL_TRUE);
-        } else if (m_mode == MODE_NORMAL) {
-          if (!pause) {
-              if (m_character)
-                m_character->update(tmp);
-              m_physics->update(tmp);
-              for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it)
-                (*it)->update(tmp);
-            }
-          for (WinList::iterator it = _2D_objectList.begin(); it != _2D_objectList.end(); ++it)
-            (*it)->update(tmp);
-          m_camera->look();
-          picking();
-          this->paintGL();
-        } else if (m_mode == MODE_2048) {
-          m_2048->update(tmp);
-          glDepthMask(GL_FALSE);
-          m_2048->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
-          glDepthMask(GL_TRUE);
-        }
-    }
-
-  //glDisable(GL_COLOR_MATERIAL);
 }
 
 void    MyWindow::clearScreen()
@@ -250,6 +208,9 @@ void MyWindow::keyPressEvent(int key)
   switch (key) {
     case SDLK_F11:
       sdl->switchScreenMode();
+      break;
+    case SDLK_F12:
+      this->takeScreenshot();
       break;
     default:
       if (m_mode == MODE_TETRIS) {
@@ -348,58 +309,108 @@ void MyWindow::initializeGL()
   m_2048->initializeGL();
 }
 
+void  MyWindow::update()
+{
+  //glEnable(GL_COLOR_MATERIAL);
+
+  this->clearScreen();
+
+  float tmp = sdl->getElapsedTime();
+  float fps = this->m_fps->getFpsCount();
+  if (tmp != 0.f) {
+      switch (m_mode) {
+      case MODE_TETRIS:
+          m_tetris->update(tmp);
+          break;
+        case MODE_NORMAL:
+          if (!pause) {
+              if (m_character)
+                m_character->update(tmp);
+              m_physics->update(tmp);
+              for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it)
+                (*it)->update(tmp);
+            }
+          for (WinList::iterator it = _2D_objectList.begin(); it != _2D_objectList.end(); ++it)
+            (*it)->update(tmp);
+
+          if (this->m_printInfo) {
+              static_cast<Object::Text*>(m_displayList[0])->setText("x : " + Utility::toString<float>(m_camera->getPosition().x()));
+              static_cast<Object::Text*>(m_displayList[1])->setText("y : " + Utility::toString<float>(m_camera->getPosition().y()));
+              static_cast<Object::Text*>(m_displayList[2])->setText("z : " + Utility::toString<float>(m_camera->getPosition().z()));
+              static_cast<Object::Text*>(m_displayList[3])->setText("fps : " + Utility::toString<float>(fps));
+            }
+
+          m_camera->look();
+          picking();
+          break;
+        case MODE_2048:
+          m_2048->update(tmp);
+          break;
+        }
+    }
+
+  //glDisable(GL_COLOR_MATERIAL);
+}
+
 void MyWindow::paintGL()
 {
-  float fps;
-
-  fps = this->m_fps->getFpsCount();
-
-  /* 3D part */
   const glm::mat4 view_mat = Camera::getViewMatrix();
   const glm::mat4 proj_mat = Camera::getProjectionMatrix();
-  glEnable(GL_TEXTURE_2D);
 
-  for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it){
-      (*it)->paintGL(view_mat, proj_mat);
-    }
-  m_character->paintGL(view_mat, proj_mat);
-  m_disp->paintGL(view_mat, proj_mat);
-
-  /* 2D part */
   const glm::mat4 proj2d_mat = Camera::get2DProjectionMatrix();
 
-  glDepthMask(GL_FALSE);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  if (this->m_printInfo) {
-      static_cast<Object::Text*>(m_displayList[0])->setText("x : " + Utility::toString<float>(m_camera->getPosition().x()));
-      m_displayList[0]->paintGL(view_mat, proj2d_mat);
-      static_cast<Object::Text*>(m_displayList[1])->setText("y : " + Utility::toString<float>(m_camera->getPosition().y()));
-      m_displayList[1]->paintGL(view_mat, proj2d_mat);
-      static_cast<Object::Text*>(m_displayList[2])->setText("z : " + Utility::toString<float>(m_camera->getPosition().z()));
-      m_displayList[2]->paintGL(view_mat, proj2d_mat);
-      static_cast<Object::Text*>(m_displayList[3])->setText("fps : " + Utility::toString<float>(fps));
-      m_displayList[3]->paintGL(view_mat, proj2d_mat);
+  switch (m_mode) {
+    case MODE_NORMAL:
+      /* 3D part */
+      glEnable(GL_TEXTURE_2D);
+
+      for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it){
+          (*it)->paintGL(view_mat, proj_mat);
+        }
+      m_character->paintGL(view_mat, proj_mat);
+      m_disp->paintGL(view_mat, proj_mat);
+
+      /* 2D part */
+      glDepthMask(GL_FALSE);
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      if (this->m_printInfo) {
+          m_displayList[0]->paintGL(view_mat, proj2d_mat);
+          m_displayList[1]->paintGL(view_mat, proj2d_mat);
+          m_displayList[2]->paintGL(view_mat, proj2d_mat);
+          m_displayList[3]->paintGL(view_mat, proj2d_mat);
+        }
+      if (display_sentence != ""){
+          m_displayList[4]->setPosition(Vector3D());
+          static_cast<Object::Text*>(m_displayList[4])->setText(display_sentence);
+          m_displayList[4]->paintGL(view_mat, proj2d_mat);
+        }
+
+      for (WinList::iterator it = _2D_objectList.begin(); it != _2D_objectList.end(); ++it){
+          (*it)->paintGL(view_mat, proj2d_mat);
+        }
+
+      if (pause)
+        for (auto it = m_pauseObjectList.begin(); it != m_pauseObjectList.end(); ++it)
+          (*it)->paintGL(view_mat, proj2d_mat);
+
+      //display_sentence = "";
+
+      glDisable(GL_BLEND);
+      glDisable(GL_TEXTURE_2D);
+      glDepthMask(GL_TRUE);
+      break;
+    case MODE_TETRIS:
+      glDepthMask(GL_FALSE);
+      m_tetris->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
+      glDepthMask(GL_TRUE);
+      break;
+    case MODE_2048:
+      glDepthMask(GL_FALSE);
+      m_2048->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
+      glDepthMask(GL_TRUE);
+      break;
     }
-  if (display_sentence != ""){
-      m_displayList[4]->setPosition(Vector3D());
-      static_cast<Object::Text*>(m_displayList[4])->setText(display_sentence);
-      m_displayList[4]->paintGL(view_mat, proj2d_mat);
-    }
-
-  for (WinList::iterator it = _2D_objectList.begin(); it != _2D_objectList.end(); ++it){
-      (*it)->paintGL(view_mat, proj2d_mat);
-    }
-
-  if (pause)
-    for (auto it = m_pauseObjectList.begin(); it != m_pauseObjectList.end(); ++it)
-      (*it)->paintGL(view_mat, proj2d_mat);
-
-  //display_sentence = "";
-
-  glDisable(GL_BLEND);
-  glDisable(GL_TEXTURE_2D);
-  glDepthMask(GL_TRUE);
 }
 
 void  MyWindow::paintGL2(const glm::mat4 &view, const glm::mat4 &pers)
@@ -466,6 +477,7 @@ void  MyWindow::start()
     {
       m_end = sdl->handleEvents();
       this->update();
+      this->paintGL();
       sdl->updateScreen();
     }
 }
@@ -539,7 +551,32 @@ void  MyWindow::setMainCharacter(myGLWidget *w)
   if (!w)
     return;
   m_character = static_cast<Object::Model*>(w);
-  m_character->cutAnimation("", "walk", 0.f, 400.f);
+  m_character->cutAnimation("", "walk", 0.f, 393.f);
   m_character->setCurrentAnimation("walk");
   m_character->play();
+}
+
+void  MyWindow::takeScreenshot(std::string filename)
+{
+  m_fbo->bind();
+  this->clearScreen();
+  m_camera->look();
+  this->paintGL();
+  m_fbo->unbind();
+  if (filename.empty()) {
+      char text[100] = "";
+      time_t now = time(0);
+      struct tm *t = localtime(&now);
+
+      strftime(text, 99, "%H-%M-%S %d-%m-%Y", t);
+      filename = text;
+      filename += ".png";
+    }
+  Texture tmp;
+
+  tmp.setTextureID(m_fbo->getTextureID(0));
+  if (sdl->saveImage(&tmp, filename))
+    std::cout << filename << " saved" << std::endl;
+  else
+    std::cout << filename << " not saved" << std::endl;
 }
