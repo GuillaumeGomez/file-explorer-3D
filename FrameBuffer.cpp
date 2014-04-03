@@ -137,3 +137,10 @@ void  FrameBuffer::unbind() const
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   //glViewport(0, 0, MyWindow::getLib()->width(), MyWindow::getLib()->height());
 }
+
+void  FrameBuffer::resize(GLuint w, GLuint h)
+{
+  m_width = w;
+  m_height = h;
+  this->load();
+}

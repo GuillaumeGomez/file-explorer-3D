@@ -21,6 +21,7 @@ public:
   void        setWidth(GLuint);
   void        bind() const;
   void        unbind() const;
+  void        resize(GLuint w, GLuint h);
 
 private:
   GLuint                  m_id;

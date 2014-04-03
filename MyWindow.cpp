@@ -282,6 +282,8 @@ void MyWindow::keyPressEvent(int key)
 void MyWindow::resizeGL(int width, int height)
 {
   m_camera->resize(width, height);
+  m_fbo->resize(width, height);
+  m_disp->setTexture(m_fbo->getTextureID(0));
 }
 
 void MyWindow::initializeGL()
