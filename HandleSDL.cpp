@@ -457,14 +457,14 @@ bool  HandleSDL::handleEvents()
           break;
         case SDL_MOUSEMOTION:
           if (!m_win->isPaused() && !m_win->isPlaying()) {
-              static bool b(false);
+              //static bool b(false);
 
               mouse_x = event.motion.x;
               mouse_y = event.motion.y;
               m_win->mouseMoveEvent(mouse_x, mouse_y);
-              b = !b;
-              if (b)
-                resetCursor();
+              /*b = !b;
+              if (b)*/
+              resetCursor();
             }
           break;
         case SDL_MOUSEBUTTONUP:
@@ -475,6 +475,13 @@ bool  HandleSDL::handleEvents()
           break;
         case SDL_WINDOWEVENT:
           switch (event.window.event) {
+            case SDL_WINDOWEVENT_LEAVE:
+              resetCursor();
+              break;
+            case SDL_WINDOWEVENT_FOCUS_LOST:
+              m_win->setPause(true);
+              displayCursor(true);
+              break;
             case SDL_WINDOWEVENT_RESIZED:
               SDL_GetWindowSize(screen, &screenWidth, &screenHeight);
               m_win->resizeGL(screenWidth, screenHeight);
