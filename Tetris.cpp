@@ -489,6 +489,8 @@ void    Tetris::update(const float &n)
               createNewPiece();
             }
           m_elapsed = m_speeds[m_level - 1] - m_elapsed;
+          if (m_elapsed <= 0.f)
+            m_elapsed = m_speeds[m_level - 1];
         }
       if (!m_hasNew)
         return;

@@ -59,8 +59,8 @@ private:
   bool        m_pause;
   int         m_oldSize;
   char        map[22][10];
-  float       m_speeds[12];
-  int         m_levels[11];
+  float       m_speeds[13];
+  int         m_levels[12];
   PieceDatas  m_pieces[7];
   Piece       m_piece;
   Piece       m_ghost;
