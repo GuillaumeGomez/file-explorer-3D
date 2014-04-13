@@ -130,6 +130,10 @@ void  HeightMap::initializeGL()
   m_uniloc_pos = glGetUniformLocation(m_shader->getProgramID(), "_pos");
   m_uniloc_height = glGetUniformLocation(m_shader->getProgramID(), "fRenderHeight");
 
+  std::string s[] = {"gSampler[0]", "gSampler[1]", "gSampler[2]", "gSampler[3]"};
+  for (int i = 0; i < 4; ++i) {
+      m_uniloc_tex.push_back(glGetUniformLocation(m_shader->getProgramID(), s[i].c_str()));
+    }
 
   std::string tex_name[] = {"sand.jpg", "sand_grass_02.jpg", "fungus.jpg", "rock_2_4w.jpg"};
 
@@ -231,7 +235,6 @@ void  HeightMap::initializeGL()
 
 void  HeightMap::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix)
 {
-  std::string s[] = {"gSampler[0]", "gSampler[1]", "gSampler[2]", "gSampler[3]"};
   glUseProgram(m_shader->getProgramID());
 
   glBindVertexArray(m_vaoID);
@@ -242,11 +245,11 @@ void  HeightMap::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_mat
   glUniform3fv(m_uniloc_pos, 1, glm::value_ptr(glm::vec3(m_pos.x(), m_pos.y(), m_pos.z())));
   glUniform1f(m_uniloc_height, height);
 
-  for (int i = 0; i < 4; ++i) {
+  for (unsigned int i = 0; i < m_uniloc_tex.size(); ++i) {
 
       glBindMultiTextureEXT(GL_TEXTURE0 + i, GL_TEXTURE_2D, m_tex[i]->getTextureID());
       //m_tex[i]->bindTexture(i);
-      m_shader->setUniform(s[i], i);
+      m_shader->setUniform(m_uniloc_tex[i], (int)i);
     }
 
   glDrawArrays(GL_TRIANGLE_STRIP, 0, m_pointsNumber);

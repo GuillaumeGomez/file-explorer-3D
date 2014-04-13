@@ -222,7 +222,8 @@ void MyWindow::keyPressEvent(int key)
               m_key->lock();
               m_key->setInterval(10);
               m_key->unlock();
-              sdl->resetCursor();
+              sdl->setFPSMode(true);
+              //sdl->resetCursor();
               break;
               /*case SDLK_UP:
         case SDLK_SPACE:
@@ -238,7 +239,8 @@ void MyWindow::keyPressEvent(int key)
           if (key == SDLK_TAB) {
               glEnable(GL_DEPTH_TEST);
               this->m_mode = MODE_NORMAL;
-              sdl->resetCursor();
+              sdl->setFPSMode(true);
+              //sdl->resetCursor();
               //sdl->displayCursor(pause);
               /*m_key->lock();
               m_key->setInterval(10);
@@ -253,6 +255,8 @@ void MyWindow::keyPressEvent(int key)
             case SDLK_TAB:
               glDisable(GL_DEPTH_TEST);
               this->m_mode = MODE_TETRIS;
+              sdl->setFPSMode(false);
+              sdl->displayCursor(false);
               /*m_key->lock();
               m_key->setInterval(50);
               m_key->unlock();*/
@@ -262,12 +266,15 @@ void MyWindow::keyPressEvent(int key)
               glPolygonMode(GL_FRONT_AND_BACK, m_wireframe ? GL_LINE : GL_FILL);
               break;
             case SDLK_ESCAPE:
+              sdl->setFPSMode(pause);
               pause = !pause;
               sdl->displayCursor(pause);
               break;
             case SDLK_0:
               glDisable(GL_DEPTH_TEST);
               this->m_mode = MODE_2048;
+              sdl->setFPSMode(false);
+              sdl->displayCursor(false);
               //sdl->displayCursor(true);
               break;
             default:
@@ -316,6 +323,8 @@ void  MyWindow::update()
   //glEnable(GL_COLOR_MATERIAL);
 
   this->clearScreen();
+
+  m_camera->update();
 
   float tmp = sdl->getElapsedTime();
   float fps = this->m_fps->getFpsCount();
@@ -512,22 +521,24 @@ void  MyWindow::picking()
     }*/
   static myGLWidget *w(0);
 
-  if (w)
-    w->setSelected(false);
-  w = m_physics->pick(sdl->width() / 2, sdl->height() / 2, sdl->width(), sdl->height());
-  if (!w) {
-      return;
+  myGLWidget *tmp = m_physics->pick(sdl->width() / 2, sdl->height() / 2, sdl->width(), sdl->height());
+  if (w != tmp && w) {
+        w->setSelected(false);
     }
-  if (!w->isSelected()) {
+  if (!tmp)
+    return;
+  tmp->setSelected(true);
+  w = tmp;
+  /*if (!w->isSelected()) {
       for (auto it = objectList.begin(); it != objectList.end(); ++it){
           (*it)->setSelected(false);
           /*if ((*it) == w) {
           (*it)->setSelected(true);
           break;
           }*/
-        }
+        /*}
       w->setSelected(true);
-    }
+    }*/
 }
 
 void  MyWindow::setDisplaySentence(std::string s)

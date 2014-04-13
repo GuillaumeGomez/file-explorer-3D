@@ -29,6 +29,8 @@ namespace Object {
   class Text;
 }
 
+#define TETRIS_LEVELS_NUMBER 14
+
 class Tetris : public myGLWidget
 {
 public:
@@ -59,8 +61,8 @@ private:
   bool        m_pause;
   int         m_oldSize;
   char        map[22][10];
-  float       m_speeds[13];
-  int         m_levels[12];
+  float       m_speeds[TETRIS_LEVELS_NUMBER];
+  int         m_levels[TETRIS_LEVELS_NUMBER - 1];
   PieceDatas  m_pieces[7];
   Piece       m_piece;
   Piece       m_ghost;

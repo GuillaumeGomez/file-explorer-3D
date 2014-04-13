@@ -168,13 +168,13 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_score(0), m
 
   m_texture.setTexture("./textures/tetris.png");
 
-  float tmp_speeds[13] = {1.f, 0.85f, 0.7f, 0.6f, 0.5f, 0.4f, 0.3f, 0.24f, 0.2f, 0.18f, 0.15f, 0.125f, 0.1f};
-  int   tmp_levels[12] = {20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 250};
+  float tmp_speeds[TETRIS_LEVELS_NUMBER] = {1.f, 0.85f, 0.7f, 0.6f, 0.5f, 0.4f, 0.3f, 0.24f, 0.2f, 0.18f, 0.15f, 0.125f, 0.1f, 0.085f};
+  int   tmp_levels[TETRIS_LEVELS_NUMBER - 1] = {20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 250, 280};
 
-  for (unsigned int i = 0; i < 13; ++i) {
+  for (unsigned int i = 0; i < TETRIS_LEVELS_NUMBER; ++i) {
       m_speeds[i] = tmp_speeds[i];
     }
-  for (unsigned int i = 0; i < 12; ++i) {
+  for (unsigned int i = 0; i < TETRIS_LEVELS_NUMBER - 1; ++i) {
       m_levels[i] = tmp_levels[i];
     }
 }
@@ -601,7 +601,7 @@ void  Tetris::createNewPiece()
           m_lines += tmp;
           m_score += tmp + m_level;
           m_texts[LINE]->setText(Utility::toString<int>(m_lines));
-          if (m_level - 1 < 12 && m_lines >= m_levels[m_level - 1]) {
+          if (m_level - 1 < TETRIS_LEVELS_NUMBER - 1 && m_lines >= m_levels[m_level - 1]) {
               ++m_level;
               m_texts[LVL]->setText(Utility::toString<int>(m_level));
             }

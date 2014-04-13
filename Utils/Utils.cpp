@@ -159,8 +159,9 @@ HBITMAP Utils::getIconFromFileType(const char *sz, int *width, int *height, int 
     return 0;
 
   _splitpath(sz, drive, dir, fname, ext);
-  std::string szext(fname);
-  szext += ext;
+  std::string szext(sz);
+  std::string szpath(sz);
+  //szext += ext;
   if ((szext.length() < 4 || szext.find(".exe") != std::string::npos ||
        szext.find(".pif") != std::string::npos || szext.find(".lnk") != std::string::npos) &&
       SHGetFileInfo(string2wstring(szext).c_str(), FILE_ATTRIBUTE_NORMAL, &shfi, sizeof(shfi),
@@ -170,7 +171,7 @@ HBITMAP Utils::getIconFromFileType(const char *sz, int *width, int *height, int 
     }
   if (!hicon)
     {
-      hSysImageList = (HIMAGELIST)SHGetFileInfo(string2wstring(szext).c_str(), FILE_ATTRIBUTE_NORMAL, &shfi, sizeof(shfi),
+      hSysImageList = (HIMAGELIST)SHGetFileInfo(string2wstring(szpath).c_str(), 0, &shfi, sizeof(SHFILEINFO),
                                                 SHGFI_SYSICONINDEX | SHGFI_LARGEICON);
 
       if (hSysImageList)

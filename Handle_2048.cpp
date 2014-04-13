@@ -140,6 +140,7 @@ void  Handle_2048::update(const float &t)
                   m_score->setText("score : " + Utility::toString<int>(sc + tt->value + tt->value));
                 }
               tt->setValue(ti->value + tt->value);
+              tt->m_zoom = 1.f;
               if (tt->value == 2048) {
                   m_end = true;
                   m_msg->setText("You win !\nPress any key to restart");

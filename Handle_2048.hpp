@@ -25,6 +25,7 @@ class Handle_2048 : public myGLWidget
     float         pos_y;
     float         from_x;
     float         from_y;
+    float         m_zoom;
     int           value;
     int           x;
     int           y;
@@ -32,7 +33,7 @@ class Handle_2048 : public myGLWidget
     Object::Plane *m_back;
 
     Tile(const float &s, const float &x, const float &y) : to_x(0.f), to_y(0.f), pos_x(0.f), pos_y(0.f), from_x(0.f), from_y(0.f),
-      value(0), x(x), y(y), m_text(0), m_back(0) {
+      m_zoom(0.f), value(0), x(x), y(y), m_text(0), m_back(0) {
       m_text = new Object::Text("", BLACK, x, y, s - s / 20);
       m_back = new Object::Plane(Vector3D(x, y),
                                  Rotation(), RED, s, s, false);
@@ -41,7 +42,7 @@ class Handle_2048 : public myGLWidget
     }
 
     Tile(int y, int x) : to_x(0.f), to_y(0.f), pos_x(0.f), pos_y(0.f), from_x(0.f), from_y(0.f),
-      value(0), x(x), y(y), m_text(0), m_back(0) {}
+      m_zoom(0.f), value(0), x(x), y(y), m_text(0), m_back(0) {}
     ~Tile() {
       if (m_text)
         delete m_text;
@@ -65,29 +66,6 @@ class Handle_2048 : public myGLWidget
       if (m_text)
         m_text->paintGL(view_matrix, proj_matrix);
     }
-    void operator=(Tile &t) {
-      pos_x = t.pos_x;
-      pos_y = t.pos_y;
-      from_x = t.from_x;
-      from_y = t.from_y;
-
-      this->setValue(t.value);
-
-      std::vector<GLfloat>  &v = m_text->getVertices();
-      std::vector<GLfloat>  &v2 = t.m_text->getVertices();
-
-      for (unsigned int i = v2.size(); i > 0; --i)
-        v[i - 1] = v2[i - 1];
-
-      std::vector<GLfloat>  &vv = m_back->getVertices();
-      std::vector<GLfloat>  &vv2 = t.m_back->getVertices();
-
-      for (unsigned int i = vv2.size(); i > 0; --i)
-        vv[i - 1] = vv2[i - 1];
-      m_back->updateVertices();
-      m_text->updateVertices();
-    }
-
     void  update(const float &t, const float &move) {
       if (!value)
         return;
@@ -120,21 +98,62 @@ class Handle_2048 : public myGLWidget
             }
           m_back->updateVertices();
         }
+      if (m_zoom < 1.f) {
+          std::vector<GLfloat>  &t2 = m_back->getVertices();
+          if (m_zoom > 0.f)
+            for (unsigned int i = 0; i < t2.size(); i += 2) {
+                t2[i] /= m_zoom;
+                t2[i + 1] /= m_zoom;
+              }
+          m_zoom += 1.f * TRANS_TIME;
+          if (m_zoom > 1.f)
+            m_zoom = 1.f;
+
+          for (unsigned int i = 0; i < t2.size(); i += 2) {
+              t2[i] *= m_zoom;
+              t2[i + 1] *= m_zoom;
+            }
+          m_back->updateVertices();
+        }
       if (m_text)
         m_text->update(t);
       if (m_back)
         m_back->update(t);
     }
+    void operator=(Tile &t) {
+      pos_x = t.pos_x;
+      pos_y = t.pos_y;
+      from_x = t.from_x;
+      from_y = t.from_y;
+      m_zoom = t.m_zoom;
+
+      this->setValue(t.value);
+
+      std::vector<GLfloat>  &v = m_text->getVertices();
+      std::vector<GLfloat>  &v2 = t.m_text->getVertices();
+
+      for (unsigned int i = v2.size(); i > 0; --i)
+        v[i - 1] = v2[i - 1];
+
+      std::vector<GLfloat>  &vv = m_back->getVertices();
+      std::vector<GLfloat>  &vv2 = t.m_back->getVertices();
+
+      for (unsigned int i = vv2.size(); i > 0; --i)
+        vv[i - 1] = vv2[i - 1];
+      m_back->updateVertices();
+      m_text->updateVertices();
+    }
     void  setValue(int x) {
       if (x <= 0) {
           value = 0;
+          m_zoom = 0.f;
           return;
         }
       if (x == value || x & 1)
         return;
       value = x;
       m_text->setText(Utility::toString<int>(value));
-      switch (x / 2) {
+      switch (x) {
         case 2:
           m_back->setColor(Color(0.93f, 0.89f, 0.85f));
           m_text->setColor(GREY);

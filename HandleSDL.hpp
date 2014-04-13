@@ -39,7 +39,8 @@ public:
   bool            destroyTexture(GLuint id);
   int             getEvent(SDL_Event*);
   void            displayCursor(bool display);
-  void            resetCursor();
+  void            moveCursor(int x, int y);
+  void            setFPSMode(bool p);
   bool            saveImage(SDL_Surface *s, const char *filename);
   bool            saveImage(SDL_Surface *s, std::string filename);
   bool            saveImage(Texture*, const char *filename);
@@ -51,6 +52,7 @@ public:
   static Color            getPixelColor(SDL_Surface*, unsigned int x, unsigned int y);
 
 private:
+  void    resetCursor();
   GLuint  internTextureLoad(SDL_Surface *picture_surface, const char *name, bool useMipMap, GLuint *width, GLuint *height);
   std::string           m_name;
   MyWindow              *m_win;
@@ -68,6 +70,7 @@ private:
   SDL_Window    *screen;
   Uint32        sdl_flags;
   SDL_GLContext glcontext;
+  bool          m_ignore;
 
   static TTF_Font       *m_font;
 };

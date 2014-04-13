@@ -26,6 +26,7 @@ namespace Object {
     std::string   m_img;
     Texture       *m_tex[4];
     GLint         m_uniloc_height;
+    std::vector<GLint>  m_uniloc_tex;
     float         height, min_height, max_height;
   };
 }

@@ -28,7 +28,7 @@ Loader::Loader(MyWindow *w) : m_win(w)
   objList.push_back(ObjectFactory::createNewObject<Model, Vector3D, Rotation, const char*, float>(Vector3D(0.f, 40.f, 10.f), Rotation(90.f, 0.f, 0.f, -1.f), "models/guard/boblampclean.md5mesh", 6.f));
 
   //objList.push_back(ObjectFactory::createCharacter<Model, Vector3D, Rotation, const char*, float>(Vector3D(0.f, 20.f, 10.f), Rotation(), "models/starting.obj", 3.f));
-  objList.push_back(ObjectFactory::createNewObject<GraphicFile, Vector3D, Rotation, Color, const char*>(Vector3D(0.f, 2.f, -6.f), Rotation(), GREEN, "GraphicHandler.cpp"));
+  objList.push_back(ObjectFactory::createNewObject<GraphicFile, Vector3D, Rotation, Color, const char*>(Vector3D(0.f, 2.f, -6.f), Rotation(), GREEN, "Camera.cpp"));
   objList.push_back(ObjectFactory::createNewObject<Object::Plane, Vector3D, Rotation, const char*, float, float>(Vector3D(), Rotation(90.f, 0.f, 0.f, 1.f), "textures/metal.jpg", 10.f, 80.f));
   objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, Color, float>(Vector3D(-30.f, 10.f, 100.f), Rotation(45.f, 0.f, 0.f, 0.f), Color(0.9f, 0.1f, 0.1f), 20.f));
   objList.push_back(ObjectFactory::createNewObject<Cylinder, Vector3D, Rotation, const char*, float, float>(Vector3D(), Rotation(), "textures/box.jpg", 10.f, 80.f));

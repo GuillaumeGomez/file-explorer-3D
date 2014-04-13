@@ -28,7 +28,7 @@ float     Camera::distanceView = 10000.f;
 float     Camera::m_ratio = 1.f;
 
 Camera::Camera()
-  : m_speed(.6f), m_sensivity(0.2f), m_phi(-24.f), m_theta(60.f), m_position(0.f, 1.f, 0.f),
+  : m_speed(.6f), m_sensivity(0.2f), m_phi(24.f), m_theta(60.f), m_position(0.f, 1.f, -15.f),
     m_up(0.f, 1.f, 0.f), m_target(-1.f, -1.f, -1.f), m_win(0), m_oldX(0), m_oldY(0),
     m_y(m_position.y()), tmpSpeed(1.f), m_skybox(0)
 {
@@ -90,13 +90,20 @@ void Camera::look()
     m_character->paintGL(m_view, m_proj);*/
 }
 
+void  Camera::update()
+{
+  vectorsFromAngles();
+}
+
 void Camera::mouseMoveEvent(int x, int y)
 {
   MyMutexLocker l(m_mutex);
 
   (void)l;
-  m_oldX = (m_oldX - x);
-  m_oldY = (y - m_oldY);
+  //m_oldX = (m_oldX - x);
+  //m_oldY = (y - m_oldY);
+  m_oldX = -x;
+  m_oldY = y;
   if (m_oldX > 100 || m_oldX < -100 ||
       m_oldY > 100 || m_oldY < -100)
     {
@@ -106,7 +113,7 @@ void Camera::mouseMoveEvent(int x, int y)
     }
   m_theta -= m_oldX * m_sensivity;
   m_phi -= m_oldY * m_sensivity;
-  vectorsFromAngles();
+  //vectorsFromAngles();
   m_oldX = x;
   m_oldY = y;
 }

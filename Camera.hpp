@@ -40,6 +40,7 @@ public:
   int                 mouseX() const;
   int                 mouseY() const;
   void                setCharacter(myGLWidget*);
+  void                update();
 
   static glm::mat4 const &getViewMatrix();
   static glm::mat4 const &getProjectionMatrix();

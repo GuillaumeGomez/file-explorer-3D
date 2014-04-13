@@ -9,6 +9,7 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <SDL/SDL_version.h>
 #include <cstring>
 #include <cstdio>
 
@@ -65,6 +66,7 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
   screenHeight = 600;
   mouse_x = 0;
   mouse_y = 0;
+  m_ignore = false;
 
   if (!m_win){
       throw MyException("HandleSDL: Invalid null pointer in constructor");
@@ -83,7 +85,7 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
       HandleError::showError(SDL_GetError());
       TTF_Quit();
       SDL_Quit();
-      exit(-1);
+      throw MyException("HandleSDL: Cannot create window");
     }
 
   glcontext = SDL_GL_CreateContext(screen);
@@ -106,7 +108,13 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
   SDL_SetWindowMinimumSize(screen, 400, 400);
   sdl_flags = SDL_GetWindowFlags(screen);
   SDL_GetWindowSize(screen, &screenWidth, &screenHeight);
-  //SDL_SetRelativeMouseMode(SDL_TRUE); //-> fps mode for cursor
+
+  SDL_version v, c;
+  SDL_VERSION(&c);
+  SDL_GetVersion(&v);
+  std::cout << "compil version: " << (int)c.major << "." << (int)c.minor << "." << (int)c.patch << std::endl;
+  std::cout << "run version: " << (int)v.major << "." << (int)v.minor << "." << (int)v.patch << std::endl;
+  SDL_SetRelativeMouseMode(SDL_TRUE); //-> fps mode for cursor
 
   /* if needed...
   int flags = IMG_INIT_JPG|IMG_INIT_PNG;
@@ -457,14 +465,14 @@ bool  HandleSDL::handleEvents()
           break;
         case SDL_MOUSEMOTION:
           if (!m_win->isPaused() && !m_win->isPlaying()) {
-              //static bool b(false);
-
-              mouse_x = event.motion.x;
-              mouse_y = event.motion.y;
+              if (m_ignore) {
+                  m_ignore = false;
+                  break;
+                }
+              mouse_x = event.motion.xrel;
+              mouse_y = event.motion.yrel;
               m_win->mouseMoveEvent(mouse_x, mouse_y);
-              /*b = !b;
-              if (b)*/
-              resetCursor();
+              //resetCursor();
             }
           break;
         case SDL_MOUSEBUTTONUP:
@@ -475,11 +483,13 @@ bool  HandleSDL::handleEvents()
           break;
         case SDL_WINDOWEVENT:
           switch (event.window.event) {
-            case SDL_WINDOWEVENT_LEAVE:
-              resetCursor();
-              break;
+            /*case SDL_WINDOWEVENT_LEAVE:
+              if (!m_win->isPlaying() && !m_win->isPaused())
+                resetCursor();
+              break;*/
             case SDL_WINDOWEVENT_FOCUS_LOST:
               m_win->setPause(true);
+              setFPSMode(false);
               displayCursor(true);
               break;
             case SDL_WINDOWEVENT_RESIZED:
@@ -501,8 +511,12 @@ bool  HandleSDL::handleEvents()
 void  HandleSDL::resetCursor()
 {
   if (mouse_x >= screenWidth - MOUSE_MARGIN || mouse_x <= MOUSE_MARGIN ||
-      mouse_y >= screenHeight - MOUSE_MARGIN || mouse_y <= MOUSE_MARGIN)
-    SDL_WarpMouseInWindow(screen, screenWidth / 2, screenHeight / 2);
+      mouse_y >= screenHeight - MOUSE_MARGIN || mouse_y <= MOUSE_MARGIN) {
+      SDL_EventState(SDL_MOUSEMOTION, SDL_DISABLE);
+      SDL_WarpMouseInWindow(screen, screenWidth / 2, screenHeight / 2);
+      SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
+      //m_ignore = true;
+    }
 }
 
 void  HandleSDL::switchScreenMode()
@@ -536,12 +550,17 @@ bool  HandleSDL::displayInformationMessage(const char *title, const char *msg)
 
 void  HandleSDL::displayCursor(bool display)
 {
-#ifdef WIN32
   SDL_ShowCursor(display ? SDL_ENABLE : SDL_DISABLE);
-#else
-  SDL_ShowCursor(display ? SDL_ENABLE : SDL_DISABLE);
-  SDL_SetRelativeMouseMode(display ? SDL_bool(SDL_DISABLE) : SDL_bool(SDL_ENABLE));
-#endif
+}
+
+void  HandleSDL::moveCursor(int x, int y)
+{
+  SDL_WarpMouseInWindow(screen, x, y);
+}
+
+void  HandleSDL::setFPSMode(bool p)
+{
+  SDL_SetRelativeMouseMode(p ? SDL_bool(SDL_ENABLE) : SDL_bool(SDL_DISABLE));
 }
 
 #ifdef WIN32
@@ -679,6 +698,8 @@ GLuint HandleSDL::loadIconFile(const char *s)
     extension = extension.substr(p);
   std::vector<std::string> tmp = Utility::split<std::string>(s, "/");
 
+  if (!tmp.size())
+    return 0;
   std::string filename = tmp[tmp.size() - 1];
   //std::string fullname = "./textures/" + std::string(tmp[tmp.size() - 1]) + ".bmp";
 
