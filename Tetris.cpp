@@ -747,6 +747,8 @@ void  Tetris::keyPressEvent(int key)
       this->restart();
       return;
     }
+  if (m_pause && key != SDLK_ESCAPE)
+    return;
   switch (key) {
     case SDLK_ESCAPE:
       m_pause = !m_pause;
