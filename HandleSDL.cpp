@@ -66,7 +66,6 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
   screenHeight = 600;
   mouse_x = 0;
   mouse_y = 0;
-  m_ignore = false;
 
   if (!m_win){
       throw MyException("HandleSDL: Invalid null pointer in constructor");
@@ -114,7 +113,7 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
   SDL_GetVersion(&v);
   std::cout << "compil version: " << (int)c.major << "." << (int)c.minor << "." << (int)c.patch << std::endl;
   std::cout << "run version: " << (int)v.major << "." << (int)v.minor << "." << (int)v.patch << std::endl;
-  SDL_SetRelativeMouseMode(SDL_TRUE); //-> fps mode for cursor
+  setFPSMode(true);
 
   /* if needed...
   int flags = IMG_INIT_JPG|IMG_INIT_PNG;
@@ -465,14 +464,13 @@ bool  HandleSDL::handleEvents()
           break;
         case SDL_MOUSEMOTION:
           if (!m_win->isPaused() && !m_win->isPlaying()) {
-              if (m_ignore) {
-                  m_ignore = false;
-                  break;
-                }
-              mouse_x = event.motion.xrel;
-              mouse_y = event.motion.yrel;
-              m_win->mouseMoveEvent(mouse_x, mouse_y);
-              //resetCursor();
+              //if (SDL_GetEventState(SDL_MOUSEMOTION) == SDL_ENABLE) {
+                  mouse_x = event.motion.xrel;
+                  mouse_y = event.motion.yrel;
+                  m_win->mouseMoveEvent(mouse_x, mouse_y);
+                  //resetCursor();
+                //}
+              //
             }
           break;
         case SDL_MOUSEBUTTONUP:
@@ -492,6 +490,9 @@ bool  HandleSDL::handleEvents()
               setFPSMode(false);
               displayCursor(true);
               break;
+            case SDL_WINDOWEVENT_FOCUS_GAINED:
+              if (m_win->isPaused())
+                displayCursor(false);
             case SDL_WINDOWEVENT_RESIZED:
               SDL_GetWindowSize(screen, &screenWidth, &screenHeight);
               m_win->resizeGL(screenWidth, screenHeight);
@@ -510,13 +511,12 @@ bool  HandleSDL::handleEvents()
 
 void  HandleSDL::resetCursor()
 {
-  if (mouse_x >= screenWidth - MOUSE_MARGIN || mouse_x <= MOUSE_MARGIN ||
-      mouse_y >= screenHeight - MOUSE_MARGIN || mouse_y <= MOUSE_MARGIN) {
+  /*if (mouse_x >= screenWidth - MOUSE_MARGIN || mouse_x <= MOUSE_MARGIN ||
+      mouse_y >= screenHeight - MOUSE_MARGIN || mouse_y <= MOUSE_MARGIN) {*/
       SDL_EventState(SDL_MOUSEMOTION, SDL_DISABLE);
       SDL_WarpMouseInWindow(screen, screenWidth / 2, screenHeight / 2);
-      SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
-      //m_ignore = true;
-    }
+      //SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
+    //}
 }
 
 void  HandleSDL::switchScreenMode()

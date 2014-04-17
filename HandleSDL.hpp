@@ -70,7 +70,6 @@ private:
   SDL_Window    *screen;
   Uint32        sdl_flags;
   SDL_GLContext glcontext;
-  bool          m_ignore;
 
   static TTF_Font       *m_font;
 };

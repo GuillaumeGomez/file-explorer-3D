@@ -350,7 +350,8 @@ void  createGrid(std::vector<GLfloat> &tex, std::vector<GLfloat> &vec, int &oldS
 void  Tetris::initializeGL()
 {
   m_texture.setRepeat(false);
-  loadTexture();
+  this->loadTexture();
+
   m_piece.id = -1;
 
   std::string vert;

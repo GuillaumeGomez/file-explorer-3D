@@ -533,3 +533,17 @@ GLenum  myGLWidget::drawMode() const
 {
   return m_drawMode;
 }
+
+void  myGLWidget::setShader(Shader *s)
+{
+  if (!s)
+    return;
+  if (m_shader)
+    delete m_shader;
+  m_shader = s;
+}
+
+Shader  *myGLWidget::getShader()
+{
+  return m_shader;
+}

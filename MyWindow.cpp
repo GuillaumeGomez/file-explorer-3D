@@ -55,7 +55,6 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
     if (!sdl)
       sdl = new WINDOW_HANDLER(winName, this, 2);
 
-    /* initialisation de glew */
     GLenum err;
 
     if ((err = glewInit())){
@@ -63,9 +62,6 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
         delete sdl;
         exit(-1);
       }
-
-    // hiding cursor
-    //SDL_ShowCursor(SDL_DISABLE);
 
     m_camera = new Camera;
 

@@ -14,8 +14,8 @@ GENERAL FEATURES
 
 - create an option menu (change keys, mouse sensibility and all the stuff)
 - create a sqlite3 class (for score in games, saved keys, etc...)
-- update sdl2 to its latest version to see if its SDL_SetRelativeMouseMode works now (what a pain in the ass...)
 - add an icon for the window, it's ugly for the moment
+- see what OpenMp can improve in calculs
 
 TEXT CLASS FEATURES
 

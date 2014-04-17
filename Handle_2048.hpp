@@ -7,7 +7,8 @@
 #include "Plane.hpp"
 #include "String_utils.hpp"
 
-#define TRANS_TIME 0.15f
+#define TRANS_TIME 0.1f
+#define MAX_UNZOOM 1.5f
 
 class Handle_2048 : public myGLWidget
 {
@@ -26,6 +27,7 @@ class Handle_2048 : public myGLWidget
     float         from_x;
     float         from_y;
     float         m_zoom;
+    float         m_unzoom;
     int           value;
     int           x;
     int           y;
@@ -33,16 +35,14 @@ class Handle_2048 : public myGLWidget
     Object::Plane *m_back;
 
     Tile(const float &s, const float &x, const float &y) : to_x(0.f), to_y(0.f), pos_x(0.f), pos_y(0.f), from_x(0.f), from_y(0.f),
-      m_zoom(0.f), value(0), x(x), y(y), m_text(0), m_back(0) {
+      m_zoom(1.f), m_unzoom(.99f), value(0), x(x), y(y), m_text(0), m_back(0) {
       m_text = new Object::Text("", BLACK, x, y, s - s / 20);
       m_back = new Object::Plane(Vector3D(x, y),
                                  Rotation(), RED, s, s, false);
-
       m_back->setRender2D(true);
     }
-
     Tile(int y, int x) : to_x(0.f), to_y(0.f), pos_x(0.f), pos_y(0.f), from_x(0.f), from_y(0.f),
-      m_zoom(0.f), value(0), x(x), y(y), m_text(0), m_back(0) {}
+      m_zoom(1.f), m_unzoom(.99f), value(0), x(x), y(y), m_text(0), m_back(0) {}
     ~Tile() {
       if (m_text)
         delete m_text;
@@ -66,6 +66,54 @@ class Handle_2048 : public myGLWidget
       if (m_text)
         m_text->paintGL(view_matrix, proj_matrix);
     }
+
+    bool  _zoom(float add_value) {
+      if (m_zoom < 1.f && add_value > 0.f) {
+          std::vector<GLfloat>  &t2 = m_back->getVertices();
+          if (m_zoom > 0.f)
+            for (unsigned int i = 0; i < t2.size(); i += 2) {
+                t2[i] /= m_zoom;
+                t2[i + 1] /= m_zoom;
+              }
+          m_zoom += add_value;
+          if (m_zoom > 1.f)
+            m_zoom = 1.f;
+
+          for (unsigned int i = 0; i < t2.size(); i += 2) {
+              t2[i] *= m_zoom;
+              t2[i + 1] *= m_zoom;
+            }
+          m_back->updateVertices();
+          return true;
+        }
+      return false;
+    }
+    bool  _unzoom(float sub_value) {
+      if (m_unzoom > 1.f && sub_value > 0.f) {
+          std::vector<GLfloat>  &t2 = m_back->getVertices();
+          if (m_unzoom < MAX_UNZOOM)
+            for (unsigned int i = 0; i < t2.size(); i += 2) {
+                t2[i] /= m_unzoom;
+                t2[i + 1] /= m_unzoom;
+              }
+          m_unzoom -= sub_value;
+          if (m_unzoom < 1.f)
+            m_unzoom = 1.f;
+
+          for (unsigned int i = 0; i < t2.size(); i += 2) {
+              t2[i] *= m_unzoom;
+              t2[i + 1] *= m_unzoom;
+            }
+          m_back->updateVertices();
+          return true;
+        }
+      return false;
+    }
+    void  reset_zoom() {
+      _zoom(1.f - m_zoom);
+      _unzoom(m_unzoom - 1.f);
+    }
+
     void  update(const float &t, const float &move) {
       if (!value)
         return;
@@ -91,30 +139,10 @@ class Handle_2048 : public myGLWidget
               t[i + 1] += add_y;
             }
           m_text->updateVertices();
-          std::vector<GLfloat>  &t2 = m_back->getVertices();
-          for (unsigned int i = 0; i < t2.size(); i += 2) {
-              t2[i] += add_x;
-              t2[i + 1] += add_y;
-            }
-          m_back->updateVertices();
         }
-      if (m_zoom < 1.f) {
-          std::vector<GLfloat>  &t2 = m_back->getVertices();
-          if (m_zoom > 0.f)
-            for (unsigned int i = 0; i < t2.size(); i += 2) {
-                t2[i] /= m_zoom;
-                t2[i + 1] /= m_zoom;
-              }
-          m_zoom += 1.f * TRANS_TIME;
-          if (m_zoom > 1.f)
-            m_zoom = 1.f;
 
-          for (unsigned int i = 0; i < t2.size(); i += 2) {
-              t2[i] *= m_zoom;
-              t2[i + 1] *= m_zoom;
-            }
-          m_back->updateVertices();
-        }
+      if (!_zoom(1.f * TRANS_TIME))
+        _unzoom(1.f * TRANS_TIME);
       if (m_text)
         m_text->update(t);
       if (m_back)
@@ -126,6 +154,7 @@ class Handle_2048 : public myGLWidget
       from_x = t.from_x;
       from_y = t.from_y;
       m_zoom = t.m_zoom;
+      m_unzoom = t.m_unzoom;
 
       this->setValue(t.value);
 
@@ -224,6 +253,7 @@ private:
   Object::Text                      *m_msg;
   Object::Text                      *m_title;
   bool                              m_end;
+  bool                              m_win;
   std::vector<std::vector<Tile*> >  m_tiles;
   std::vector<Tile*>                m_move_tiles;
   float                             m_move;

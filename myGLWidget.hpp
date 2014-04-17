@@ -90,6 +90,8 @@ public:
   std::string const &getClassName() const;
   void            setDrawMode(GLenum);
   GLenum          drawMode() const;
+  void            setShader(Shader*);
+  Shader          *getShader();
 
 protected:
   void        convertTRIANGLE_STRIP_To_TRIANGLES(std::vector<Vector3D> const &tmp_vertices, std::vector<Vector3D> const &tmp_textures);

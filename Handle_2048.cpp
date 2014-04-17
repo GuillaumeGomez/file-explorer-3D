@@ -8,19 +8,19 @@
 
 void  Handle_2048::create_back_tile(Vector3D v, float size, Color c)
 {
-  m_vertices.push_back(v.x());
-  m_vertices.push_back(v.y());
-  m_vertices.push_back(v.x());
-  m_vertices.push_back(v.y() + size);
-  m_vertices.push_back(v.x() + size);
-  m_vertices.push_back(v.y() + size);
+  m_vertices.push_back(v.x() + size / 2.f);
+  m_vertices.push_back(v.y() + size / 2.f);
+  m_vertices.push_back(v.x() + size / 2.f);
+  m_vertices.push_back(v.y() - size / 2.f);
+  m_vertices.push_back(v.x() - size / 2.f);
+  m_vertices.push_back(v.y() - size / 2.f);
 
-  m_vertices.push_back(v.x());
-  m_vertices.push_back(v.y());
-  m_vertices.push_back(v.x() + size);
-  m_vertices.push_back(v.y() + size);
-  m_vertices.push_back(v.x() + size);
-  m_vertices.push_back(v.y());
+  m_vertices.push_back(v.x() + size / 2.f);
+  m_vertices.push_back(v.y() + size / 2.f);
+  m_vertices.push_back(v.x() - size / 2.f);
+  m_vertices.push_back(v.y() - size / 2.f);
+  m_vertices.push_back(v.x() - size / 2.f);
+  m_vertices.push_back(v.y() + size / 2.f);
 
   for (int x = 0; x < 6; ++x) {
       m_colors.push_back(c.red());
@@ -30,7 +30,7 @@ void  Handle_2048::create_back_tile(Vector3D v, float size, Color c)
 }
 
 Handle_2048::Handle_2048() : myGLWidget(Vector3D(), Rotation()),
-  tile_s(0.35f), border_s(0.05f), m_score(0), m_msg(0), m_title(0), m_end(false)
+  tile_s(0.35f), border_s(0.05f), m_score(0), m_msg(0), m_title(0), m_end(false), m_win(true)
 {
   m_render2D = true;
   m_move = 0.f;
@@ -38,8 +38,8 @@ Handle_2048::Handle_2048() : myGLWidget(Vector3D(), Rotation()),
   m_score = new Object::Text("score : 0", WHITE, 0.5f, 0.75f);
   m_msg = new Object::Text("", RED, 0.f, 0.f);
   m_title = new Object::Text("2048", LGREY, -0.83f, 0.66f, 0.35f);
-  create_back_tile(Vector3D(-1.f, -1.f), 2.f, BLACK);
-  create_back_tile(Vector3D(-0.85f, -0.95f), 1.65f, GREY);
+  create_back_tile(Vector3D(0.f, 0.f), 2.f, BLACK);
+  create_back_tile(Vector3D(-0.025f, -0.125f), 1.65f, GREY);
   float decal = tile_s + border_s;
   for (int y = 0; y < 4; ++y) {
       std::vector<Tile*> tmp;
@@ -48,8 +48,11 @@ Handle_2048::Handle_2048() : myGLWidget(Vector3D(), Rotation()),
           float x_pos = decal * x - 0.8f;
           float y_pos = 0.3f - y * decal;
 
+          float xx = x_pos + tile_s / 2.f;
+          float yy = y_pos + tile_s / 2.f;
+
           t->m_text = new Object::Text("", BLACK, x_pos, y_pos, tile_s - tile_s / 20);
-          t->m_back = new Object::Plane(Vector3D(x_pos, y_pos),
+          t->m_back = new Object::Plane(Vector3D(xx, yy),
                                         Rotation(), RED, tile_s, tile_s, false);
 
           if (!t->m_text || !t->m_back)
@@ -59,7 +62,7 @@ Handle_2048::Handle_2048() : myGLWidget(Vector3D(), Rotation()),
 
           t->m_back->setRender2D(true);
           tmp.push_back(t);
-          m_move_tiles.push_back(new Tile(tile_s, x_pos, y_pos));
+          m_move_tiles.push_back(new Tile(tile_s / 2.f, xx, yy));
         }
       m_tiles.push_back(tmp);
     }
@@ -106,19 +109,13 @@ void  Handle_2048::initializeGL()
 
 bool  Handle_2048::checkTile(Tile *t)
 {
-  if (t->x > 0 && t->y > 0 && canMove(t->y - 1, t->x - 1, t->value))
-    return true;
   if (t->x > 0 && canMove(t->y, t->x - 1, t->value))
     return true;
   if (t->y > 0 && canMove(t->y - 1, t->x, t->value))
     return true;
-  if (t->x < 3 && t->y < 3 && canMove(t->y + 1, t->x + 1, t->value))
-    return true;
   if (t->x < 3 && canMove(t->y, t->x + 1, t->value))
     return true;
-  if (t->y < 3 && canMove(t->y + 1, t->x, t->value))
-    return true;
-  return false;
+  return (t->y < 3 && canMove(t->y + 1, t->x, t->value));
 }
 
 void  Handle_2048::update(const float &t)
@@ -128,7 +125,7 @@ void  Handle_2048::update(const float &t)
   if (m_move > 0.f) {
       m_move -= t;
       if (m_move <= 0.f) {
-          m_move = 0.f;
+          m_move = -0.1f;
           int z;
           for (z = 0; z < 16 && m_move_tiles[z]->value; ++z) {
               Tile *ti = m_move_tiles[z];
@@ -138,12 +135,14 @@ void  Handle_2048::update(const float &t)
                   std::string ts = m_score->getText();
                   int sc = Utility::getValueFromString<int>(Utility::replace<std::string>(ts, "score : ", ""));
                   m_score->setText("score : " + Utility::toString<int>(sc + tt->value + tt->value));
+                  tt->m_unzoom = MAX_UNZOOM;
                 }
               tt->setValue(ti->value + tt->value);
               tt->m_zoom = 1.f;
-              if (tt->value == 2048) {
+              if (tt->value == 2048 && !m_win) {
                   m_end = true;
-                  m_msg->setText("You win !\nPress any key to restart");
+                  m_win = true;
+                  m_msg->setText("You win !\nPress C to continue\nPress R to restart");
                 }
               ti->setValue(0);
             }
@@ -163,8 +162,10 @@ void  Handle_2048::update(const float &t)
                       for (auto it2 : it)
                         end_loop = checkTile(it2);
                   m_end = !end_loop;
-                  if (m_end)
-                    m_msg->setText("Defeat !\nPress any key to restart");
+                  if (m_end) {
+                      m_msg->setText("Defeat !\nPress any key to restart");
+                      m_win = false;
+                    }
                 }
             }
         }
@@ -248,6 +249,7 @@ void  Handle_2048::restart()
     for (auto it2 : it)
       it2->setValue(0);
   m_end = false;
+  m_win = false;
 
   create_new_number();
   create_new_number();
@@ -258,7 +260,10 @@ void  Handle_2048::keyReleaseEvent(int key)
   if (m_move > 0.f)
     return;
   if (m_end) {
-      restart();
+      if (m_win && key == SDLK_c)
+        m_end = false;
+      else if (!m_win || key == SDLK_r)
+        restart();
       return;
     }
   switch (key) {
@@ -279,6 +284,9 @@ void  Handle_2048::keyReleaseEvent(int key)
       return;
     }
   int z(0);
+  for (auto &it : m_tiles)
+    for (auto it2 : it)
+      it2->reset_zoom();
   for (int i_y = (m_direction == D_MOVE ? 3 : 0); (m_direction == D_MOVE ? i_y >= 0 : i_y < 4);
        (m_direction == D_MOVE ? --i_y : ++i_y)) {
       for (int i_x = (m_direction == R_MOVE ? 3 : 0); (m_direction == R_MOVE ? i_x >= 0 : i_x < 4);
@@ -327,5 +335,6 @@ bool  Handle_2048::create_new_number()
   int z = rand() % tmp.size();
   int r = rand() % 10;
   tmp[z]->setValue(r >= 9 ? 4 : 2); //90% getting a 2
+  tmp[z]->m_zoom = 0.f;
   return true;
 }

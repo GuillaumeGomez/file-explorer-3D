@@ -88,12 +88,42 @@ void Plane::initializeGL()
     }
   if (!m_render2D)
     m_shader = ShaderHandler::getInstance()->createShader(vert, frag);
-  else
-    m_shader = ShaderHandler::createShader(Shader::getStandard2DVertexShader(m_hasTexture), Shader::getStandard2DFragmentShader(m_hasTexture));
-  /*if (m_render2D)
-    m_shader = ShaderHandler::createShader(Shader::getStandard2DVertexShader(m_hasTexture), Shader::getStandard2DFragmentShader(m_hasTexture));
-  else
-    m_shader = ShaderHandler::createShader(Shader::getStandardVertexShader(m_hasTexture), Shader::getStandardFragmentShader(m_hasTexture));*/
+  else {
+      std::string vert;
+
+      if (m_hasTexture) {
+          vert =
+              "#version 330\n"
+
+              "in vec2 in_Vertex;\n"
+              "in vec2 in_TexCoord0;\n"
+              "uniform vec2 in_pos;\n"
+
+              "out vec2 coordTexture;\n"
+              "void main()\n"
+              "{\n"
+              "gl_Position.xy = vec2(in_Vertex.x + in_pos.x, in_Vertex.y + in_pos.y);\n"
+              "coordTexture = in_TexCoord0;\n"
+              "}";
+        } else {
+          vert =
+              "#version 330\n"
+
+              "in vec2 in_Vertex;\n"
+              "in vec3 in_Color;\n"
+              "uniform vec2 in_pos;\n"
+
+              "out vec3 color;\n"
+              "void main()\n"
+              "{\n"
+              "gl_Position.xy = vec2(in_Vertex.x + in_pos.x, in_Vertex.y + in_pos.y);\n"
+              "color = in_Color;\n"
+              "}";
+        }
+      if ((m_shader = ShaderHandler::createShader(vert, Shader::getStandard2DFragmentShader(m_hasTexture)))) {
+          m_uniloc_pos = m_shader->getUniform("in_pos");
+        }
+    }
   if (!m_shader){
       HandleError::showError("Shader didn't load in Plane");
       exit(-1);
@@ -113,10 +143,10 @@ void Plane::initializeGL()
         }
     } else {
       GLfloat verticesTmp[] = {
-        m_pos.x(), this->height + m_pos.y(),
-        this->width + m_pos.x(), this->height + m_pos.y(),
-        m_pos.x(), m_pos.y(),
-        this->width + m_pos.x(), m_pos.y()
+        this->width / -2.f, this->height / 2.f,
+        this->width / 2.f, this->height / 2.f,
+        this->width / -2.f, this->height / -2.f,
+        this->width / 2.f, this->height / -2.f
       };
       for (unsigned int i(0); i < sizeof(verticesTmp) / sizeof(verticesTmp[0]); ++i){
           m_vertices.push_back(verticesTmp[i]);
@@ -169,6 +199,8 @@ void  Plane::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
       if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
         tmp = glm::rotate(tmp, m_rot.rotation(), glm::vec3(m_rot.x(), m_rot.y(), m_rot.z()));
       glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
+    } else {
+      glUniform2fv(m_uniloc_pos, 1, m_pos.getDatas());
     }
 
   // Rendu
