@@ -160,7 +160,10 @@ void  Handle_2048::update(const float &t)
                   for (auto &it : m_tiles)
                     if (!end_loop)
                       for (auto it2 : it)
-                        end_loop = checkTile(it2);
+                        if (checkTile(it2)) {
+                            end_loop = true;
+                            break;
+                          }
                   m_end = !end_loop;
                   if (m_end) {
                       m_msg->setText("Defeat !\nPress any key to restart");
@@ -181,7 +184,6 @@ void  Handle_2048::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_m
 
   glBindVertexArray(m_vaoID);
 
-  //m_background->paintGL(view_matrix, proj_matrix);
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -194,9 +196,6 @@ void  Handle_2048::paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_m
   if (m_move > 0.f)
     for (auto it : m_move_tiles)
       it->paintGL(view_matrix, proj_matrix);
-  /*for (auto &it : m_backs)
-        for (auto it2 : it)
-          it2->paintGL(view_matrix, proj_matrix);*/
 
   m_score->paintGL(view_matrix, proj_matrix);
   m_msg->paintGL(view_matrix, proj_matrix);

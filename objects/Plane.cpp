@@ -215,3 +215,13 @@ void  Plane::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
   glBindVertexArray(0);
   m_shader->unbind();
 }
+
+float const &Plane::getWidth() const
+{
+  return width;
+}
+
+float const &Plane::getHeight() const
+{
+  return height;
+}

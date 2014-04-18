@@ -13,6 +13,8 @@ namespace Object
     virtual ~Plane(){}
     virtual void    initializeGL();
     virtual void    paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix);
+    float const     &getWidth() const;
+    float const     &getHeight() const;
 
   protected:
     float   width;

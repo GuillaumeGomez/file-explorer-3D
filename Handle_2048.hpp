@@ -110,8 +110,22 @@ class Handle_2048 : public myGLWidget
       return false;
     }
     void  reset_zoom() {
-      _zoom(1.f - m_zoom);
-      _unzoom(m_unzoom - 1.f);
+      if (!m_back)
+        return;
+      float w(m_back->getWidth()), h(m_back->getHeight());
+      GLfloat verticesTmp[] = {
+        w / -2.f, h / 2.f,
+        w / 2.f, h / 2.f,
+        w / -2.f, h / -2.f,
+        w / 2.f, h / -2.f
+      };
+      std::vector<GLfloat>  &t = m_back->getVertices();
+      for (unsigned int i = 0; i < t.size(); i += 2) {
+          t[i] = verticesTmp[i];
+          t[i + 1] = verticesTmp[i + 1];
+        }
+      m_back->updateVertices();
+      m_zoom = m_unzoom = 1.f;
     }
 
     void  update(const float &t, const float &move) {
