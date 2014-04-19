@@ -30,7 +30,7 @@ void  Handle_2048::create_back_tile(Vector3D v, float size, Color c)
 }
 
 Handle_2048::Handle_2048() : myGLWidget(Vector3D(), Rotation()),
-  tile_s(0.35f), border_s(0.05f), m_score(0), m_msg(0), m_title(0), m_end(false), m_win(true)
+  tile_s(0.35f), border_s(0.05f), m_score(0), m_msg(0), m_title(0), m_end(false), m_win(false)
 {
   m_render2D = true;
   m_move = 0.f;
@@ -259,8 +259,10 @@ void  Handle_2048::keyReleaseEvent(int key)
   if (m_move > 0.f)
     return;
   if (m_end) {
-      if (m_win && key == SDLK_c)
-        m_end = false;
+      if (m_win && key == SDLK_c) {
+          m_end = false;
+          m_msg->setText("");
+        }
       else if (!m_win || key == SDLK_r)
         restart();
       return;

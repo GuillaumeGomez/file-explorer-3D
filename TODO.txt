@@ -16,6 +16,7 @@ GENERAL FEATURES
 - create a sqlite3 class (for score in games, saved keys, etc...)
 - add an icon for the window, it's ugly for the moment
 - see what OpenMp can improve in calculs
+- add network opening to allow someone else to come "visit" your folders (it will be an option)
 
 TEXT CLASS FEATURES
 
