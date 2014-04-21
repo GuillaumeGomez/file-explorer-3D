@@ -40,7 +40,8 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0), m_normalsSize(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
-    m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
+    m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0),
+    m_alignment(Object::LEFT_ALIGN)
 {
   m_className = "myGLWidget";
 }
@@ -49,7 +50,8 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, Color co)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(co), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0), m_normalsSize(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
-    m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
+    m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0),
+    m_alignment(Object::LEFT_ALIGN)
 {
   m_className = "myGLWidget";
 }
@@ -58,7 +60,8 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, const string tex)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0), m_normalsSize(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false), m_texture(tex),
-    m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
+    m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0),
+    m_alignment(Object::LEFT_ALIGN)
 {
   m_className = "myGLWidget";
 }
@@ -67,7 +70,8 @@ myGLWidget::myGLWidget(Vector3D p, Rotation rot, Texture const &tex)
   : m_hasTexture(false), m_pos(p), m_rot(rot), m_color(Color()), m_selected(false),
     m_pickAllow(false), mainWindow(0), m_shader(0), m_vboID(0), m_vaoID(0), m_normalsSize(0),
     m_verticesSize(0), m_colorsSize(0), m_texturesSize(0), m_pointsNumber(0), m_render2D(false),
-    m_texture(tex), m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0)
+    m_texture(tex), m_drawMode(GL_TRIANGLES), m_uniLoc_modelView(0), m_uniLoc_projection(0), m_uniloc_rot(0), m_uniloc_pos(0),
+    m_alignment(Object::LEFT_ALIGN)
 {
   m_className = "myGLWidget";
 }

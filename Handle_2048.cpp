@@ -51,7 +51,7 @@ Handle_2048::Handle_2048() : myGLWidget(Vector3D(), Rotation()),
           float xx = x_pos + tile_s / 2.f;
           float yy = y_pos + tile_s / 2.f;
 
-          t->m_text = new Object::Text("", BLACK, x_pos, y_pos, tile_s - tile_s / 20);
+          t->m_text = new Object::Text("", BLACK, xx, yy, tile_s - tile_s / 20, Object::CENTER_ALIGN);
           t->m_back = new Object::Plane(Vector3D(xx, yy),
                                         Rotation(), RED, tile_s, tile_s, false);
 

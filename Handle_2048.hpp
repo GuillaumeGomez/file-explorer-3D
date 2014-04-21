@@ -36,7 +36,7 @@ class Handle_2048 : public myGLWidget
 
     Tile(const float &s, const float &x, const float &y) : to_x(0.f), to_y(0.f), pos_x(0.f), pos_y(0.f), from_x(0.f), from_y(0.f),
       m_zoom(1.f), m_unzoom(.99f), value(0), x(x), y(y), m_text(0), m_back(0) {
-      m_text = new Object::Text("", BLACK, x, y, s - s / 20);
+      m_text = new Object::Text("", BLACK, x, y, s - s / 20, Object::CENTER_ALIGN);
       m_back = new Object::Plane(Vector3D(x, y),
                                  Rotation(), RED, s, s, false);
       m_back->setRender2D(true);
@@ -237,8 +237,12 @@ class Handle_2048 : public myGLWidget
           m_back->setColor(Color(0.93f, 0.76f, 0.32f));
           m_text->setColor(WHITE);
           break;
-        default:
+        case 2048:
           m_back->setColor(Color(0.93f, 0.75f, 0.29f));
+          m_text->setColor(WHITE);
+          break;
+        default:
+          m_back->setColor(Color(0.01f, 0.01f, 0.01f));
           m_text->setColor(WHITE);
           break;
         }

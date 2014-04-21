@@ -361,8 +361,8 @@ void  HandlePhysics::deleteObject(myGLWidget *obj)
 
 myGLWidget  *HandlePhysics::pick(int mouseX, int mouseY, int screenWidth, int screenHeight)
 {
-  dynamicsWorld->debugDrawWorld();
-  static_cast<DebugDrawer*>(dynamicsWorld->getDebugDrawer())->draw();
+  //dynamicsWorld->debugDrawWorld();
+  //static_cast<DebugDrawer*>(dynamicsWorld->getDebugDrawer())->draw();
 
   glm::vec4 lRayStart_NDC(((float)mouseX/(float)screenWidth  - 0.5f) * 2.f, // [0,1024] -> [-1,1]
                           ((float)mouseY/(float)screenHeight - 0.5f) * 2.f, // [0, 768] -> [-1,1]
@@ -373,16 +373,6 @@ myGLWidget  *HandlePhysics::pick(int mouseX, int mouseY, int screenWidth, int sc
                         0.f,
                         1.f);
 
-  //glm::mat4 InverseProjectionMatrix = glm::inverse(Camera::getProjectionMatrix());
-
-  // The View Matrix goes from World Space to Camera Space.
-  // So inverse(ViewMatrix) goes from Camera Space to World Space.
-  /*glm::mat4 InverseViewMatrix = glm::inverse(Camera::getViewMatrix());
-
-  glm::vec4 lRayStart_camera = InverseProjectionMatrix * lRayStart_NDC;    lRayStart_camera/=lRayStart_camera.w;
-  glm::vec4 lRayStart_world  = InverseViewMatrix       * lRayStart_camera; lRayStart_world /=lRayStart_world .w;
-  glm::vec4 lRayEnd_camera   = InverseProjectionMatrix * lRayEnd_NDC;      lRayEnd_camera  /=lRayEnd_camera  .w;
-  glm::vec4 lRayEnd_world    = InverseViewMatrix       * lRayEnd_camera;   lRayEnd_world   /=lRayEnd_world   .w;*/
   glm::mat4 M = glm::inverse(Camera::getProjectionMatrix() * Camera::getViewMatrix());
   glm::vec4 lRayStart_world = M * lRayStart_NDC; lRayStart_world/=lRayStart_world.w;
   glm::vec4 lRayEnd_world   = M * lRayEnd_NDC  ; lRayEnd_world  /=lRayEnd_world.w;

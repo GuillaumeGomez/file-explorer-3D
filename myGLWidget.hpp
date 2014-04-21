@@ -31,6 +31,14 @@ enum {
   NORMAL_COORD
 };
 
+namespace Object {
+  typedef enum {
+    LEFT_ALIGN,
+    CENTER_ALIGN,
+    RIGHT_ALIGN
+  } OBJECT_ALIGN;
+}
+
 class myGLWidget
 {
 public:
@@ -118,6 +126,7 @@ protected:
   GLint                   m_uniLoc_projection;
   GLint                   m_uniloc_rot;
   GLint                   m_uniloc_pos;
+  Object::OBJECT_ALIGN    m_alignment;
   Color                   m_pickingColor;
 
   std::string           m_className;

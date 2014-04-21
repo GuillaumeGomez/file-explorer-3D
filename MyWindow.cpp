@@ -123,6 +123,7 @@ MyWindow::~MyWindow()
 void  MyWindow::repeatKey()
 {
   int     *k(m_key->getKeys());
+  int     interval;
 
   while (1)
     {
@@ -149,8 +150,9 @@ void  MyWindow::repeatKey()
           if (front == 1 && lat == 1)
             m_camera->setSpeed(m_camera->speed() / 0.75f);
         }
+      interval = m_key->getInterval();
       m_key->unlock();
-      Utils::sleep(m_key->getInterval());
+      Utils::sleep(interval);
     }
 }
 
@@ -227,9 +229,6 @@ void MyWindow::keyPressEvent(int key)
           break;*/
             default:
               m_tetris->keyPressEvent(key);
-              //m_key->lock();
-              //m_key->addKey(key);
-              //m_key->unlock();
             }
         } else if (m_mode == MODE_2048) {
           if (key == SDLK_TAB) {
@@ -253,9 +252,6 @@ void MyWindow::keyPressEvent(int key)
               this->m_mode = MODE_TETRIS;
               sdl->setFPSMode(false);
               sdl->displayCursor(false);
-              /*m_key->lock();
-              m_key->setInterval(50);
-              m_key->unlock();*/
               break;
             case SDLK_BACKSPACE:
               m_wireframe = !m_wireframe;
@@ -271,7 +267,6 @@ void MyWindow::keyPressEvent(int key)
               this->m_mode = MODE_2048;
               sdl->setFPSMode(false);
               sdl->displayCursor(false);
-              //sdl->displayCursor(true);
               break;
             default:
               m_key->lock();
@@ -326,7 +321,7 @@ void  MyWindow::update()
   float fps = this->m_fps->getFpsCount();
   if (tmp != 0.f) {
       switch (m_mode) {
-      case MODE_TETRIS:
+        case MODE_TETRIS:
           m_tetris->update(tmp);
           break;
         case MODE_NORMAL:
@@ -519,7 +514,7 @@ void  MyWindow::picking()
 
   myGLWidget *tmp = m_physics->pick(sdl->width() / 2, sdl->height() / 2, sdl->width(), sdl->height());
   if (w != tmp && w) {
-        w->setSelected(false);
+      w->setSelected(false);
     }
   if (!tmp)
     return;
@@ -532,7 +527,7 @@ void  MyWindow::picking()
           (*it)->setSelected(true);
           break;
           }*/
-        /*}
+  /*}
       w->setSelected(true);
     }*/
 }

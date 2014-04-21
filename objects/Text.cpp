@@ -10,7 +10,7 @@
 
 using namespace Object;
 
-Text::Text(string text, Color c, float x, float y, float font_size)
+Text::Text(string text, Color c, float x, float y, float font_size, OBJECT_ALIGN align)
   : myGLWidget(Vector3D(x, y, 0.f), Rotation(), c), m_text(text), m_font_size(font_size)
 {
   if (m_text.length() > 0) {
@@ -18,13 +18,14 @@ Text::Text(string text, Color c, float x, float y, float font_size)
     } else {
       m_hasTexture = true;
     }
+  m_alignment = align;
   m_size = 0.017f * m_text.length() * font_size * 5.f;
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_render2D = true;
   m_className = "Text";
 }
 
-Text::Text(const char *text, Color c, float x, float y, float font_size)
+Text::Text(const char *text, Color c, float x, float y, float font_size, OBJECT_ALIGN align)
   : myGLWidget(Vector3D(x, y, 0.f), Rotation(), c), m_text(text ? text : ""), m_font_size(font_size)
 {
   if (m_text.length() > 0) {
@@ -32,6 +33,7 @@ Text::Text(const char *text, Color c, float x, float y, float font_size)
     } else {
       m_hasTexture = true;
     }
+  m_alignment = align;
   m_size = 0.017f * m_text.length() * font_size * 5.f;
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_render2D = true;
@@ -64,33 +66,37 @@ Text::Text(const char *text, Color c, Vector3D v, Rotation r, float font_size)
   m_className = "Text";
 }
 
-Text::Text(Texture const &s, std::string text, Vector3D v, Rotation r, float font_size)
+Text::Text(Texture const &s, std::string text, Vector3D v, Rotation r, float font_size, OBJECT_ALIGN align)
   : myGLWidget(v, r, s), m_text(text), m_font_size(font_size)
 {
+  m_alignment = align;
   m_size = m_text.length() * 5;
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_className = "Text";
 }
 
-Text::Text(Texture const &s, float length, int lines, Vector3D v, Rotation r, float font_size)
+Text::Text(Texture const &s, float length, int lines, Vector3D v, Rotation r, float font_size, OBJECT_ALIGN align)
   : myGLWidget(v, r, s), m_text(""), m_font_size(font_size)
 {
+  m_alignment = align;
   m_size = length;
   m_lines = (lines <= 0 ? 1 : lines);
   m_className = "Text";
 }
 
-Text::Text(Texture const &s, std::string text, float x, float y, float font_size)
+Text::Text(Texture const &s, std::string text, float x, float y, float font_size, OBJECT_ALIGN align)
   : myGLWidget(Vector3D(x, y, 0.f), Rotation(), s), m_text(text), m_font_size(font_size)
 {
+  m_alignment = align;
   m_size = m_text.length() * 5;
   m_lines = Utility::numberOfOccurence<std::string>(m_text, "\n") + 1;
   m_className = "Text";
 }
 
-Text::Text(Texture const &s, float length, int lines, float x, float y, float font_size)
+Text::Text(Texture const &s, float length, int lines, float x, float y, float font_size, OBJECT_ALIGN align)
   : myGLWidget(Vector3D(x, y, 0.f), Rotation(), s), m_text(""), m_font_size(font_size)
 {
+  m_alignment = align;
   m_size = length;
   m_lines = (lines <= 0 ? 1 : lines);
   m_className = "Text";
@@ -186,6 +192,7 @@ void    Text::initializeGL()
         m_size / -2.f, tmp / -2.f, 0.f,
         m_size / 2.f, tmp / -2.f, 0.f
       };
+
       for (unsigned int i(0); i < sizeof(verticesTmp) / sizeof(verticesTmp[0]); ++i){
           m_vertices.push_back(verticesTmp[i]);
         }
@@ -256,16 +263,29 @@ void  Text::fill2DVertices(bool recalc)
 
   //GLfloat old_tmp = m_font_size + m_pos.y();
 
-  GLfloat verticesTmp[] = {m_pos.x(), tmp_h + m_pos.y(),
-                           m_size + m_pos.x(), tmp_h + m_pos.y(),
-                           m_pos.x(), m_pos.y(),
-                           m_size + m_pos.x(), m_pos.y()};
+  GLfloat verticesTmp_l[] = {m_pos.x(), tmp_h + m_pos.y(),
+                             m_size + m_pos.x(), tmp_h + m_pos.y(),
+                             m_pos.x(), m_pos.y(),
+                             m_size + m_pos.x(), m_pos.y()};
+
+  GLfloat verticesTmp_c[] = {m_pos.x() + m_size / -2.f, tmp_h /2.f + m_pos.y(),
+                             m_size / 2.f + m_pos.x(), tmp_h /2.f + m_pos.y(),
+                             m_pos.x() + m_size / -2.f, m_pos.y() + tmp_h / -2.f,
+                             m_size /2.f + m_pos.x(), m_pos.y() + tmp_h / -2.f};
 
   m_vertices.clear();
-  unsigned int size(sizeof(verticesTmp) / sizeof(verticesTmp[0]));
+  if (m_alignment == LEFT_ALIGN) {
+      unsigned int size(sizeof(verticesTmp_l) / sizeof(verticesTmp_l[0]));
 
-  for (unsigned int i(0); i < size; ++i){
-      m_vertices.push_back(verticesTmp[i]);
+      for (unsigned int i(0); i < size; ++i){
+          m_vertices.push_back(verticesTmp_l[i]);
+        }
+    } else if (m_alignment == CENTER_ALIGN) {
+      unsigned int size(sizeof(verticesTmp_c) / sizeof(verticesTmp_c[0]));
+
+      for (unsigned int i(0); i < size; ++i){
+          m_vertices.push_back(verticesTmp_c[i]);
+        }
     }
 }
 

@@ -116,6 +116,13 @@ void Camera::mouseMoveEvent(int x, int y)
   //vectorsFromAngles();
   m_oldX = x;
   m_oldY = y;
+
+  if (m_phi > 89.f)
+    m_phi = 89.f;
+  else if (m_phi < -89.f)
+    m_phi = -89.f;
+  tmp1 = m_phi * M_PI / 180.f;
+  tmp2 = m_theta * M_PI / 180.f;
 }
 
 void Camera::keyPressEvent(int ev)
@@ -156,7 +163,7 @@ void Camera::keyPressEvent(int ev)
     default:
       return;
     }
-  vectorsFromAngles();
+  vectorsFromAngles(false);
 }
 
 void Camera::keyReleaseEvent(int e)
@@ -203,14 +210,16 @@ void Camera::setPosition(const Vector3D &position)
   m_target = m_position + m_forward;
 }
 
-void  Camera::vectorsFromAngles()
+void  Camera::vectorsFromAngles(bool phiChanged)
 {
-  if (m_phi > 89.f)
-    m_phi = 89.f;
-  else if (m_phi < -89.f)
-    m_phi = -89.f;
-  tmp1 = m_phi * M_PI / 180.f;
-  tmp2 = m_theta * M_PI / 180.f;
+  if (phiChanged) {
+      if (m_phi > 89.f)
+        m_phi = 89.f;
+      else if (m_phi < -89.f)
+        m_phi = -89.f;
+      tmp1 = m_phi * M_PI / 180.f;
+      tmp2 = m_theta * M_PI / 180.f;
+    }
   r_temp = cosf(tmp1);
   m_forward.setY(tmp1);
   m_forward.setX(r_temp * cosf(tmp2));
@@ -221,12 +230,12 @@ void  Camera::vectorsFromAngles()
   m_left.normalize();*/
   m_target = (m_forward + m_position);
 
-  tmp1 = 45.f * M_PI / 180.f;
-  tmp2 = m_theta * M_PI / 180.f;
-  r_temp = cosf(tmp1);
-  m_forward.setY(tmp1);
-  m_forward.setX(r_temp * cosf(tmp2));
-  m_forward.setZ(r_temp * sinf(tmp2));
+  float _tmp1 = 45.f * M_PI / 180.f;
+  float _tmp2 = m_theta * M_PI / 180.f;
+  r_temp = cosf(_tmp1);
+  m_forward.setY(_tmp1);
+  m_forward.setX(r_temp * cosf(_tmp2));
+  m_forward.setZ(r_temp * sinf(_tmp2));
   //m_forward.setY(0.f);
 
   m_left = Vector3D::crossProduct(m_up, m_forward);

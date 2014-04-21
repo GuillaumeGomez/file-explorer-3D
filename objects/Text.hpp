@@ -9,14 +9,14 @@ namespace Object
   class Text : public myGLWidget
   {
   public:
-    Text(std::string text, Color = Color(), float x = 0.f, float y = 0.f, float font_size = 0.2f);
-    Text(const char *text, Color = Color(), float x = 0.f, float y = 0.f, float font_size = 0.2f);
+    Text(std::string text, Color = Color(), float x = 0.f, float y = 0.f, float font_size = 0.2f, OBJECT_ALIGN align = LEFT_ALIGN);
+    Text(const char *text, Color = Color(), float x = 0.f, float y = 0.f, float font_size = 0.2f, OBJECT_ALIGN align = LEFT_ALIGN);
     Text(std::string text, Color = Color(), Vector3D = Vector3D(), Rotation = Rotation(), float font_size = 0.2f);
     Text(const char *text, Color = Color(), Vector3D = Vector3D(), Rotation = Rotation(), float font_size = 0.2f);
-    Text(Texture const &s, std::string text, Vector3D v, Rotation = Rotation(), float font_size = 0.2f);
-    Text(Texture const &s, float length, int lines, Vector3D v, Rotation = Rotation(), float font_size = 0.2f);
-    Text(Texture const &s, std::string text, float x = 0.f, float y = 0.f, float font_size = 0.2f);
-    Text(Texture const &s, float length, int lines, float x = 0.f, float y = 0.f, float font_size = 0.2f);
+    Text(Texture const &s, std::string text, Vector3D v, Rotation = Rotation(), float font_size = 0.2f, OBJECT_ALIGN align = LEFT_ALIGN);
+    Text(Texture const &s, float length, int lines, Vector3D v, Rotation = Rotation(), float font_size = 0.2f, OBJECT_ALIGN align = LEFT_ALIGN);
+    Text(Texture const &s, std::string text, float x = 0.f, float y = 0.f, float font_size = 0.2f, OBJECT_ALIGN align = LEFT_ALIGN);
+    Text(Texture const &s, float length, int lines, float x = 0.f, float y = 0.f, float font_size = 0.2f, OBJECT_ALIGN align = LEFT_ALIGN);
     virtual ~Text();
     virtual void    initializeGL();
     virtual void    paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);

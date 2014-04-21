@@ -50,7 +50,7 @@ public:
   static float const     &getRatio();
 
 private:
-  void  vectorsFromAngles();
+  void  vectorsFromAngles(bool phiChanged = true);
 
   float       m_speed;
   float       m_sensivity;
