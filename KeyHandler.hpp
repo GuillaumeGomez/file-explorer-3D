@@ -11,7 +11,7 @@ public:
   KeyHandler(int ms = 10);
   virtual ~KeyHandler();
   int     getNbKeys() const;
-  void    addKey(int);
+  bool    addKey(int);
   void    operator<<(int);
   void    releaseKey(int);
   int     getKey(int);
@@ -19,13 +19,13 @@ public:
   void    setInterval(int ms);
   int     getInterval();
   int     *getKeys();
-  void    lock();
-  void    unlock();
+  bool    update(const float &time); // returns true if the remaining time has gone below zero
+  void    setRemaining(float t);
 
 private:
   int         m_nbKeys;
-  HandleMutex *m_mut;
   int         m_interval;
+  float       m_remaining;
   int         m_key[MAX_KEY_SIZE];
 };
 

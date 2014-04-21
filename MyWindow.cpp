@@ -29,14 +29,6 @@ using namespace std;
 
 HandleSDL  *MyWindow::sdl = 0;
 
-void  *repeat_func(void *arg)
-{
-  MyWindow  *win(static_cast<MyWindow*>(arg));
-
-  win->repeatKey();
-  return arg;
-}
-
 MyWindow::MyWindow(std::string winName, int antiali, int fps)
   : m_printInfo(false), MIN(WTIMER / (fps <= 0 ? 40 : fps)), pause(false), m_wireframe(false),
     m_mode(MODE_NORMAL), m_physics(0), m_character(0)
@@ -44,7 +36,6 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
   srand(time(0));
   m_camera = 0;
   m_key = 0;
-  m_thread = 0;
   m_fps = 0;
   m_fbo = 0;
   m_tetris = 0;
@@ -53,7 +44,7 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
   (void)antiali;
   try {
     if (!sdl)
-      sdl = new WINDOW_HANDLER(winName, this, 2);
+      sdl = new HandleSDL(winName, this, 2);
 
     GLenum err;
 
@@ -66,7 +57,6 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
     m_camera = new Camera;
 
     m_key = new KeyHandler;
-    m_thread = new HandleThread(repeat_func, static_cast<void*>(this));
     m_fps = new HandleFpsCount;
 
     m_fbo = new FrameBuffer(sdl->width(), sdl->height());
@@ -86,8 +76,6 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
 
 MyWindow::~MyWindow()
 {
-  if (this->m_thread)
-    delete this->m_thread;
   if (this->m_physics)
     delete this->m_physics;
   if (this->m_fps)
@@ -123,36 +111,31 @@ MyWindow::~MyWindow()
 void  MyWindow::repeatKey()
 {
   int     *k(m_key->getKeys());
-  int     interval;
 
-  while (1)
-    {
-      m_key->lock();
-      int s(m_key->getNbKeys() - 1);
+  int s(m_key->getNbKeys());
 
-      if (m_mode == MODE_NORMAL) {
-          int lat(0);
-          int front(0);
+  if (m_mode == MODE_NORMAL) {
+      int lat(0);
+      int front(0);
 
-          while (s >= 0){
-              int tmp = k[s--];
+      while (s > 0) {
+          int tmp = k[--s];
 
-              if (tmp == SDLK_a || tmp == SDLK_d)
-                ++lat;
-              else if (tmp == SDLK_w || tmp == SDLK_s)
-                ++front;
-            }
-          if (front == 1 && lat == 1)
-            m_camera->setSpeed(m_camera->speed() * 0.75f);
-          s = m_key->getNbKeys() - 1;
-          while (s >= 0)
-            m_camera->keyPressEvent(k[s--]);
-          if (front == 1 && lat == 1)
-            m_camera->setSpeed(m_camera->speed() / 0.75f);
+          if (tmp == SDLK_a || tmp == SDLK_d)
+            ++lat;
+          else if (tmp == SDLK_w || tmp == SDLK_s)
+            ++front;
         }
-      interval = m_key->getInterval();
-      m_key->unlock();
-      Utils::sleep(interval);
+      if (front == 1 && lat == 1)
+        m_camera->setSpeed(m_camera->speed() * 0.75f);
+      s = m_key->getNbKeys();
+      while (s > 0)
+        m_camera->keyPressEvent(k[--s]);
+      if (front == 1 && lat == 1)
+        m_camera->setSpeed(m_camera->speed() / 0.75f);
+    } else if (m_mode == MODE_TETRIS) {
+      while (s > 0)
+        m_tetris->keyPressEvent(k[--s]);
     }
 }
 
@@ -185,9 +168,9 @@ void  MyWindow::mouseReleaseEvent(int but, int posx, int posy)
 
 void  MyWindow::keyReleaseEvent(int ev)
 {
-  m_key->lock();
+  //m_key->lock();
   m_key->releaseKey(ev);
-  m_key->unlock();
+  //m_key->unlock();
   switch (m_mode) {
     case MODE_TETRIS:
       m_tetris->keyReleaseEvent(ev);
@@ -217,29 +200,25 @@ void MyWindow::keyPressEvent(int key)
             case SDLK_TAB:
               glEnable(GL_DEPTH_TEST);
               this->m_mode = MODE_NORMAL;
-              m_key->lock();
+              //m_key->lock();
               m_key->setInterval(10);
-              m_key->unlock();
+              //m_key->unlock();
               sdl->setFPSMode(true);
               //sdl->resetCursor();
               break;
-              /*case SDLK_UP:
-        case SDLK_SPACE:
-          m_tetris->keyPressEvent(key);
-          break;*/
+            case SDLK_SPACE:
+              m_tetris->keyPressEvent(key);
+              break;
             default:
               m_tetris->keyPressEvent(key);
+              if (m_key->addKey(key))
+                m_key->setRemaining(0.16f);
             }
         } else if (m_mode == MODE_2048) {
           if (key == SDLK_TAB) {
               glEnable(GL_DEPTH_TEST);
               this->m_mode = MODE_NORMAL;
               sdl->setFPSMode(true);
-              //sdl->resetCursor();
-              //sdl->displayCursor(pause);
-              /*m_key->lock();
-              m_key->setInterval(10);
-              m_key->unlock();*/
             }
         } else if (m_mode == MODE_NORMAL) {
           switch(key)
@@ -250,6 +229,7 @@ void MyWindow::keyPressEvent(int key)
             case SDLK_TAB:
               glDisable(GL_DEPTH_TEST);
               this->m_mode = MODE_TETRIS;
+              m_key->setInterval(100);
               sdl->setFPSMode(false);
               sdl->displayCursor(false);
               break;
@@ -269,9 +249,7 @@ void MyWindow::keyPressEvent(int key)
               sdl->displayCursor(false);
               break;
             default:
-              m_key->lock();
               m_key->addKey(key);
-              m_key->unlock();
             }
         }
     }
@@ -315,10 +293,13 @@ void  MyWindow::update()
 
   this->clearScreen();
 
-  m_camera->update();
-
   float tmp = sdl->getElapsedTime();
   float fps = this->m_fps->getFpsCount();
+
+  if (m_key->update(tmp)) {
+      this->repeatKey();
+    }
+  m_camera->update();
   if (tmp != 0.f) {
       switch (m_mode) {
         case MODE_TETRIS:
@@ -474,7 +455,6 @@ void  MyWindow::start()
   this->initializeGL();
   m_camera->setView(this);
 
-  this->m_thread->start();
   while (!m_end)
     {
       m_end = sdl->handleEvents();

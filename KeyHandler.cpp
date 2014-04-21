@@ -1,13 +1,12 @@
 #include "KeyHandler.hpp"
 #include "../Utils/HandleMutex.hpp"
 
-KeyHandler::KeyHandler(int ms) : m_nbKeys(0), m_mut(new HandleMutex), m_interval(ms)
+KeyHandler::KeyHandler(int ms) : m_nbKeys(0), m_interval(ms), m_remaining(0.f)
 {
 }
 
 KeyHandler::~KeyHandler()
 {
-  delete m_mut;
 }
 
 int   KeyHandler::getNbKeys() const
@@ -15,17 +14,18 @@ int   KeyHandler::getNbKeys() const
   return m_nbKeys;
 }
 
-void  KeyHandler::addKey(int k)
+bool  KeyHandler::addKey(int k)
 {
   int i;
 
   if (m_nbKeys >= MAX_KEY_SIZE)
-    return;
+    return false;
   for (i = 0; i < m_nbKeys; ++i){
       if (m_key[i] == k)
-        return;
+        return false;
     }
   m_key[m_nbKeys++] = k;
+  return true;
 }
 
 void  KeyHandler::operator<<(int k)
@@ -52,8 +52,6 @@ void  KeyHandler::releaseKey(int k)
 
 int KeyHandler::getKey(int i)
 {
-  /*if (i < 0 || i >= m_nbKeys)
-    return -1;*/
   return m_key[i];
 }
 
@@ -67,6 +65,7 @@ void  KeyHandler::setInterval(int ms)
   m_interval = ms;
   if (m_interval <= 0)
     m_interval = 10;
+  m_remaining = (m_interval / 1000.f);
 }
 
 int KeyHandler::getInterval()
@@ -79,17 +78,20 @@ int *KeyHandler::getKeys()
   return m_key;
 }
 
-void  KeyHandler::lock()
+bool  KeyHandler::update(const float &time)
 {
-  m_mut->lock();
+  bool  b;
+
+  m_remaining -= time;
+  b = (m_remaining <= 0.f);
+  if (m_remaining <= 0.f)
+    m_remaining += (m_interval / 1000.f);
+  return b;
 }
 
-void  KeyHandler::unlock()
+void  KeyHandler::setRemaining(float t)
 {
-  m_mut->unlock();
+  m_remaining = t;
+  if (m_remaining < 0.f)
+    m_remaining = 0.f;
 }
-
-/*void  KeyHandler::emitTimeout()
-{
-  emit repeatKey();
-}*/

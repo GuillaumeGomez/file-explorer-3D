@@ -26,13 +26,7 @@ typedef std::vector<myGLWidget*>  WinList;
 
 #define WTIMER  1000.f
 
-//#ifdef WIN32
-#define WINDOW_HANDLER  HandleSDL
 #include "HandleSDL.hpp"
-//#else
-//#define WINDOW_HANDLER  HandleSFML
-//#include "HandleSFML.hpp"
-//#endif
 
 namespace Object {
   class Model;
@@ -93,7 +87,6 @@ private:
   clock_t             actual;
   clock_t             prev;
   bool                m_end;
-  HandleThread        *m_thread;
   HandleFpsCount      *m_fps;
   std::string         display_sentence;
   myGLWidget          *m_displayList[5];
