@@ -64,8 +64,24 @@ void  Line::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
   glUniformMatrix4fv(m_uniLoc_projection, 1, GL_FALSE, glm::value_ptr(proj_matrix));
   glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(view_matrix));
 
-  //glDrawArrays(GL_LINES, 0, m_pointsNumber);
+  glDrawArrays(GL_LINES, 0, m_pointsNumber);
 
   glBindVertexArray(0);
   glUseProgram(0);
+}
+
+void  Line::setFrom(Vector3D v)
+{
+  m_vertices[0] = v.x();
+  m_vertices[1] = v.y();
+  m_vertices[2] = v.z();
+  this->updateVertices();
+}
+
+void  Line::setTo(Vector3D v)
+{
+  m_vertices[3] = v.x();
+  m_vertices[4] = v.y();
+  m_vertices[5] = v.z();
+  this->updateVertices();
 }

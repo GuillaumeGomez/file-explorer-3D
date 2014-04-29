@@ -19,10 +19,12 @@ namespace Object {
     float const   &getCaseSize() const;
 
   private:
+    void          generateRandomHeightMap();
     unsigned int  m_width;
     unsigned int  m_height;
     float         m_case_size;
     float         m_tex_repeat;
+    void          *data_ptr;
     std::string   m_img;
     Texture       *m_tex[4];
     GLint         m_uniloc_height;

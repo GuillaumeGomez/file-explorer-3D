@@ -3,19 +3,57 @@
 #include "../HandleError.hpp"
 #include "../shaders/ShaderHandler.hpp"
 #include "../String_utils.hpp"
+#include "../Utils/PerlinNoise.hpp"
 
 using namespace Object;
 
+void  HeightMap::generateRandomHeightMap()
+{
+  SDL_Surface *s = SDL_CreateRGBSurface(SDL_SWSURFACE, m_width, m_height, 32, 0, 0, 0, 0);
+
+  // Create a PerlinNoise object with a random permutation vector generated with seed
+  //unsigned int seed = 237;
+  PerlinNoise pn(rand());
+
+  unsigned int kk = 0;
+  // Visit every pixel of the image and assign a color generated with Perlin noise
+  for(unsigned int i = 0; i < m_height; ++i) {     // y
+      for(unsigned int j = 0; j < m_width; ++j) {  // x
+          double x = (double)j/((double)m_width);
+          double y = (double)i/((double)m_height);
+
+          // Typical Perlin noise
+          double n = pn.noise(x, y, 140.);
+
+          // Wood like structure
+          //n = 20 * pn.noise(x, y, 0.8);
+          //n = n - floor(n);
+
+          // Map the values to the [0, 255] interval, for simplicity we use
+          // tones of grey
+          ((char*)s->pixels)[kk++] = floor(255 * n);
+          ((char*)s->pixels)[kk++] = floor(255 * n);
+          ((char*)s->pixels)[kk++] = floor(255 * n);
+          ((char*)s->pixels)[kk++] = 0;
+        }
+    }
+
+  data_ptr = static_cast<void*>(s);
+}
+
 HeightMap::HeightMap(Vector3D v, unsigned int width, unsigned int height, float case_size)
-  : myGLWidget(v, Rotation()), m_width(width), m_height(height), m_case_size(case_size), m_tex_repeat(m_case_size * 3.f / 4.f)
+  : myGLWidget(v, Rotation()), m_width(width), m_height(height), m_case_size(case_size),
+    m_tex_repeat(m_case_size * 3.f / 4.f), data_ptr(0)
 {
   for (int i = 0; i < 4; ++i)
     m_tex[i] = 0;
   m_className = "HeightMap";
+  this->generateRandomHeightMap();
 }
 
 HeightMap::HeightMap(Vector3D v, string img, float case_size)
-  : myGLWidget(v, Rotation()), m_width(0), m_height(0), m_case_size(case_size), m_tex_repeat(m_case_size * 3.f / 4.f), m_img(img)
+  : myGLWidget(v, Rotation()), m_width(0), m_height(0), m_case_size(case_size),
+    m_tex_repeat(m_case_size * 3.f / 4.f), data_ptr(0), m_img(img)
 {
   for (int i = 0; i < 4; ++i)
     m_tex[i] = 0;
@@ -117,9 +155,6 @@ void  HeightMap::initializeGL()
       "outputColor = texture(gSampler[3], coordTexture);\n"
       "}\n";
 
-
-  /*vert = Shader::getStandardVertexShader(true);
-  frag = Shader::getStandardFragmentShader(true);*/
   m_shader = ShaderHandler::getInstance()->createShader(vert, frag);
   if (!m_shader){
       HandleError::showError("Shader didn't load in HeightMap");
@@ -146,20 +181,21 @@ void  HeightMap::initializeGL()
           exit(-1);
         }
     }
-  if (m_img.empty()) {
-      return;
+  SDL_Surface *img = static_cast<SDL_Surface*>(data_ptr);
+
+  if (!img && !m_img.empty()) {
+      img = HandleSDL::loadImage(m_img);
+      m_width = img->w;
+      m_height = img->h;
     }
-  SDL_Surface *img = HandleSDL::loadImage(m_img);
 
   if (!img) {
       HandleError::showError("Invalid image: " + m_img);
       exit(0);
     }
-  m_width = img->w;
-  m_height = img->h;
 
   std::vector<std::vector<glm::vec3> >  tmp_v(m_height, std::vector<glm::vec3>(m_width));
-  min_height = max_height = 0.f;
+  bool min_set(false);
   const float fscaleX = m_tex_repeat / m_width, fscaleY = m_tex_repeat / m_height;
 
   for (unsigned int i = 0; i < m_width; ++i)
@@ -168,35 +204,35 @@ void  HeightMap::initializeGL()
 
         float tmp_h = (tmp.blue() + tmp.green() + tmp.red()) * 10.f * m_case_size;
         tmp_v[j][i] = glm::vec3(i * m_case_size, tmp_h, j * m_case_size);
-        if (tmp_h < min_height)
-          min_height = tmp_h;
-        else if (tmp_h > max_height)
-          max_height = tmp_h;
+        if (!min_set) {
+            min_height = max_height = tmp_h;
+            min_set = true;
+          }
+        else if (tmp_h < min_height) {
+            min_height = tmp_h;
+          }
+        else if (tmp_h > max_height) {
+            max_height = tmp_h;
+          }
       }
-  HandleSDL::freeImage(img);
+  HandleSDL::freeSurface(img);
 
   //convert into GL_TRIANGLE_STRIP after
   height = max_height - min_height;
   float tmp_x(0.f), tmp_y(0.f);
   for (unsigned int y = 0; y < m_height - 1;) {
       for (unsigned int x = 0; x < m_width; ++x) {
-          /*createTriangle(m_vertices, tmp_v[y][x], tmp_v[y][x + 1], tmp_v[y + 1][x]);
-          m_textures.push_back(tmp_x); m_textures.push_back(tmp_y);
-          m_textures.push_back(tmp_x + fscaleX); m_textures.push_back(tmp_y);
-          m_textures.push_back(tmp_x); m_textures.push_back(tmp_y + fscaleY);
-          createTriangle(m_vertices, tmp_v[y + 1][x], tmp_v[y + 1][x + 1], tmp_v[y][x + 1]);
-          m_textures.push_back(tmp_x); m_textures.push_back(tmp_y + fscaleY);
-          m_textures.push_back(tmp_x + fscaleX); m_textures.push_back(tmp_y + fscaleY);
-          m_textures.push_back(tmp_x + fscaleX); m_textures.push_back(tmp_y);*/
           m_vertices.push_back(tmp_v[y][x][0]);
-          m_vertices.push_back(tmp_v[y][x][1]);
+          m_vertices.push_back(tmp_v[y][x][1] - min_height);
           m_vertices.push_back(tmp_v[y][x][2]);
-          m_textures.push_back(tmp_x); m_textures.push_back(tmp_y);
+          m_textures.push_back(tmp_x);
+          m_textures.push_back(tmp_y);
 
           m_vertices.push_back(tmp_v[y + 1][x][0]);
-          m_vertices.push_back(tmp_v[y + 1][x][1]);
+          m_vertices.push_back(tmp_v[y + 1][x][1] - min_height);
           m_vertices.push_back(tmp_v[y + 1][x][2]);
-          m_textures.push_back(tmp_x); m_textures.push_back(tmp_y + fscaleY);
+          m_textures.push_back(tmp_x);
+          m_textures.push_back(tmp_y + fscaleY);
 
           tmp_x += fscaleX;
         }
@@ -207,25 +243,21 @@ void  HeightMap::initializeGL()
             tmp_x -= fscaleX;
 
             m_vertices.push_back(tmp_v[y][x][0]);
-            m_vertices.push_back(tmp_v[y][x][1]);
+            m_vertices.push_back(tmp_v[y][x][1] - min_height);
             m_vertices.push_back(tmp_v[y][x][2]);
-            m_textures.push_back(tmp_x); m_textures.push_back(tmp_y);
+            m_textures.push_back(tmp_x);
+            m_textures.push_back(tmp_y);
 
             m_vertices.push_back(tmp_v[y + 1][x][0]);
-            m_vertices.push_back(tmp_v[y + 1][x][1]);
+            m_vertices.push_back(tmp_v[y + 1][x][1] - min_height);
             m_vertices.push_back(tmp_v[y + 1][x][2]);
-            m_textures.push_back(tmp_x); m_textures.push_back(tmp_y + fscaleY);
+            m_textures.push_back(tmp_x);
+            m_textures.push_back(tmp_y + fscaleY);
           }
       ++y;
       tmp_x = 0.f;
       tmp_y += fscaleY;
     }
-
-  /*HandleFile f("res.txt", std::ios_base::trunc | std::ios_base::out);
-  f.open();
-  for (int t = 0; t < m_textures.size(); t += 2) {
-      f.write(Utility::toString<float>(m_textures[t]) + " - " + Utility::toString<float>(m_textures[t + 1]) + "\n");
-    }*/
 
   m_pointsNumber = m_vertices.size() / 3;
 

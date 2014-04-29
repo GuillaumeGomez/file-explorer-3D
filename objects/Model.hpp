@@ -7,7 +7,7 @@
 #include <map>
 #include "myGLWidget.hpp"
 
-#define ANIMATION_TICKS_PER_SECOND 30.f
+#define ANIMATION_TICKS_PER_SECOND 30.0
 #define MAXBONESPERMESH 60 //This value has to be changed in the shader code as well, boneMatrices[MAXBONESPERMESH]
 
 struct AnimationNode;

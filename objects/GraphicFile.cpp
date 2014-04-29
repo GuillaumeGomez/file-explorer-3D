@@ -8,6 +8,8 @@
 #include "../glm/gtc/matrix_transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
 
+#define FILE_ROTATION 20.f
+
 using namespace Object;
 
 GraphicFile::GraphicFile(Vector3D v, Rotation r, Color c, const char *fileName)
@@ -17,7 +19,7 @@ GraphicFile::GraphicFile(Vector3D v, Rotation r, Color c, const char *fileName)
     throw MyException("GraphicFile: File name can't be empty");
 
   tmpRotation = m_rot;
-  tmpRotation.setSpeed(0.f);
+  tmpRotation.setSpeed(FILE_ROTATION);
   tmpRotation.setRotX(1.f);
   m_className = "GraphicFile";
 }
@@ -29,7 +31,7 @@ GraphicFile::GraphicFile(Vector3D v, Rotation r, Color c, std::string fileName)
     throw MyException("GraphicFile: File name can't be empty");
 
   tmpRotation = m_rot;
-  tmpRotation.setSpeed(10.f);
+  tmpRotation.setSpeed(FILE_ROTATION);
   tmpRotation.setRotX(1.f);
   m_className = "GraphicFile";
 }
@@ -223,7 +225,7 @@ void  GraphicFile::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_m
           tmpRotation.setSpeed(0.f);
         }
     } else {
-      tmpRotation.setSpeed(10.f);
+      tmpRotation.setSpeed(FILE_ROTATION);
     }
   glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
 

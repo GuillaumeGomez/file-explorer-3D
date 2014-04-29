@@ -1,7 +1,7 @@
 #include "KeyHandler.hpp"
 #include "../Utils/HandleMutex.hpp"
 
-KeyHandler::KeyHandler(int ms) : m_nbKeys(0), m_interval(ms), m_remaining(0.f)
+KeyHandler::KeyHandler(float seconds) : m_nbKeys(0), m_interval(seconds), m_remaining(seconds)
 {
 }
 
@@ -60,15 +60,15 @@ int KeyHandler::operator[](int i)
   return getKey(i);
 }
 
-void  KeyHandler::setInterval(int ms)
+void  KeyHandler::setInterval(float seconds)
 {
-  m_interval = ms;
-  if (m_interval <= 0)
-    m_interval = 10;
-  m_remaining = (m_interval / 1000.f);
+  m_interval = seconds;
+  if (m_interval <= 0.f)
+    m_interval = 0.01f;
+  m_remaining = m_interval / 1000.f;
 }
 
-int KeyHandler::getInterval()
+float const &KeyHandler::getInterval() const
 {
   return m_interval;
 }
@@ -84,8 +84,11 @@ bool  KeyHandler::update(const float &time)
 
   m_remaining -= time;
   b = (m_remaining <= 0.f);
-  if (m_remaining <= 0.f)
-    m_remaining += (m_interval / 1000.f);
+  if (m_remaining <= 0.f) {
+      m_remaining += m_interval;
+      if (m_remaining < -m_interval)
+        m_remaining = 0.f;
+    }
   return b;
 }
 
@@ -94,4 +97,9 @@ void  KeyHandler::setRemaining(float t)
   m_remaining = t;
   if (m_remaining < 0.f)
     m_remaining = 0.f;
+}
+
+float const &KeyHandler::getRemaining() const
+{
+  return m_remaining;
 }

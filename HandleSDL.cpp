@@ -113,7 +113,6 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
   SDL_GetVersion(&v);
   std::cout << "compil version: " << (int)c.major << "." << (int)c.minor << "." << (int)c.patch << std::endl;
   std::cout << "run version: " << (int)v.major << "." << (int)v.minor << "." << (int)v.patch << std::endl;
-  setFPSMode(true);
 
   /* if needed...
   int flags = IMG_INIT_JPG|IMG_INIT_PNG;
@@ -265,7 +264,7 @@ SDL_Surface *HandleSDL::loadImage(const char *s)
   return 0;
 }
 
-void  HandleSDL::freeImage(SDL_Surface *s)
+void  HandleSDL::freeSurface(SDL_Surface *s)
 {
   if (s)
     SDL_FreeSurface(s);
@@ -758,7 +757,7 @@ bool  HandleSDL::saveImage(Texture *t, const char *filename)
 {
   if (!t || !filename)
     return false;
-  SDL_Surface *tmp = this->convertTextureToSurface(t);
+  SDL_Surface *tmp = convertTextureToSurface(t);
   if (!tmp)
     return false;
   bool ret = saveImage(tmp, filename);
@@ -790,7 +789,6 @@ SDL_Surface *HandleSDL::convertTextureToSurface(Texture *t)
   bmask = 0x00ff0000;
   amask = 0xff000000;
 #endif
-
 
   glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
   glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);

@@ -26,11 +26,12 @@ glm::mat4 Camera::m_2Dproj;
 glm::vec3 Camera::m_vecPos;
 float     Camera::distanceView = 10000.f;
 float     Camera::m_ratio = 1.f;
+glm::vec3 Camera::m_target(-1.f, -1.f, -1.f);
+glm::vec3 Camera::m_up(0.f, 1.f, 0.f);
 
 Camera::Camera()
   : m_speed(.6f), m_sensivity(0.2f), m_phi(24.f), m_theta(60.f), m_position(0.f, 1.f, -15.f),
-    m_up(0.f, 1.f, 0.f), m_target(-1.f, -1.f, -1.f), m_win(0), m_oldX(0), m_oldY(0),
-    m_y(m_position.y()), tmpSpeed(1.f), m_skybox(0)
+    m_win(0), m_oldX(0), m_oldY(0), m_y(m_position.y()), tmpSpeed(1.f), m_skybox(0)
 {
   m_mutex = new HandleMutex;
   vectorsFromAngles();
@@ -71,8 +72,7 @@ void Camera::resize(int w, int h)
 void  Camera::lookAt()
 {
   m_view = glm::lookAt(glm::vec3(m_position.x(), m_position.y(), m_position.z()),
-                       glm::vec3(m_target.x(), m_target.y(), m_target.z()),
-                       glm::vec3(m_up.x(), m_up.y(), m_up.z()));
+                       m_target, m_up);
 }
 
 void Camera::look()
@@ -134,11 +134,11 @@ void Camera::keyPressEvent(int ev)
     {
     case SDLK_a:
       m_position = m_position + (m_left * m_speed * tmpSpeed);
-      m_target = m_position + m_forward;
+      m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
       break;
     case SDLK_d:
       m_position = m_position - (m_left * m_speed * tmpSpeed);
-      m_target = m_position + m_forward;
+      m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
       break;
     case SDLK_w:
       m_position += (m_forward * m_speed * tmpSpeed);
@@ -207,7 +207,7 @@ void Camera::setPosition(const Vector3D &position)
 
   (void)l;
   m_position = position;
-  m_target = m_position + m_forward;
+  m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
 }
 
 void  Camera::vectorsFromAngles(bool phiChanged)
@@ -228,7 +228,7 @@ void  Camera::vectorsFromAngles(bool phiChanged)
 
   /*m_left = Vector3D::crossProduct(m_up, m_forward);
   m_left.normalize();*/
-  m_target = (m_forward + m_position);
+  m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
 
   float _tmp1 = 45.f * M_PI / 180.f;
   float _tmp2 = m_theta * M_PI / 180.f;
@@ -238,7 +238,7 @@ void  Camera::vectorsFromAngles(bool phiChanged)
   m_forward.setZ(r_temp * sinf(_tmp2));
   //m_forward.setY(0.f);
 
-  m_left = Vector3D::crossProduct(m_up, m_forward);
+  m_left = Vector3D::crossProduct(Vector3D(m_up.x, m_up.y, m_up.z), m_forward);
   m_left.normalize();
 
   m_vecPos.x = m_position.x();
@@ -298,6 +298,16 @@ glm::mat4 const &Camera::get2DProjectionMatrix()
 float const &Camera::getRatio()
 {
   return m_ratio;
+}
+
+glm::vec3 &Camera::getTarget()
+{
+  return m_target;
+}
+
+glm::vec3 &Camera::getUpVector()
+{
+  return m_up;
 }
 
 void  Camera::setCharacter(myGLWidget *w)

@@ -46,7 +46,6 @@ public:
   void        initializeGL();
   void        resizeGL(int width, int height);
   void        paintGL();
-  void        paintGL2(glm::mat4 const&view, glm::mat4 const&pers);
   void        setPause(bool b);
   bool        isPaused() const;
   bool        isPlaying() const;

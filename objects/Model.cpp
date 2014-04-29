@@ -412,12 +412,15 @@ void Model::initializeGL()
           m_animations[std::string(m_pScene->mAnimations[i]->mName.C_Str())] = tmp;
           m_pAnimator = tmp;
         }
+    } else {
+      m_pause = true;
     }
 }
 
 void  Model::play()
 {
-  m_pause = false;
+  if (m_pScene->HasAnimations())
+    m_pause = false;
 }
 
 void  Model::pause()
@@ -854,7 +857,6 @@ const std::vector<aiMatrix4x4>& Animator::GetBoneMatrices(const aiNode* pNode, u
             }
         }
     }
-
   //and return the result
   return m_vTransforms;
 }
@@ -886,136 +888,134 @@ const aiMatrix4x4& Animator::GetGlobalTransform(const aiNode * node) const {
 
 //------------------------------------------------------------------------------------------------
 //Calculates the node transformations for the scene.
-void Animator::UpdateAnimation(float lElapsedTime, double dTicksPerSecond) {
-  if ((m_pCurrentAnimation) && (m_pCurrentAnimation->mDuration > 0.0)) {
-      //double dTime = ((double) lElapsedTime) / 1000.0;
-      double dTime = lElapsedTime;
+void  Animator::UpdateAnimation(float lElapsedTime, double dTicksPerSecond) {
+  if (!m_pCurrentAnimation || m_pCurrentAnimation->mDuration <= 0.0)
+    return;
+  //double dTime = ((double) lElapsedTime) / 1000.0;
+  double dTime = lElapsedTime;
 
-      //calculate current local transformations
-      //extract ticks per second. Assume default value if not given
-      double dTicksPerSecondCorrected = dTicksPerSecond != 0.0 ? dTicksPerSecond : ANIMATION_TICKS_PER_SECOND;
+  //calculate current local transformations
+  //extract ticks per second. Assume default value if not given
+  double dTicksPerSecondCorrected = dTicksPerSecond != 0.0 ? dTicksPerSecond : ANIMATION_TICKS_PER_SECOND;
 
-      //map into anim's duration
-      double dTimeInTicks = 0.f;
+  //map into anim's duration
+  double dTimeInTicks = 0.f;
 
-      if (m_pCurrentAnimation->mDuration > 0.0) {
-          float tmp_ = (dTime + m_from) * dTicksPerSecondCorrected;
+  //if (m_pCurrentAnimation->mDuration > 0.0) {
+  float tmp_ = (dTime + m_from) * dTicksPerSecondCorrected;
 
-          dTimeInTicks = fmod(tmp_, m_duration > 0.f ? m_duration : m_pCurrentAnimation->mDuration);
-        }
+  dTimeInTicks = fmod(tmp_, m_duration > 0.f ? m_duration : m_pCurrentAnimation->mDuration);
+  //}
 
-      if (m_vTransforms.size() != m_pCurrentAnimation->mNumChannels) {
-          m_vTransforms.resize(m_pCurrentAnimation->mNumChannels);
-        }
-
-      //calculate the transformations for each animation channel
-      for (unsigned int i = 0; i < m_pCurrentAnimation->mNumChannels; i++) {
-          const aiNodeAnim* pChannel = m_pCurrentAnimation->mChannels[i];
-
-          //******** Position *****
-          aiVector3D vPresentPosition(0, 0, 0);
-
-          if (pChannel->mNumPositionKeys > 0) {
-              //Look for present frame number. Search from last position if time is after the last time, else from beginning
-              //Should be much quicker than always looking from start for the average use case.
-              unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].x : m_from;
-
-              while (uFrame < pChannel->mNumPositionKeys - 1) {
-                  if (dTimeInTicks < pChannel->mPositionKeys[uFrame + 1].mTime) {
-                      break;
-                    }
-
-                  uFrame++;
-                }
-
-              //interpolate between this frame's value and next frame's value
-              unsigned int uNextFrame = (uFrame + 1) % pChannel->mNumPositionKeys;
-              const aiVectorKey& pKey = pChannel->mPositionKeys[uFrame];
-              const aiVectorKey& pNextKey = pChannel->mPositionKeys[uNextFrame];
-              double dTimeDifference = pNextKey.mTime - pKey.mTime;
-
-              if (dTimeDifference < 0.0) {
-                  dTimeDifference += m_pCurrentAnimation->mDuration;
-                }
-
-              if (dTimeDifference > 0) {
-                  float fInterpolationFactor = (float) ((dTimeInTicks - pKey.mTime) / dTimeDifference);
-                  vPresentPosition = pKey.mValue + (pNextKey.mValue - pKey.mValue) * fInterpolationFactor;
-                }
-              else {
-                  vPresentPosition = pKey.mValue;
-                }
-
-              m_pLastFramePosition[i].x = uFrame;
-            }
-
-          //******** Rotation *********
-          aiQuaternion qPresentRotation(1, 0, 0, 0);
-
-          if (pChannel->mNumRotationKeys > 0) {
-              unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].y : 0;
-
-              while (uFrame < pChannel->mNumRotationKeys - 1) {
-                  if (dTimeInTicks < pChannel->mRotationKeys[uFrame + 1].mTime) {
-                      break;
-                    }
-
-                  uFrame++;
-                }
-
-              //interpolate between this frame's value and next frame's value
-              unsigned int uNextFrame = (uFrame + 1) % pChannel->mNumRotationKeys;
-              const aiQuatKey& pKey = pChannel->mRotationKeys[uFrame];
-              const aiQuatKey& pNextKey = pChannel->mRotationKeys[uNextFrame];
-              double dTimeDifference = pNextKey.mTime - pKey.mTime;
-
-              if (dTimeDifference < 0.0) {
-                  dTimeDifference += m_pCurrentAnimation->mDuration;
-                }
-
-              if (dTimeDifference > 0) {
-                  float fInterpolationFactor = (float) ((dTimeInTicks - pKey.mTime) / dTimeDifference);
-                  aiQuaternion::Interpolate(qPresentRotation, pKey.mValue, pNextKey.mValue, fInterpolationFactor);
-                }
-              else {
-                  qPresentRotation = pKey.mValue;
-                }
-
-              m_pLastFramePosition[i].y = uFrame;
-            }
-
-          //******** Scaling **********
-          aiVector3D vPresentScaling(1, 1, 1);
-
-          if (pChannel->mNumScalingKeys > 0) {
-              unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].z : 0;
-
-              while (uFrame < pChannel->mNumScalingKeys - 1) {
-                  if (dTimeInTicks < pChannel->mScalingKeys[uFrame + 1].mTime) {
-                      break;
-                    }
-
-                  uFrame++;
-                }
-
-              vPresentScaling = pChannel->mScalingKeys[uFrame].mValue;
-              m_pLastFramePosition[i].z = uFrame;
-            }
-
-          //build a transformation matrix from it
-          aiMatrix4x4& mTransformation = m_vTransforms[i];
-          mTransformation = aiMatrix4x4(qPresentRotation.GetMatrix());
-          mTransformation.a1 *= vPresentScaling.x; mTransformation.b1 *= vPresentScaling.x; mTransformation.c1 *= vPresentScaling.x;
-          mTransformation.a2 *= vPresentScaling.y; mTransformation.b2 *= vPresentScaling.y; mTransformation.c2 *= vPresentScaling.y;
-          mTransformation.a3 *= vPresentScaling.z; mTransformation.b3 *= vPresentScaling.z; mTransformation.c3 *= vPresentScaling.z;
-          mTransformation.a4 = vPresentPosition.x; mTransformation.b4 = vPresentPosition.y; mTransformation.c4 = vPresentPosition.z;
-        }
-
-      m_dLastTime = dTimeInTicks;
-
-      //and update all node transformations with the results
-      UpdateTransforms(m_pRootNode, m_vTransforms);
+  if (m_vTransforms.size() != m_pCurrentAnimation->mNumChannels) {
+      m_vTransforms.resize(m_pCurrentAnimation->mNumChannels);
     }
+
+  //calculate the transformations for each animation channel
+  for (unsigned int i = 0; i < m_pCurrentAnimation->mNumChannels; i++) {
+      const aiNodeAnim* pChannel = m_pCurrentAnimation->mChannels[i];
+
+      //******** Position *****
+      aiVector3D vPresentPosition(0, 0, 0);
+
+      if (pChannel->mNumPositionKeys > 0) {
+          //Look for present frame number. Search from last position if time is after the last time, else from beginning
+          //Should be much quicker than always looking from start for the average use case.
+          unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].x : m_from;
+
+          while (uFrame < pChannel->mNumPositionKeys - 1) {
+              if (dTimeInTicks < pChannel->mPositionKeys[uFrame + 1].mTime) {
+                  break;
+                }
+
+              uFrame++;
+            }
+
+          //interpolate between this frame's value and next frame's value
+          unsigned int uNextFrame = (uFrame + 1) % pChannel->mNumPositionKeys;
+          const aiVectorKey& pKey = pChannel->mPositionKeys[uFrame];
+          const aiVectorKey& pNextKey = pChannel->mPositionKeys[uNextFrame];
+          double dTimeDifference = pNextKey.mTime - pKey.mTime;
+
+          if (dTimeDifference < 0.0) {
+              dTimeDifference += m_pCurrentAnimation->mDuration;
+            }
+          else if (dTimeDifference > 0.0) {
+              float fInterpolationFactor = (float) ((dTimeInTicks - pKey.mTime) / dTimeDifference);
+              vPresentPosition = pKey.mValue + (pNextKey.mValue - pKey.mValue) * fInterpolationFactor;
+            }
+          else {
+              vPresentPosition = pKey.mValue;
+            }
+
+          m_pLastFramePosition[i].x = uFrame;
+        }
+
+      //******** Rotation *********
+      aiQuaternion qPresentRotation(1, 0, 0, 0);
+
+      if (pChannel->mNumRotationKeys > 0) {
+          unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].y : 0;
+
+          while (uFrame < pChannel->mNumRotationKeys - 1) {
+              if (dTimeInTicks < pChannel->mRotationKeys[uFrame + 1].mTime) {
+                  break;
+                }
+
+              uFrame++;
+            }
+
+          //interpolate between this frame's value and next frame's value
+          unsigned int uNextFrame = (uFrame + 1) % pChannel->mNumRotationKeys;
+          const aiQuatKey& pKey = pChannel->mRotationKeys[uFrame];
+          const aiQuatKey& pNextKey = pChannel->mRotationKeys[uNextFrame];
+          double dTimeDifference = pNextKey.mTime - pKey.mTime;
+
+          if (dTimeDifference < 0.0) {
+              dTimeDifference += m_pCurrentAnimation->mDuration;
+            }
+          else if (dTimeDifference > 0.0) {
+              float fInterpolationFactor = (float) ((dTimeInTicks - pKey.mTime) / dTimeDifference);
+              aiQuaternion::Interpolate(qPresentRotation, pKey.mValue, pNextKey.mValue, fInterpolationFactor);
+            }
+          else {
+              qPresentRotation = pKey.mValue;
+            }
+
+          m_pLastFramePosition[i].y = uFrame;
+        }
+
+      //******** Scaling **********
+      aiVector3D vPresentScaling(1, 1, 1);
+
+      if (pChannel->mNumScalingKeys > 0) {
+          unsigned int uFrame = (dTimeInTicks >= m_dLastTime) ? m_pLastFramePosition[i].z : 0;
+
+          while (uFrame < pChannel->mNumScalingKeys - 1) {
+              if (dTimeInTicks < pChannel->mScalingKeys[uFrame + 1].mTime) {
+                  break;
+                }
+
+              uFrame++;
+            }
+
+          vPresentScaling = pChannel->mScalingKeys[uFrame].mValue;
+          m_pLastFramePosition[i].z = uFrame;
+        }
+
+      //build a transformation matrix from it
+      aiMatrix4x4& mTransformation = m_vTransforms[i];
+      mTransformation = aiMatrix4x4(qPresentRotation.GetMatrix());
+      mTransformation.a1 *= vPresentScaling.x; mTransformation.b1 *= vPresentScaling.x; mTransformation.c1 *= vPresentScaling.x;
+      mTransformation.a2 *= vPresentScaling.y; mTransformation.b2 *= vPresentScaling.y; mTransformation.c2 *= vPresentScaling.y;
+      mTransformation.a3 *= vPresentScaling.z; mTransformation.b3 *= vPresentScaling.z; mTransformation.c3 *= vPresentScaling.z;
+      mTransformation.a4 = vPresentPosition.x; mTransformation.b4 = vPresentPosition.y; mTransformation.c4 = vPresentPosition.z;
+    }
+
+  m_dLastTime = dTimeInTicks;
+
+  //and update all node transformations with the results
+  UpdateTransforms(m_pRootNode, m_vTransforms);
 }
 
 //------------------------------------------------------------------------------------------------

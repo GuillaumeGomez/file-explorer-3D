@@ -117,15 +117,7 @@ public:
   }
 
   void  drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color) {
-    if (!init) {
-        lines.push_back(from.x());
-        lines.push_back(from.y());
-        lines.push_back(from.z());
-
-        lines.push_back(to.x());
-        lines.push_back(to.y());
-        lines.push_back(to.z());
-      } else if (pos < lines.size() - 6) {
+    if (init && pos < lines.size() - 6) {
         lines[pos++] = from.x();
         lines[pos++] = from.y();
         lines[pos++] = from.z();
@@ -142,8 +134,10 @@ public:
         lines.push_back(to.y());
         lines.push_back(to.z());
 
-        pos += 6;
-        re_init = false;
+        if (init) {
+            pos += 6;
+            re_init = false;
+          }
       }
   }
   void drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,btScalar distance,int lifeTime,const btVector3& color){
@@ -165,8 +159,10 @@ public:
   int  getDebugMode() const{return m_debugMode;}
 };
 
-HandlePhysics::HandlePhysics()
+HandlePhysics::HandlePhysics() : drawDebug(false)
 {
+  temoin = new Object::Line(Vector3D(), Vector3D(), WHITE);
+  static_cast<Object::Line*>(temoin)->initializeGL();
   // Build the broadphase
   broadphase = new btDbvtBroadphase();
 
@@ -226,33 +222,14 @@ bool  HandlePhysics::addObject(myGLWidget *obj)
   if (obj->getClassName() != "Cube" && obj->getClassName() != "GraphicFile" && obj->getClassName() != "Sphere"
       && obj->getClassName() != "HeightMap")
     return false;
-  //if (rigidBodies.size() > 20)
-  //return false;
-  /*btTriangleMesh* mesh = new btTriangleMesh();
-
-  std::vector<GLfloat>  v = obj->getVertices();*/
   Vector3D pos = obj->getPosition();
   Rotation rot = obj->rotation();
 
-  /*for (unsigned int i = 0; i < v.size();)
-    {
-      btVector3 bv[3];
-
-      for (int x = 0; x < 3; ++x) {
-          bv[x] = btVector3(v[i], v[i + 1], v[i + 2]);
-          i += 3;
-        }
-      mesh->addTriangle(bv[0], bv[1], bv[2]);
-    }
-  btConvexTriangleMeshShape *shape = new btConvexTriangleMeshShape(mesh, true);
-  //btBvhTriangleMeshShape *shape = new btBvhTriangleMeshShape(mesh, true);*/
-
   if (obj->getClassName() == "HeightMap") {
       Object::HeightMap *t = static_cast<Object::HeightMap*>(obj);
-      std::vector<GLfloat>  &tmp = t->getVertices();
-      //static std::vector<GLfloat> tmp2;
+      std::vector<GLfloat> &tmp = t->getVertices();
 
-      static std::vector<int>  ss;
+      std::vector<int>  ss;
 
       int x = 0;
       ss.push_back(x);
@@ -270,19 +247,14 @@ bool  HandlePhysics::addObject(myGLWidget *obj)
 
           x++;
         }
-      btTriangleIndexVertexArray  *ca = new btTriangleIndexVertexArray(ss.size() / 3, &ss[0], sizeof(ss[0]) * 3,
+      int *tmp_tb = new int[ss.size()];
+      for (unsigned int x = 0; x < ss.size(); ++x)
+        tmp_tb[x] = ss[x];
+      btTriangleIndexVertexArray  *ca = new btTriangleIndexVertexArray(ss.size() / 3, tmp_tb, sizeof(ss[0]) * 3,
           tmp.size() / 3, &tmp[0], sizeof(tmp[0]) * 3);
-      /*btIndexedMesh part;
 
-      part.m_vertexBase = (const unsigned char*)LandscapeVtx[i];
-      part.m_vertexStride = sizeof(btScalar) * 3;
-      part.m_numVertices = LandscapeVtxCount[i];
-      part.m_triangleIndexBase = (const unsigned char*)&ss[0];
-      part.m_triangleIndexStride = sizeof( short) * 3;
-      part.m_numTriangles = ss.size() / 3;
-      part.m_indexType = PHY_SHORT;
-      ca->addIndexedMesh(part,PHY_SHORT);*/
-
+      if (!ca)
+        return false;
       btBvhTriangleMeshShape* trimeshShape = new btBvhTriangleMeshShape(ca,true);
 
       btDefaultMotionState* motionstate = new btDefaultMotionState(btTransform(
@@ -359,17 +331,67 @@ void  HandlePhysics::deleteObject(myGLWidget *obj)
     }
 }
 
+btVector3 getRayTo(int x, int y, int screenWidth, int screenHeight)
+{
+  float top = 1.f;
+  float bottom = -1.f;
+  float nearPlane = -1.f;
+  float tanFov = (top-bottom)*0.5f / nearPlane;
+  float fov = btScalar(2.0) * btAtan(tanFov);
+
+  glm::vec3 t = Camera::getVecPosition();
+  btVector3 rayFrom(t.x, t.y, t.z);
+  t = Camera::getTarget() - t;//getCameraTargetPosition()-getCameraPosition()
+  btVector3 rayForward(t.x, t.y, t.z);
+  rayForward.normalize();
+  float farPlane = 10.f;
+  rayForward*= farPlane;
+
+  t = Camera::getUpVector();
+  btVector3 vertical(t.x, t.y, t.z);
+
+  btVector3 hor;
+  hor = rayForward.cross(vertical);
+  hor.normalize();
+  vertical = hor.cross(rayForward);
+  vertical.normalize();
+
+  float tanfov = tanf(0.5f*fov);
+
+  hor *= 2.f * farPlane * tanfov;
+  vertical *= 2.f * farPlane * tanfov;
+
+  btScalar aspect = Camera::getRatio();
+
+  //aspect = screenWidth / (btScalar)screenHeight;
+
+  hor*=aspect;
+
+  btVector3 rayToCenter = rayFrom + rayForward;
+  btVector3 dHor = hor * 1.f/float(screenWidth);
+  btVector3 dVert = vertical * 1.f/float(screenHeight);
+
+
+  btVector3 rayTo = rayToCenter - 0.5f * hor + 0.5f * vertical;
+  rayTo += btScalar(x) * dHor;
+  rayTo -= btScalar(y) * dVert;
+  return rayTo;
+}
+
 myGLWidget  *HandlePhysics::pick(int mouseX, int mouseY, int screenWidth, int screenHeight)
 {
   //dynamicsWorld->debugDrawWorld();
   //static_cast<DebugDrawer*>(dynamicsWorld->getDebugDrawer())->draw();
 
-  glm::vec4 lRayStart_NDC(((float)mouseX/(float)screenWidth  - 0.5f) * 2.f, // [0,1024] -> [-1,1]
-                          ((float)mouseY/(float)screenHeight - 0.5f) * 2.f, // [0, 768] -> [-1,1]
+  //float resX = ((float)mouseX/(float)screenWidth  - 0.5f) * 2.f;
+  //float resY = ((float)mouseY/(float)screenHeight - 0.5f) * 2.f;
+
+  /*glm::vec4 lRayStart_NDC(0.f, // [0,1024] -> [-1,1]
+                          0.f, // [0, 768] -> [-1,1]
                           -1.f, // The near plane maps to Z=-1 in Normalized Device Coordinates
                           1.f);
-  glm::vec4 lRayEnd_NDC(((float)mouseX/(float)screenWidth  - 0.5f) * 2.f,
-                        ((float)mouseY/(float)screenHeight - 0.5f) * 2.f,
+  glm::vec4 lRayEnd_NDC(0.f,
+                        0.f,
                         0.f,
                         1.f);
 
@@ -385,14 +407,34 @@ myGLWidget  *HandlePhysics::pick(int mouseX, int mouseY, int screenWidth, int sc
 
   out_direction = out_direction * 1000.f;
 
-  btCollisionWorld::ClosestRayResultCallback RayCallback(btVector3(out_origin.x, out_origin.y, out_origin.z),
+  btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(out_origin.x, out_origin.y, out_origin.z),
                                                          btVector3(out_direction.x, out_direction.y, out_direction.z));
   dynamicsWorld->rayTest(btVector3(out_origin.x, out_origin.y, out_origin.z),
                          btVector3(out_direction.x, out_direction.y, out_direction.z),
-                         RayCallback);
+                         rayCallback);
 
-  if (RayCallback.hasHit()) {
-      return static_cast<myGLWidget*>(RayCallback.m_collisionObject->getUserPointer());
+  std::cout << "from -> " << out_origin.x << " " << out_origin.y << " " << out_origin.z << std::endl;
+  std::cout << "to   -> " << out_direction.x << " " << out_direction.y << " " << out_direction.z << std::endl;*/
+
+  glm::vec3 t = Camera::getVecPosition();
+  btVector3 rayFrom(t.x, t.y, t.z);
+  btVector3 rayTo = getRayTo(mouseX, mouseY, screenWidth, screenHeight);
+
+  btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom, rayTo);
+  dynamicsWorld->rayTest(rayFrom, rayTo, rayCallback);
+
+  static_cast<Object::Line*>(temoin)->setFrom(Vector3D(t.x, t.y, t.z));
+  static_cast<Object::Line*>(temoin)->setTo(Vector3D(rayTo.x(), rayTo.y() + 10.f, rayTo.z()));
+
+
+  temoin->paintGL(Camera::getViewMatrix(), Camera::getProjectionMatrix());
+
+  //std::cout << "from -> " << rayFrom.x() << " " << rayFrom.y() << " " << rayFrom.z() << std::endl;
+  //std::cout << "to   -> " << rayTo.x() << " " << rayTo.y() << " " << rayTo.z() << std::endl;
+
+  if (rayCallback.hasHit()) {
+      const btCollisionObject *p = rayCallback.m_collisionObject;
+      return static_cast<myGLWidget*>(p->getUserPointer());
     }
   return 0;
 }
@@ -409,6 +451,11 @@ void  HandlePhysics::update(const float &t)
       //it->getMotionState()->update();
     }
   //dynamicsWorld->updateAabbs();
+  if (drawDebug) {
+      dynamicsWorld->debugDrawWorld();
+      static_cast<DebugDrawer*>(dynamicsWorld->getDebugDrawer())->draw();
+    }
+
   dynamicsWorld->stepSimulation(t);
   for (btRigidBody *it : dynBodies) {
       btTransform trans;
@@ -426,4 +473,14 @@ void  HandlePhysics::update(const float &t)
       f.write("sphere height: " + Utility::toString<float>(trans.getOrigin().getY()) + "\n");
       f.flush();*/
     }
+}
+
+bool  HandlePhysics::isDrawingDebug() const
+{
+  return drawDebug;
+}
+
+void  HandlePhysics::setDrawDebug(bool b)
+{
+  drawDebug = b;
 }

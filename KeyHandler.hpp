@@ -8,7 +8,7 @@ class HandleMutex;
 class KeyHandler
 {
 public:
-  KeyHandler(int ms = 10);
+  KeyHandler(float seconds = 0.01f);
   virtual ~KeyHandler();
   int     getNbKeys() const;
   bool    addKey(int);
@@ -16,15 +16,16 @@ public:
   void    releaseKey(int);
   int     getKey(int);
   int     operator[](int);
-  void    setInterval(int ms);
-  int     getInterval();
+  void    setInterval(float seconds);
+  const float &getInterval() const;
   int     *getKeys();
-  bool    update(const float &time); // returns true if the remaining time has gone below zero
+  bool    update(const float &time); // returns true if the remaining time <= 0
   void    setRemaining(float t);
+  float const &getRemaining() const;
 
 private:
   int         m_nbKeys;
-  int         m_interval;
+  float       m_interval;
   float       m_remaining;
   int         m_key[MAX_KEY_SIZE];
 };

@@ -201,7 +201,7 @@ void MyWindow::keyPressEvent(int key)
               glEnable(GL_DEPTH_TEST);
               this->m_mode = MODE_NORMAL;
               //m_key->lock();
-              m_key->setInterval(10);
+              m_key->setInterval(0.01f);
               //m_key->unlock();
               sdl->setFPSMode(true);
               //sdl->resetCursor();
@@ -227,11 +227,7 @@ void MyWindow::keyPressEvent(int key)
               this->m_printInfo = !this->m_printInfo;
               break;
             case SDLK_TAB:
-              glDisable(GL_DEPTH_TEST);
-              this->m_mode = MODE_TETRIS;
-              m_key->setInterval(100);
-              sdl->setFPSMode(false);
-              sdl->displayCursor(false);
+              m_physics->setDrawDebug(!m_physics->isDrawingDebug());
               break;
             case SDLK_BACKSPACE:
               m_wireframe = !m_wireframe;
@@ -245,6 +241,13 @@ void MyWindow::keyPressEvent(int key)
             case SDLK_0:
               glDisable(GL_DEPTH_TEST);
               this->m_mode = MODE_2048;
+              sdl->setFPSMode(false);
+              sdl->displayCursor(false);
+              break;
+            case SDLK_1:
+              glDisable(GL_DEPTH_TEST);
+              this->m_mode = MODE_TETRIS;
+              m_key->setInterval(0.1f);
               sdl->setFPSMode(false);
               sdl->displayCursor(false);
               break;
@@ -285,6 +288,8 @@ void MyWindow::initializeGL()
 
   m_tetris->initializeGL();
   m_2048->initializeGL();
+  sdl->setFPSMode(true);
+  sdl->getElapsedTime();
 }
 
 void  MyWindow::update()
@@ -296,9 +301,14 @@ void  MyWindow::update()
   float tmp = sdl->getElapsedTime();
   float fps = this->m_fps->getFpsCount();
 
-  if (m_key->update(tmp)) {
-      this->repeatKey();
-    }
+  int loop = tmp / m_key->getInterval();
+
+  do {
+      if (m_key->update(tmp)) {
+        this->repeatKey();
+      }
+      --loop;
+  } while (loop > 1);
   m_camera->update();
   if (tmp != 0.f) {
       switch (m_mode) {
@@ -396,14 +406,6 @@ void MyWindow::paintGL()
     }
 }
 
-void  MyWindow::paintGL2(const glm::mat4 &view, const glm::mat4 &pers)
-{
-  for (WinList::iterator it = m_pickObjects.begin(); it != m_pickObjects.end(); ++it){
-      (*it)->pick(view, pers);
-      //(*it)->paintGL(view, pers);
-    }
-}
-
 void  MyWindow::addObject(myGLWidget *s, bool isPauseObject)
 {
   if (!s)
@@ -471,25 +473,6 @@ HandleSDL *MyWindow::getLib()
 
 void  MyWindow::picking()
 {
-  /*  glm::mat4 pickMat = Camera::getViewMatrix();
-  glm::mat4 perspectiveMat = glm::perspective(70.f, Camera::getRatio(), 0.1f, 20.f);
-
-  m_fbo->bind();
-  paintGL2(pickMat, perspectiveMat);
-  unsigned char pixel[3];
-  glReadPixels(mouseX, sdl->height() - mouseY, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
-  m_fbo->unbind();
-  m_disp->setTexture(m_fbo->getTextureID(0));
-
-  Color comp(pixel[0] / 255.f, pixel[1] / 255.f, pixel[2] / 255.f);
-
-  for (WinList::iterator it = m_pickObjects.begin(); it != m_pickObjects.end(); ++it){
-      (*it)->setSelected(false);
-      if ((*it)->getPrimaryColor() == comp) {
-          (*it)->setSelected(true);
-          break;
-        }
-    }*/
   static myGLWidget *w(0);
 
   myGLWidget *tmp = m_physics->pick(sdl->width() / 2, sdl->height() / 2, sdl->width(), sdl->height());
@@ -500,16 +483,6 @@ void  MyWindow::picking()
     return;
   tmp->setSelected(true);
   w = tmp;
-  /*if (!w->isSelected()) {
-      for (auto it = objectList.begin(); it != objectList.end(); ++it){
-          (*it)->setSelected(false);
-          /*if ((*it) == w) {
-          (*it)->setSelected(true);
-          break;
-          }*/
-  /*}
-      w->setSelected(true);
-    }*/
 }
 
 void  MyWindow::setDisplaySentence(std::string s)

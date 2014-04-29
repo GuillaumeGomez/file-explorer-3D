@@ -90,7 +90,8 @@ SOURCES += main.cpp \
     objects/HeightMap.cpp \
     objects/Point.cpp \
     Handle_2048.cpp \
-    objects/Menu.cpp
+    objects/Menu.cpp \
+    Utils/PerlinNoise.cpp
 
 HEADERS += \
     HandleSDL.hpp \
@@ -139,4 +140,5 @@ HEADERS += \
     objects/HeightMap.hpp \
     objects/Point.hpp \
     Handle_2048.hpp \
-    objects/Menu.hpp
+    objects/Menu.hpp \
+    Utils/PerlinNoise.hpp
