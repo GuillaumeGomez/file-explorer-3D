@@ -18,4 +18,3 @@ It is a file explorer in 3D, made with SDL2 and platform independant.
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-    Come on, don't tell me you read that.
