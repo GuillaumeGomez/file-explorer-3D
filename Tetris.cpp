@@ -7,7 +7,7 @@
 
 #include "HandleSDL.hpp"
 
-//ajouter class module dont tetris et 2048 herite
+//add module class inherited by tetris and 2048
 /*class Module : public myGLWidget
 {
 
@@ -169,7 +169,7 @@ Tetris::Tetris() : myGLWidget(Vector3D(), Rotation()), m_level(1), m_score(0), m
   m_texture.setTexture("./textures/tetris.png");
 
   float tmp_speeds[TETRIS_LEVELS_NUMBER] = {1.f, 0.85f, 0.7f, 0.6f, 0.5f, 0.4f, 0.3f, 0.24f, 0.2f, 0.18f, 0.15f, 0.125f, 0.1f, 0.085f};
-  int   tmp_levels[TETRIS_LEVELS_NUMBER - 1] = {20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 250, 280};
+  int   tmp_levels[TETRIS_LEVELS_NUMBER - 1] = {17, 34, 51, 68, 85, 102, 119, 136, 153, 170, 187, 204, 221};
 
   for (unsigned int i = 0; i < TETRIS_LEVELS_NUMBER; ++i) {
       m_speeds[i] = tmp_speeds[i];
