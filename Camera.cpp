@@ -30,7 +30,7 @@ glm::vec3 Camera::m_target(-1.f, -1.f, -1.f);
 glm::vec3 Camera::m_up(0.f, 1.f, 0.f);
 
 Camera::Camera()
-  : m_speed(.6f), m_sensivity(0.2f), m_phi(24.f), m_theta(60.f), m_position(0.f, 1.f, -15.f),
+  : m_speed(.6f), m_sensivity(0.1f), m_phi(24.f), m_theta(60.f), m_position(0.f, 1.f, -15.f),
     m_win(0), m_oldX(0), m_oldY(0), m_y(m_position.y()), tmpSpeed(1.f), m_skybox(0)
 {
   m_mutex = new HandleMutex;

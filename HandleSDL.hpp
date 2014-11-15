@@ -12,7 +12,7 @@
 
 class MyWindow;
 
-#define FPS 30
+#define FPS 40
 #define MOUSE_MARGIN  100
 
 class HandleSDL

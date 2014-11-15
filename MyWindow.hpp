@@ -19,7 +19,9 @@ class HandleThread;
 class HandleFpsCount;
 class FrameBuffer;
 class Tetris;
+#ifdef USE_PHYSICS
 class HandlePhysics;
+#endif
 class Handle_2048;
 
 typedef std::vector<myGLWidget*>  WinList;
@@ -75,7 +77,9 @@ private:
   bool                pause;
   bool                m_wireframe;
   int                 m_mode;
+#ifdef USE_PHYSICS
   HandlePhysics       *m_physics;
+#endif
   Object::Model       *m_character;
   WinList             objectList;
   WinList             _2D_objectList;

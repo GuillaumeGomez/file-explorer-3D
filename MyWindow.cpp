@@ -10,7 +10,9 @@
 #include "objects/Cube.hpp"
 #include "objects/Model.hpp"
 #include "FrameBuffer.hpp"
+#ifdef USE_PHYSICS
 #include "HandlePhysics.hpp"
+#endif
 
 #include "Loader/Loader.hpp"
 
@@ -31,7 +33,11 @@ HandleSDL  *MyWindow::sdl = 0;
 
 MyWindow::MyWindow(std::string winName, int antiali, int fps)
   : m_printInfo(false), MIN(WTIMER / (fps <= 0 ? 40 : fps)), pause(false), m_wireframe(false),
-    m_mode(MODE_NORMAL), m_physics(0), m_character(0)
+    m_mode(MODE_NORMAL),
+    #ifdef USE_PHYSICS
+    m_physics(0),
+    #endif
+    m_character(0)
 {
   srand(time(0));
   m_camera = 0;
@@ -67,7 +73,9 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
       }
     m_tetris = new Tetris;
     m_2048 = new Handle_2048;
+#ifdef USE_PHYSICS
     m_physics = new HandlePhysics;
+#endif
   } catch (std::bad_alloc &err) {
     HandleError::showError(err.what());
     throw MyException("Bad alloc");
@@ -76,8 +84,10 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
 
 MyWindow::~MyWindow()
 {
+#ifdef USE_PHYSICS
   if (this->m_physics)
     delete this->m_physics;
+#endif
   if (this->m_fps)
     delete this->m_fps;
   if (this->m_camera)
@@ -227,8 +237,10 @@ void MyWindow::keyPressEvent(int key)
               this->m_printInfo = !this->m_printInfo;
               break;
             case SDLK_TAB:
+#ifdef USE_PHYSICS
               m_physics->setDrawDebug(!m_physics->isDrawingDebug());
               break;
+#endif
             case SDLK_BACKSPACE:
               m_wireframe = !m_wireframe;
               glPolygonMode(GL_FRONT_AND_BACK, m_wireframe ? GL_LINE : GL_FILL);
@@ -319,7 +331,9 @@ void  MyWindow::update()
           if (!pause) {
               if (m_character)
                 m_character->update(tmp);
+#ifdef USE_PHYSICS
               m_physics->update(tmp);
+#endif
               for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it)
                 (*it)->update(tmp);
             }
@@ -416,7 +430,9 @@ void  MyWindow::addObject(myGLWidget *s, bool isPauseObject)
     }
   else if (!s->is2D()) {
       objectList.push_back(s);
+#ifdef USE_PHYSICS
       m_physics->addObject(s);
+#endif
     }
   else {
       _2D_objectList.push_back(s);
@@ -474,8 +490,11 @@ HandleSDL *MyWindow::getLib()
 void  MyWindow::picking()
 {
   static myGLWidget *w(0);
+  myGLWidget *tmp(0);
 
-  myGLWidget *tmp = m_physics->pick(sdl->width() / 2, sdl->height() / 2, sdl->width(), sdl->height());
+#ifdef USE_PHYSICS
+  tmp = m_physics->pick(sdl->width() / 2, sdl->height() / 2, sdl->width(), sdl->height());
+#endif
   if (w != tmp && w) {
       w->setSelected(false);
     }

@@ -8,9 +8,10 @@ INCLUDEPATH += include/
 
 unix {
     QMAKE_CXXFLAGS += -std=c++0x
-    INCLUDEPATH += /usr/local/include/bullet/
+    #INCLUDEPATH += /usr/local/include/bullet/
 
-    LIBS += -lGLU -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_ttf -lGLEW -lm -lpthread -lassimp -lBulletDynamics -lBulletCollision -lLinearMath \
+    LIBS += -lGL -lGLU -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_ttf -lGLEW -lm -lpthread -lassimp \
+    #LIBS += -lBulletDynamics -lBulletCollision -lLinearMath
 }
 
 win32 {
@@ -19,6 +20,7 @@ win32 {
     CONFIG += c++11
     DEFINES += WIN32
     DEFINES += GLEW_STATIC _USE_MATH_DEFINES
+    DEFINES += USE_PHYSICS
 
     LIBS += -L./SDL2/ \
             -L./assimp/ \
@@ -85,7 +87,7 @@ SOURCES += main.cpp \
     Tetris.cpp \
     objects/Model.cpp \
     objects/Line.cpp \
-    HandlePhysics.cpp \
+#    HandlePhysics.cpp \
     shaders/ShaderHandler.cpp \
     objects/HeightMap.cpp \
     objects/Point.cpp \
@@ -135,7 +137,7 @@ HEADERS += \
     Tetris.hpp \
     objects/Model.hpp \
     objects/Line.hpp \
-    HandlePhysics.hpp \
+#    HandlePhysics.hpp \
     shaders/ShaderHandler.hpp \
     objects/HeightMap.hpp \
     objects/Point.hpp \
