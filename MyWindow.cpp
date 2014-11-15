@@ -10,6 +10,7 @@
 #include "objects/Cube.hpp"
 #include "objects/Model.hpp"
 #include "FrameBuffer.hpp"
+#include "network/UDP.hpp"
 #ifdef USE_PHYSICS
 #include "HandlePhysics.hpp"
 #endif
@@ -37,7 +38,8 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
     #ifdef USE_PHYSICS
     m_physics(0),
     #endif
-    m_character(0)
+    m_character(0),
+    m_udp(0)
 {
   srand(time(0));
   m_camera = 0;
@@ -76,6 +78,8 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
 #ifdef USE_PHYSICS
     m_physics = new HandlePhysics;
 #endif
+    m_udp = new UDP;
+    m_udp->start();
   } catch (std::bad_alloc &err) {
     HandleError::showError(err.what());
     throw MyException("Bad alloc");

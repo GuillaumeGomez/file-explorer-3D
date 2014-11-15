@@ -93,7 +93,9 @@ SOURCES += main.cpp \
     objects/Point.cpp \
     Handle_2048.cpp \
     objects/Menu.cpp \
-    Utils/PerlinNoise.cpp
+    Utils/PerlinNoise.cpp \
+    network/TCP.cpp \
+    network/UDP.cpp \
 
 HEADERS += \
     HandleSDL.hpp \
@@ -143,4 +145,6 @@ HEADERS += \
     objects/Point.hpp \
     Handle_2048.hpp \
     objects/Menu.hpp \
-    Utils/PerlinNoise.hpp
+    Utils/PerlinNoise.hpp \
+    network/TCP.hpp \
+    network/UDP.hpp \

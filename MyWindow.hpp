@@ -19,6 +19,7 @@ class HandleThread;
 class HandleFpsCount;
 class FrameBuffer;
 class Tetris;
+class UDP;
 #ifdef USE_PHYSICS
 class HandlePhysics;
 #endif
@@ -81,6 +82,7 @@ private:
   HandlePhysics       *m_physics;
 #endif
   Object::Model       *m_character;
+  UDP                 *m_udp;
   WinList             objectList;
   WinList             _2D_objectList;
   WinList             m_pickObjects;
