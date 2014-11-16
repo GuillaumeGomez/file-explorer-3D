@@ -537,6 +537,11 @@ bool  HandleSDL::displayErrorMessage(const char *title, const char *msg)
   return !SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, msg, NULL);
 }
 
+bool  HandleSDL::displayErrorMessage(const char *title, std::string const &msg)
+{
+  return !SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, msg.c_str(), NULL);
+}
+
 bool  HandleSDL::displayWarningMessage(const char *title, const char *msg)
 {
   return !SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, title, msg, NULL);

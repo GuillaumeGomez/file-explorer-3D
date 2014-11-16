@@ -20,6 +20,7 @@ class HandleFpsCount;
 class FrameBuffer;
 class Tetris;
 class UDP;
+class TCP;
 #ifdef USE_PHYSICS
 class HandlePhysics;
 #endif
@@ -66,6 +67,8 @@ public:
   void        setDisplaySentence(const char*);
   void        setMainCharacter(myGLWidget*);
   void        takeScreenshot(std::string filename = "");
+  bool        connectToServer(const char *addr);
+  void        startServers();
 
   Vector3D const  &getPlayerPosition() const;
 
@@ -83,10 +86,12 @@ private:
 #endif
   Object::Model       *m_character;
   UDP                 *m_udp;
+  TCP                 *m_tcp;
   WinList             objectList;
   WinList             _2D_objectList;
   WinList             m_pickObjects;
   WinList             m_pauseObjectList;
+  WinList             m_players;
   Camera              *m_camera;
   KeyHandler          *m_key;
   clock_t             actual;

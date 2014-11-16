@@ -38,7 +38,6 @@ bool TCP::start(const char *addr) {
         if (!addr)
             return false;
 
-        // create socket
         if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
             close(sock);
             return false;

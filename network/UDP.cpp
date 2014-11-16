@@ -1,11 +1,6 @@
 #include "UDP.hpp"
 #include "../Utils/HandleThread.hpp"
 #include "../Utils/HandleMutex.hpp"
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <iostream>
 
 void *handle_udp_data(void *obj) {
     static_cast<UDP*>(obj)->listenClients();
@@ -88,4 +83,26 @@ HandleMutex *UDP::getMutex() {
 
 bool UDP::isServer() {
     return server_mode;
+}
+
+void UDP::addClient(int id, struct sockaddr_in data) {
+    for (std::vector<client>::iterator it = clients.begin(); it != clients.end(); ++it) {
+        if ((*it).id == id)
+            return;
+    }
+    clients.push_back(client{id, data});
+}
+
+void UDP::send(Vector3D &pos, float theta, float phi, int id) {
+    if (server_mode) {
+        character_data d{id, theta * 10, phi * 10, pos.x() * 10, pos.y() * 10, pos.z() * 10};
+
+        for (std::vector<client>::iterator it = clients.begin(); it != clients.end(); ++it) {
+            sendto(sock, &d, sizeof(d), 0, (sockaddr*)&(*it).data, sizeof((*it).data));
+        }
+    } else {
+        character_data d{id, theta * 10, phi * 10, pos.x() * 10, pos.y() * 10, pos.z() * 10};
+
+        sendto(sock, &d, sizeof(d), 0, (sockaddr*)&server, sizeof(server));
+    }
 }

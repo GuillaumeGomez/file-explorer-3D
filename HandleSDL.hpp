@@ -30,6 +30,7 @@ public:
   virtual Texture *createTextTexture(const char* text, Texture *texture = 0, Color c = Color());
   virtual void    createSkyBoxTextures(std::string textures[6]);
   virtual bool    displayErrorMessage(const char *title, const char *msg);
+  virtual bool    displayErrorMessage(const char *title, std::string const &msg);
   virtual bool    displayWarningMessage(const char *title, const char *msg);
   virtual bool    displayInformationMessage(const char *title, const char *msg);
   int             height();

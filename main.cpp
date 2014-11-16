@@ -11,6 +11,11 @@ int main(int argc, char **argv)
   try {
     MyWindow  w("My world");
 
+    if (argc == 2) {
+        w.connectToServer(argv[1]);
+    } else {
+        w.startServers();
+    }
     (void)argc;
     (void)argv;
     w.start();

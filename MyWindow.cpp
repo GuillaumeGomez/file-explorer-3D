@@ -11,6 +11,7 @@
 #include "objects/Model.hpp"
 #include "FrameBuffer.hpp"
 #include "network/UDP.hpp"
+#include "network/TCP.hpp"
 #ifdef USE_PHYSICS
 #include "HandlePhysics.hpp"
 #endif
@@ -39,7 +40,8 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
     m_physics(0),
     #endif
     m_character(0),
-    m_udp(0)
+    m_udp(0),
+    m_tcp(0)
 {
   srand(time(0));
   m_camera = 0;
@@ -78,8 +80,6 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
 #ifdef USE_PHYSICS
     m_physics = new HandlePhysics;
 #endif
-    m_udp = new UDP;
-    m_udp->start();
   } catch (std::bad_alloc &err) {
     HandleError::showError(err.what());
     throw MyException("Bad alloc");
@@ -120,6 +120,29 @@ MyWindow::~MyWindow()
     delete this->m_key;
   if (this->sdl)
     delete this->sdl;
+}
+
+void MyWindow::startServers() {
+    m_udp = new UDP;
+    m_udp->start();
+    m_tcp = new TCP;
+    m_tcp->start();
+}
+
+bool MyWindow::connectToServer(const char *addr) {
+    if (!addr) {
+        getLib()->displayErrorMessage("Error", "Invalid address");
+        return false;
+    }
+    m_tcp = new TCP(false);
+
+    if (!m_tcp->start(addr)) {
+        delete m_tcp;
+        m_tcp = 0;
+        getLib()->displayErrorMessage("Error", std::string("Cannot connect to ") + addr);
+        return false;
+    }
+    return true;
 }
 
 void  MyWindow::repeatKey()
@@ -359,6 +382,9 @@ void  MyWindow::update()
           break;
         }
     }
+  if (m_udp && m_tcp) {
+    m_udp->send(m_camera->getPosition(), 0., 0.);
+  }
 
   //glDisable(GL_COLOR_MATERIAL);
 }
