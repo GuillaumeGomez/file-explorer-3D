@@ -564,7 +564,7 @@ void  HandleSDL::moveCursor(int x, int y)
 
 void  HandleSDL::setFPSMode(bool p)
 {
-  SDL_SetRelativeMouseMode(p ? SDL_bool(SDL_ENABLE) : SDL_bool(SDL_DISABLE));
+  //SDL_SetRelativeMouseMode(p ? SDL_bool(SDL_ENABLE) : SDL_bool(SDL_DISABLE));
 }
 
 #ifdef WIN32

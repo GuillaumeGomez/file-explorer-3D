@@ -9,8 +9,37 @@
 #include <unistd.h>
 #include <sys/select.h>
 #include <sys/time.h>
+#include <cstring>
+#include <stdint.h>
 
 #define PORT 2425
+
+#define NEW_CLIENT 1
+#define QUIT_CLIENT 2
+#define SET_ID 0
+#define SET_PORT 5
+#define WATCHDOG 4
+
+#define MAX_PORT 65535
+
+typedef struct {
+    char type;
+    int32_t size;
+} header;
+
+bool getFullData(int fd, void *data, int size) {
+    int got = 0;
+    char *pointer = (char*)data;
+
+    while (got < size) {
+        int ret = recv(fd, pointer + got, size - got, 0);
+
+        if (ret < 1)
+            return false;
+        got += ret;
+    }
+    return true;
+}
 
 void *handle_tcp_data(void *obj) {
     static_cast<TCP*>(obj)->loop();
@@ -18,6 +47,11 @@ void *handle_tcp_data(void *obj) {
 }
 
 TCP::TCP(bool server_mode) : sock(-1), server_mode(server_mode), thread(0), mutex(0) {
+    if (!server_mode) {
+        port_number = 0;
+    } else {
+        port_number = PORT + 1;
+    }
 }
 
 TCP::~TCP() {
@@ -38,33 +72,43 @@ bool TCP::start(const char *addr) {
         if (!addr)
             return false;
 
+        this->addr = addr;
         if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+            perror("socket");
             close(sock);
             return false;
         }
 
         sin.sin_addr.s_addr = inet_addr(addr);
         if (connect(sock, (struct sockaddr *)&sin, sizeof(sockaddr_in)) < 0) {
-            std::cerr << "Unable to connect to server..." << std::endl;
             close(sock);
             sock = -1;
+            perror("connect");
             return false;
         }
+        std::cout << "connected to server !" << std::endl;
     } else {
         if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
             close(sock);
+            perror("socket");
             return false;
         }
 
         sin.sin_addr.s_addr = htonl(INADDR_ANY);
-        if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {
+        if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) != 0) {
             close(sock);
             sock = -1;
             perror("bind");
             return false;
         }
 
-        listen(sock, 10);
+        if (listen(sock, 10) != 0) {
+            close(sock);
+            sock = -1;
+            perror("listen");
+            return false;
+        }
+        std::cout << "server launched !" << std::endl;
     }
     mutex = new HandleMutex;
     thread = new HandleThread(handle_tcp_data, static_cast<void*>(this));
@@ -73,20 +117,77 @@ bool TCP::start(const char *addr) {
 }
 
 void TCP::accept_new_client() {
-    int client;
+    int cli;
+    struct sockaddr_in data;
+    socklen_t len = sizeof(data);
 
-    if ((client = accept(sock, NULL, NULL)) < 0) {
+    cli = accept(sock, (sockaddr*)&data, &len);
+
+    if (cli < 0) {
+        perror("accept");
         return;
     }
+    //data.sin_port = htons(port_number++);
+    if (port_number >= MAX_PORT)
+        port_number = PORT + 1;
+    client cli_data = {cli, data};
+
+    char ak[sizeof(int32_t) + 1 + sizeof(int)] = {SET_ID, 0};
+    int tmp = sizeof(int);
+
+    // send id to new client
+    memcpy(ak + 1 + sizeof(int32_t), &cli, sizeof(cli));
+    memcpy(ak + 1, &tmp, sizeof(tmp));
+    ::send(cli, ak, sizeof(ak), 0);
+
+    // send port number to new client
+    ak[0] = SET_PORT;
+    memcpy(ak + 1 + sizeof(int32_t), &port_number, sizeof(port_number));
+    ::send(cli, ak, sizeof(ak), 0);
+
+    // send new client's id to everyone
+    ak[0] = NEW_CLIENT;
+    memcpy(ak + 1 + sizeof(int32_t), &cli, sizeof(cli));
+    sendToEveryone(ak, sizeof(ak), cli);
+
+    // send all clients' id to new one
+    for (auto it = clients.begin(); it != clients.end(); ++it) {
+        memcpy(ak + 1 + sizeof(int32_t), &(*it), sizeof(*it));
+        ::send(cli, ak, sizeof(ak), 0);
+    }
+    tmp = 0;
+    memcpy(ak + 1 + sizeof(int32_t), &tmp, sizeof(tmp));
+    ::send(cli, ak, sizeof(ak), 0);
+
+    // add new client to pending list
     mutex->lock();
-    pending_clients.push_back(client);
+    pending_clients.push_back(cli_data);
     mutex->unlock();
+    clients.push_back(cli);
+    std::cout << "new client !" << std::endl;
+}
+
+void TCP::send(int fd, void *data, size_t len) {
+    ::send(fd, data, len, 0);
+}
+
+void TCP::sendToEveryone(void *data, size_t len, int except) {
+    if (!server_mode)
+        return;
+    for (auto it = clients.begin(); it != clients.end(); ++it) {
+        if ((*it) != except) {
+            ::send((*it), data, len, 0);
+        }
+    }
 }
 
 void TCP::loop() {
+    fd_set readfs;
+
+    std::cout << "Welcome to thread !" << std::endl;
     if (server_mode) {
-        fd_set readfs;
         int max;
+        int ret;
 
         for (;;) {
             max = sock;
@@ -97,22 +198,55 @@ void TCP::loop() {
                 if (*it > max)
                     max = *it;
             }
-            if (select(max + 1, &readfs, 0, 0, 0) < 0) {
+            ret = select(max + 1, &readfs, 0, 0, 0);
+            if (ret < 0) {
                 std::cerr << "select error !" << std::endl;
             } else {
+                std::cout << "select unlocked !" << std::endl;
                 if (FD_ISSET(sock, &readfs)) {
                     this->accept_new_client();
                 } else {
-                    char useless;
+                    char head_data[5];
+                    int quit(-1);
 
                     for (int it = 0; it < clients.size(); ++it) {
                         int client = clients[it];
 
                         if (FD_ISSET(client, &readfs)) {
-                            if (recv(client, &useless, sizeof(useless), 0) < 1 || send(client, &useless, 1, 0) < 1) {
+                            if (!getFullData(client, head_data, sizeof(head_data))) {
+                                std::cout << "Client disconnected !" << std::endl;
                                 close(client);
                                 clients.erase(clients.begin() + it);
                                 it -= 1;
+                                // send to all clients that this one is now disconnected
+                                char deco[5 + sizeof(int)] = {QUIT_CLIENT, 0};
+
+                                int tmp = sizeof(int);
+                                memcpy(deco + 1, &tmp, sizeof(tmp));
+                                memcpy(deco + 5, &client, sizeof(client));
+                                for (auto tmp2 = clients.begin(); tmp2 != clients.end(); ++tmp2) {
+                                    ::send(*tmp2, deco, sizeof(deco), 0);
+                                }
+                            } else {
+                                head_data[0] = WATCHDOG;
+                                int tmp = 0;
+                                memcpy(head_data + 1, &tmp, sizeof(tmp));
+                                if (::send(client, head_data, sizeof(head_data), 0) < 1) {
+                                    std::cout << "Client disconnected !" << std::endl;
+                                    close(client);
+                                    clients.erase(clients.begin() + it);
+                                    quit = client;
+                                    it -= 1;
+                                    // send to all clients that this one is now disconnected
+                                    char deco[5 + sizeof(int)] = {QUIT_CLIENT, 0};
+
+                                    tmp = sizeof(int);
+                                    memcpy(deco + 1, &tmp, sizeof(tmp));
+                                    memcpy(deco + 5, &client, sizeof(client));
+                                    for (auto tmp2 = clients.begin(); tmp2 != clients.end(); ++tmp2) {
+                                        ::send(*tmp2, deco, sizeof(deco), 0);
+                                    }
+                                }
                             }
                         }
                     }
@@ -120,19 +254,67 @@ void TCP::loop() {
             }
         }
     } else {
-        mutex->lock();
-        if (recv(sock, &id, sizeof(id), 0) < 1) {
-            std::cerr << "Disconnected from server !" << std::endl;
-        } else {
-            mutex->unlock();
-            // keep connection alive !
-            for (;;) {
-                char useless;
+        for (;;) {
+            int ret;
+            struct timeval tv;
 
-                sleep(15);
-                if (send(sock, "1", 1, 0) < 1 || recv(sock, &useless, sizeof(useless), 0) < 1) {
+            tv.tv_sec = 15;
+            tv.tv_usec = 0;
+
+            FD_ZERO(&readfs);
+            FD_SET(sock, &readfs);
+            ret = select(sock + 1, &readfs, 0, 0, &tv);
+            if (ret < 0) {
+                perror("select");
+            } else if (!ret) {
+                //timeout
+                char head[5] = {WATCHDOG, 0};
+
+                ::send(sock, head, sizeof(head), 0);
+            } else {
+                char head_data[5];
+
+                if (!getFullData(sock, head_data, sizeof(head_data))) {
                     std::cerr << "Disconnected from server !" << std::endl;
                     return;
+                }
+                header head;
+                head.type = head_data[0];
+                memcpy(&head.size, head_data + 1, 4);
+                int client_id = 0;
+
+                if (head.size == 4) {
+                    if (!getFullData(sock, &client_id, sizeof(client_id))) {
+                        std::cerr << "Disconnected from server !" << std::endl;
+                        return;
+                    }
+                }
+                std::cout << "[" << (int)head.type << ", " << head.size << ", " << client_id << "]" << std::endl;
+                switch (head.type) {
+                    case NEW_CLIENT:
+                        std::cout << "New client !" << std::endl;
+                        mutex->lock();
+                        pending_clients.push_back(client{client_id, 0});
+                        mutex->unlock();
+                        break;
+                    case QUIT_CLIENT:
+                        std::cout << "A client left..." << std::endl;
+                        mutex->lock();
+                        quit_clients.push_back(client_id);
+                        mutex->unlock();
+                        break;
+                    case SET_ID:
+                        id = client_id;
+                        std::cout << "my id is : " << id << std::endl;
+                        break;
+                    case SET_PORT:
+                        mutex->lock();
+                        port_number = client_id;
+                        std::cout << "udp port : " << port_number << std::endl;
+                        mutex->unlock();
+                    case WATCHDOG:
+                    default:
+                        break;
                 }
             }
         }
@@ -143,6 +325,22 @@ bool TCP::isServer() {
     return server_mode;
 }
 
-std::vector<int> &TCP::getPendingClients() {
+std::vector<client> &TCP::getPendingClients() {
     return pending_clients;
+}
+
+std::vector<int> &TCP::getQuitClients() {
+    return quit_clients;
+}
+
+HandleMutex *TCP::getMutex() {
+    return mutex;
+}
+
+int TCP::getPortNumber() {
+    return port_number;
+}
+
+const char *TCP::getAddr() {
+    return addr.c_str();
 }

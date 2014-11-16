@@ -36,6 +36,11 @@ namespace Object {
   class Model;
 }
 
+typedef struct {
+    int id;
+    myGLWidget *obj;
+} player;
+
 class MyWindow
 {
   enum {
@@ -69,6 +74,7 @@ public:
   void        takeScreenshot(std::string filename = "");
   bool        connectToServer(const char *addr);
   void        startServers();
+  void        setPlayerPos(int id, int x, int y, int z);
 
   Vector3D const  &getPlayerPosition() const;
 
@@ -91,7 +97,7 @@ private:
   WinList             _2D_objectList;
   WinList             m_pickObjects;
   WinList             m_pauseObjectList;
-  WinList             m_players;
+  std::vector<player> m_players;
   Camera              *m_camera;
   KeyHandler          *m_key;
   clock_t             actual;

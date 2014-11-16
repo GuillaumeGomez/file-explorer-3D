@@ -1,3 +1,6 @@
+#ifndef __UDP_HPP__
+#define __UDP_HPP__
+
 #include <string>
 #include <vector>
 
@@ -6,6 +9,9 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <iostream>
+#include <stdint.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include "../objects/Vector3D.hpp"
 
@@ -13,12 +19,12 @@ class HandleThread;
 class HandleMutex;
 
 typedef struct {
-    int id;
-    int theta;
-    int phi;
-    int x;
-    int y;
-    int z;
+    int32_t id;
+    int32_t theta;
+    int32_t phi;
+    int32_t x;
+    int32_t y;
+    int32_t z;
 } character_data;
 
 typedef struct {
@@ -28,27 +34,35 @@ typedef struct {
 
 class UDP {
 public:
-    UDP(bool server_mode = true);
+    UDP(bool server_mode = true, int port = 0);
     ~UDP();
-    void start(const char *server_addr = NULL);
+    bool start(const char *server_addr = NULL);
     const std::string &getAddr() const;
     void listenClients();
     const std::vector<character_data> &getData();
     HandleMutex *getMutex();
+    HandleMutex *getClientMutex();
     unsigned int getNbWaitingData();
     void resetData();
     bool isServer();
     void send(Vector3D &pos, float theta, float phi, int id = 0);
     void addClient(int id, struct sockaddr_in data);
+    std::vector<client> &getClients();
 
 private:
     int sock;
     bool server_mode;
     HandleThread *thread;
     HandleMutex *mutex;
+    HandleMutex *client_mutex;
     unsigned int nbWaitingData;
     std::string addr;
     std::vector<character_data> waitingData;
     std::vector<client> clients;
     struct sockaddr_in server;
+    int port;
+    int client_sock;
+    struct sockaddr_in s_client;
 };
+
+#endif

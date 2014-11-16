@@ -3,6 +3,7 @@
 #include "Camera.hpp"
 #include "KeyHandler.hpp"
 #include "Utils/HandleThread.hpp"
+#include "Utils/HandleMutex.hpp"
 #include "objects/Wall.hpp"
 #include "objects/Button.hpp"
 #include "objects/Rectangle.hpp"
@@ -92,6 +93,10 @@ MyWindow::~MyWindow()
   if (this->m_physics)
     delete this->m_physics;
 #endif
+  if (this->m_tcp)
+      delete this->m_tcp;
+  if (this->m_udp)
+      delete this->m_udp;
   if (this->m_fps)
     delete this->m_fps;
   if (this->m_camera)
@@ -124,9 +129,20 @@ MyWindow::~MyWindow()
 
 void MyWindow::startServers() {
     m_udp = new UDP;
-    m_udp->start();
+    if (!m_udp->start()) {
+        delete m_udp;
+        m_udp = 0;
+        getLib()->displayErrorMessage("Error", "Couldn't start UDP server");
+        return;
+    }
     m_tcp = new TCP;
-    m_tcp->start();
+    if (!m_tcp->start()) {
+        delete m_tcp;
+        m_tcp = 0;
+        delete m_udp;
+        m_udp = 0;
+        getLib()->displayErrorMessage("Error", "Couldn't start TCP server");
+    }
 }
 
 bool MyWindow::connectToServer(const char *addr) {
@@ -147,7 +163,7 @@ bool MyWindow::connectToServer(const char *addr) {
 
 void  MyWindow::repeatKey()
 {
-  int     *k(m_key->getKeys());
+  int *k(m_key->getKeys());
 
   int s(m_key->getNbKeys());
 
@@ -231,6 +247,8 @@ void MyWindow::keyPressEvent(int key)
       this->takeScreenshot();
       break;
     default:
+      if (pause && SDLK_ESCAPE != key)
+          break;
       if (m_mode == MODE_TETRIS) {
           switch (key)
             {
@@ -349,12 +367,51 @@ void  MyWindow::update()
       --loop;
   } while (loop > 1);
   m_camera->update();
+  if (m_tcp) {
+      if (!m_udp) {
+          m_tcp->getMutex()->lock();
+          if (m_tcp->getPortNumber() > 0) {
+              m_udp = new UDP(false, m_tcp->getPortNumber());
+              m_udp->start(m_tcp->getAddr());
+          }
+          m_tcp->getMutex()->unlock();
+      }
+      if (m_udp) {
+          m_tcp->getMutex()->lock();
+          auto &pendings = m_tcp->getPendingClients();
+
+          for (auto it = pendings.begin(); it != pendings.end(); ++it) {
+              //myGLWidget *m = new Object::Model(Vector3D(), Rotation(), "models/Cartoon Girl/girl-cartoon.obj", 5.f);
+              myGLWidget *m = new Object::Model(Vector3D(), Rotation(), "models/bob/spongebob_bind.obj", 4.f);
+
+              m->initializeGL();
+              m_players.push_back(player{(*it).id, m});
+              m_udp->addClient((*it).id, (*it).data);
+          }
+          pendings.clear();
+          m_tcp->getMutex()->unlock();
+          m_udp->getMutex()->lock();
+          if (m_udp->getNbWaitingData() > 0) {
+              auto moves = m_udp->getData();
+              auto i = m_udp->getNbWaitingData();
+
+              for (auto it = moves.begin(); i > 0 && it != moves.end(); --i, ++it) {
+                  this->setPlayerPos((*it).id, (*it).x, (*it).y, (*it).z);
+              }
+              m_udp->resetData();
+          }
+          m_udp->getMutex()->unlock();
+          m_udp->send(m_camera->getPosition(), 0., 0.);
+      }
+  }
   if (tmp != 0.f) {
       switch (m_mode) {
         case MODE_TETRIS:
           m_tetris->update(tmp);
           break;
         case MODE_NORMAL:
+          for (auto it = m_players.begin(); it != m_players.end(); ++it)
+              (*it).obj->update(tmp);
           if (!pause) {
               if (m_character)
                 m_character->update(tmp);
@@ -372,7 +429,7 @@ void  MyWindow::update()
               static_cast<Object::Text*>(m_displayList[1])->setText("y : " + Utility::toString<float>(m_camera->getPosition().y()));
               static_cast<Object::Text*>(m_displayList[2])->setText("z : " + Utility::toString<float>(m_camera->getPosition().z()));
               static_cast<Object::Text*>(m_displayList[3])->setText("fps : " + Utility::toString<float>(fps));
-            }
+          }
 
           m_camera->look();
           picking();
@@ -382,11 +439,23 @@ void  MyWindow::update()
           break;
         }
     }
-  if (m_udp && m_tcp) {
-    m_udp->send(m_camera->getPosition(), 0., 0.);
-  }
-
   //glDisable(GL_COLOR_MATERIAL);
+}
+
+void MyWindow::setPlayerPos(int id, int x, int y, int z) {
+    for (auto it = m_players.begin(); it != m_players.end(); ++it) {
+        if ((*it).id == id) {
+            float f_x = x, f_y = y, f_z = z;
+
+            f_x /= 10.f;
+            f_y /= 10.f;
+            f_z /= 10.f;
+            Vector3D v(f_x, f_y, f_z);
+            (*it).obj->setPosition(v);
+            m_udp->send(v, 0.f, 0.f, id);
+            return;
+        }
+    }
 }
 
 void MyWindow::paintGL()
@@ -404,7 +473,10 @@ void MyWindow::paintGL()
       for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it){
           (*it)->paintGL(view_mat, proj_mat);
         }
-      m_character->paintGL(view_mat, proj_mat);
+      for (auto it = m_players.begin(); it != m_players.end(); ++it)
+          (*it).obj->paintGL(view_mat, proj_mat);
+      if (m_character)
+          m_character->paintGL(view_mat, proj_mat);
       m_disp->paintGL(view_mat, proj_mat);
 
       /* 2D part */
@@ -556,10 +628,10 @@ void  MyWindow::setMainCharacter(myGLWidget *w)
 {
   if (!w)
     return;
-  m_character = static_cast<Object::Model*>(w);
+  /*m_character = static_cast<Object::Model*>(w);
   m_character->cutAnimation("", "walk", 0.f, 393.f);
   m_character->setCurrentAnimation("walk");
-  m_character->play();
+  m_character->play();*/
 }
 
 void  MyWindow::takeScreenshot(std::string filename)
