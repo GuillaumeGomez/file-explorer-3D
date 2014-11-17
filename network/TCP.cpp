@@ -52,6 +52,7 @@ TCP::TCP(bool server_mode) : sock(-1), server_mode(server_mode), thread(0), mute
     } else {
         port_number = PORT + 1;
     }
+    id = 0;
 }
 
 TCP::~TCP() {
@@ -130,7 +131,7 @@ void TCP::accept_new_client() {
     //data.sin_port = htons(port_number++);
     if (port_number >= MAX_PORT)
         port_number = PORT + 1;
-    client cli_data = {cli, data};
+    client cli_data = {false, cli, data};
 
     char ak[sizeof(int32_t) + 1 + sizeof(int)] = {SET_ID, 0};
     int tmp = sizeof(int);
@@ -294,7 +295,7 @@ void TCP::loop() {
                     case NEW_CLIENT:
                         std::cout << "New client !" << std::endl;
                         mutex->lock();
-                        pending_clients.push_back(client{client_id, 0});
+                        pending_clients.push_back(client{false, client_id, 0});
                         mutex->unlock();
                         break;
                     case QUIT_CLIENT:
@@ -343,4 +344,8 @@ int TCP::getPortNumber() {
 
 const char *TCP::getAddr() {
     return addr.c_str();
+}
+
+int TCP::getId() {
+    return id;
 }

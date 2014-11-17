@@ -23,6 +23,7 @@ public:
     void send(int fd, void *data, size_t len);
     int getPortNumber();
     const char *getAddr();
+    int getId();
 
 private:
     int sock;

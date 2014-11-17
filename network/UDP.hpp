@@ -28,6 +28,7 @@ typedef struct {
 } character_data;
 
 typedef struct {
+    bool ok;
     int id;
     struct sockaddr_in data;
 } client;
@@ -48,6 +49,7 @@ public:
     void send(Vector3D &pos, float theta, float phi, int id = 0);
     void addClient(int id, struct sockaddr_in data);
     std::vector<client> &getClients();
+    void pushNewData(character_data *buf);
 
 private:
     int sock;
@@ -61,8 +63,6 @@ private:
     std::vector<client> clients;
     struct sockaddr_in server;
     int port;
-    int client_sock;
-    struct sockaddr_in s_client;
 };
 
 #endif

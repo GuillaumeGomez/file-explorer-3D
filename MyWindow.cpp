@@ -393,7 +393,7 @@ void  MyWindow::update()
           m_udp->getMutex()->lock();
           if (m_udp->getNbWaitingData() > 0) {
               auto moves = m_udp->getData();
-              auto i = m_udp->getNbWaitingData();
+              int i = m_udp->getNbWaitingData();
 
               for (auto it = moves.begin(); i > 0 && it != moves.end(); --i, ++it) {
                   this->setPlayerPos((*it).id, (*it).x, (*it).y, (*it).z);
@@ -401,7 +401,7 @@ void  MyWindow::update()
               m_udp->resetData();
           }
           m_udp->getMutex()->unlock();
-          m_udp->send(m_camera->getPosition(), 0., 0.);
+          m_udp->send(m_camera->getPosition(), 0., 0., m_tcp->getId());
       }
   }
   if (tmp != 0.f) {
@@ -410,8 +410,8 @@ void  MyWindow::update()
           m_tetris->update(tmp);
           break;
         case MODE_NORMAL:
-          for (auto it = m_players.begin(); it != m_players.end(); ++it)
-              (*it).obj->update(tmp);
+          //for (auto it = m_players.begin(); it != m_players.end(); ++it)
+          //    (*it).obj->update(tmp);
           if (!pause) {
               if (m_character)
                 m_character->update(tmp);
@@ -452,7 +452,6 @@ void MyWindow::setPlayerPos(int id, int x, int y, int z) {
             f_z /= 10.f;
             Vector3D v(f_x, f_y, f_z);
             (*it).obj->setPosition(v);
-            m_udp->send(v, 0.f, 0.f, id);
             return;
         }
     }
@@ -473,8 +472,9 @@ void MyWindow::paintGL()
       for (WinList::iterator it = objectList.begin(); it != objectList.end(); ++it){
           (*it)->paintGL(view_mat, proj_mat);
         }
-      for (auto it = m_players.begin(); it != m_players.end(); ++it)
+      for (auto it = m_players.begin(); it != m_players.end(); ++it) {
           (*it).obj->paintGL(view_mat, proj_mat);
+      }
       if (m_character)
           m_character->paintGL(view_mat, proj_mat);
       m_disp->paintGL(view_mat, proj_mat);

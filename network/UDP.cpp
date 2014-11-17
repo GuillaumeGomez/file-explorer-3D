@@ -1,6 +1,7 @@
 #include "UDP.hpp"
 #include "../Utils/HandleThread.hpp"
 #include "../Utils/HandleMutex.hpp"
+#include "../Utils/MyMutexLocker.hpp"
 #include <cstring>
 
 #define PORT 2424
@@ -18,15 +19,12 @@ UDP::UDP(bool server_mode, int port) : sock(-1), server_mode(server_mode), threa
     } else {
         this->port = port;
     }
-    client_sock = -1;
     memset(&server, 0, sizeof(server));
 }
 
 UDP::~UDP() {
     if (sock != -1)
         close(sock);
-    if (client_sock != -1)
-        close(client_sock);
     if (thread)
         delete thread;
     if (mutex)
@@ -64,6 +62,14 @@ bool UDP::start(const char *server_addr) {
     return true;
 }
 
+void UDP::pushNewData(character_data *buf) {
+    MyMutexLocker l(this->mutex);
+
+    (void)l;
+    waitingData.push_back(*buf);
+    ++nbWaitingData;
+}
+
 void UDP::listenClients() {
     struct sockaddr_in remaddr;
     socklen_t addrlen = sizeof(remaddr);
@@ -72,20 +78,18 @@ void UDP::listenClients() {
 
     for (;;) {
         recvlen = recvfrom(this->sock, &buf, sizeof(buf), 0, (struct sockaddr *)&remaddr, &addrlen);
-        std::cout << "new udp data" << std::endl;
-        if (!server_mode)
-        if (recvlen == sizeof(buf)) {
-            mutex->lock();
-            if (waitingData.capacity() < nbWaitingData)
-                waitingData[nbWaitingData] = buf;
-            else
-                waitingData.push_back(buf);
-            ++nbWaitingData;
-            mutex->unlock();
+        if (recvlen == sizeof(buf) && (buf.id || !server_mode)) {
+            this->pushNewData(&buf);
             if (server_mode) {
                 client_mutex->lock();
                 for (std::vector<client>::iterator it = clients.begin(); it != clients.end(); ++it) {
-                    sendto(sock, &(*it).data, sizeof((*it).data), 0, (sockaddr*)&buf, sizeof(buf));
+                    if (buf.id != (*it).id) {
+                        if ((*it).ok)
+                            sendto(sock, &(*it).data, sizeof((*it).data), 0, (sockaddr*)&buf, sizeof(buf));
+                    } else if (!(*it).ok) {
+                        memcpy(&(*it).data, &remaddr, sizeof(remaddr));
+                        (*it).ok = true;
+                    }
                 }
                 client_mutex->unlock();
             }
@@ -102,6 +106,7 @@ unsigned int UDP::getNbWaitingData() {
 }
 
 void UDP::resetData() {
+    waitingData.clear();
     nbWaitingData = 0;
 }
 
@@ -119,18 +124,17 @@ void UDP::addClient(int id, struct sockaddr_in data) {
             return ;
     }
     client_mutex->lock();
-    clients.push_back(client{id, data});
-    std::cout << "client added : " << inet_ntoa(data.sin_addr) << std::endl;
+    clients.push_back(client{false, id, data});
     client_mutex->unlock();
 }
 
 void UDP::send(Vector3D &pos, float theta, float phi, int id) {
-    character_data d{id, (int)(theta * 10), (int)(phi * 10), (int)(pos.x() * 10), (int)(pos.y() * 10), (int)(pos.z() * 100)};
+    character_data d{id, (int)(theta * 10), (int)(phi * 10), (int)(pos.x() * 10), (int)(pos.y() * 10), (int)(pos.z() * 10)};
 
     if (server_mode) {
         client_mutex->lock();
         for (std::vector<client>::iterator it = clients.begin(); it != clients.end(); ++it) {
-            if ((*it).id != id)
+            if ((*it).id != id && (*it).ok)
                 sendto(sock, &d, sizeof(d), 0, (sockaddr*)&(*it).data, sizeof((*it).data));
         }
         client_mutex->unlock();

@@ -113,8 +113,9 @@ static void *my_thread_func(void *arg)
 
 void  HandleThread::run()
 {
-  m_mutex->lock();
-  (*m_func)(m_arg);
+    if (m_mutex)
+        m_mutex->lock();
+    (*m_func)(m_arg);
 }
 
 bool  HandleThread::start()

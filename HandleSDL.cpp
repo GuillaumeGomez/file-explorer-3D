@@ -489,9 +489,9 @@ bool  HandleSDL::handleEvents()
               setFPSMode(false);
               displayCursor(true);
               break;
-            case SDL_WINDOWEVENT_FOCUS_GAINED:
+            /*case SDL_WINDOWEVENT_FOCUS_GAINED:
               if (m_win->isPaused())
-                displayCursor(false);
+                displayCursor(false);*/
             case SDL_WINDOWEVENT_RESIZED:
               SDL_GetWindowSize(screen, &screenWidth, &screenHeight);
               m_win->resizeGL(screenWidth, screenHeight);
@@ -564,7 +564,7 @@ void  HandleSDL::moveCursor(int x, int y)
 
 void  HandleSDL::setFPSMode(bool p)
 {
-  //SDL_SetRelativeMouseMode(p ? SDL_bool(SDL_ENABLE) : SDL_bool(SDL_DISABLE));
+  SDL_SetRelativeMouseMode(p ? SDL_bool(SDL_ENABLE) : SDL_bool(SDL_DISABLE));
 }
 
 #ifdef WIN32
