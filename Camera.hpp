@@ -41,6 +41,9 @@ public:
   int                 mouseY() const;
   void                setCharacter(myGLWidget*);
   void                update();
+  void                lock();
+  void                unlock();
+  float               &getTheta();
 
   static glm::mat4 const &getViewMatrix();
   static glm::mat4 const &getProjectionMatrix();

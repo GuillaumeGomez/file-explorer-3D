@@ -21,9 +21,10 @@ public:
     void sendToEveryone(void *data, size_t len, int except = -1);
     std::vector<int> &getQuitClients();
     void send(int fd, void *data, size_t len);
-    int getPortNumber();
     const char *getAddr();
     int getId();
+    bool isConnected();
+    void close();
 
 private:
     int sock;
@@ -35,7 +36,6 @@ private:
     std::vector<int> clients;
     std::vector<client> pending_clients;
     std::vector<int> quit_clients;
-    int port_number;
 };
 
 #endif

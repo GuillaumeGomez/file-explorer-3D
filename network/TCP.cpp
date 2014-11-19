@@ -17,10 +17,8 @@
 #define NEW_CLIENT 1
 #define QUIT_CLIENT 2
 #define SET_ID 0
-#define SET_PORT 5
 #define WATCHDOG 4
 
-#define MAX_PORT 65535
 
 typedef struct {
     char type;
@@ -47,19 +45,15 @@ void *handle_tcp_data(void *obj) {
 }
 
 TCP::TCP(bool server_mode) : sock(-1), server_mode(server_mode), thread(0), mutex(0) {
-    if (!server_mode) {
-        port_number = 0;
-    } else {
-        port_number = PORT + 1;
-    }
     id = 0;
 }
 
 TCP::~TCP() {
-    if (sock != -1)
-        close(sock);
     if (thread)
         delete thread;
+    if (mutex)
+        mutex->unlock();
+    this->close();
     if (mutex)
         delete mutex;
 }
@@ -76,13 +70,13 @@ bool TCP::start(const char *addr) {
         this->addr = addr;
         if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
             perror("socket");
-            close(sock);
+            ::close(sock);
             return false;
         }
 
         sin.sin_addr.s_addr = inet_addr(addr);
         if (connect(sock, (struct sockaddr *)&sin, sizeof(sockaddr_in)) < 0) {
-            close(sock);
+            ::close(sock);
             sock = -1;
             perror("connect");
             return false;
@@ -90,21 +84,21 @@ bool TCP::start(const char *addr) {
         std::cout << "connected to server !" << std::endl;
     } else {
         if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-            close(sock);
+            ::close(sock);
             perror("socket");
             return false;
         }
 
         sin.sin_addr.s_addr = htonl(INADDR_ANY);
         if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) != 0) {
-            close(sock);
+            ::close(sock);
             sock = -1;
             perror("bind");
             return false;
         }
 
         if (listen(sock, 10) != 0) {
-            close(sock);
+            ::close(sock);
             sock = -1;
             perror("listen");
             return false;
@@ -128,9 +122,6 @@ void TCP::accept_new_client() {
         perror("accept");
         return;
     }
-    //data.sin_port = htons(port_number++);
-    if (port_number >= MAX_PORT)
-        port_number = PORT + 1;
     client cli_data = {false, cli, data};
 
     char ak[sizeof(int32_t) + 1 + sizeof(int)] = {SET_ID, 0};
@@ -139,11 +130,6 @@ void TCP::accept_new_client() {
     // send id to new client
     memcpy(ak + 1 + sizeof(int32_t), &cli, sizeof(cli));
     memcpy(ak + 1, &tmp, sizeof(tmp));
-    ::send(cli, ak, sizeof(ak), 0);
-
-    // send port number to new client
-    ak[0] = SET_PORT;
-    memcpy(ak + 1 + sizeof(int32_t), &port_number, sizeof(port_number));
     ::send(cli, ak, sizeof(ak), 0);
 
     // send new client's id to everyone
@@ -182,10 +168,34 @@ void TCP::sendToEveryone(void *data, size_t len, int except) {
     }
 }
 
+bool TCP::isConnected() {
+    return sock != -1;
+}
+
+void TCP::close() {
+    if (mutex)
+        mutex->lock();
+    if (server_mode) {
+        for (auto it : clients) {
+            ::close(it);
+        }
+        for (auto it : pending_clients) {
+            ::close(it.id);
+        }
+        for (auto it : quit_clients) {
+            ::close(it);
+        }
+    }
+    if (sock > -1)
+        ::close(sock);
+    sock = -1;
+    if (mutex)
+        mutex->unlock();
+}
+
 void TCP::loop() {
     fd_set readfs;
 
-    std::cout << "Welcome to thread !" << std::endl;
     if (server_mode) {
         int max;
         int ret;
@@ -203,7 +213,6 @@ void TCP::loop() {
             if (ret < 0) {
                 std::cerr << "select error !" << std::endl;
             } else {
-                std::cout << "select unlocked !" << std::endl;
                 if (FD_ISSET(sock, &readfs)) {
                     this->accept_new_client();
                 } else {
@@ -216,7 +225,7 @@ void TCP::loop() {
                         if (FD_ISSET(client, &readfs)) {
                             if (!getFullData(client, head_data, sizeof(head_data))) {
                                 std::cout << "Client disconnected !" << std::endl;
-                                close(client);
+                                ::close(client);
                                 clients.erase(clients.begin() + it);
                                 it -= 1;
                                 // send to all clients that this one is now disconnected
@@ -234,7 +243,7 @@ void TCP::loop() {
                                 memcpy(head_data + 1, &tmp, sizeof(tmp));
                                 if (::send(client, head_data, sizeof(head_data), 0) < 1) {
                                     std::cout << "Client disconnected !" << std::endl;
-                                    close(client);
+                                    ::close(client);
                                     clients.erase(clients.begin() + it);
                                     quit = client;
                                     it -= 1;
@@ -277,6 +286,7 @@ void TCP::loop() {
 
                 if (!getFullData(sock, head_data, sizeof(head_data))) {
                     std::cerr << "Disconnected from server !" << std::endl;
+                    this->close();
                     return;
                 }
                 header head;
@@ -287,6 +297,7 @@ void TCP::loop() {
                 if (head.size == 4) {
                     if (!getFullData(sock, &client_id, sizeof(client_id))) {
                         std::cerr << "Disconnected from server !" << std::endl;
+                        this->close();
                         return;
                     }
                 }
@@ -308,11 +319,6 @@ void TCP::loop() {
                         id = client_id;
                         std::cout << "my id is : " << id << std::endl;
                         break;
-                    case SET_PORT:
-                        mutex->lock();
-                        port_number = client_id;
-                        std::cout << "udp port : " << port_number << std::endl;
-                        mutex->unlock();
                     case WATCHDOG:
                     default:
                         break;
@@ -336,10 +342,6 @@ std::vector<int> &TCP::getQuitClients() {
 
 HandleMutex *TCP::getMutex() {
     return mutex;
-}
-
-int TCP::getPortNumber() {
-    return port_number;
 }
 
 const char *TCP::getAddr() {

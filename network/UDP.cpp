@@ -2,6 +2,7 @@
 #include "../Utils/HandleThread.hpp"
 #include "../Utils/HandleMutex.hpp"
 #include "../Utils/MyMutexLocker.hpp"
+#include "../Camera.hpp"
 #include <cstring>
 
 #define PORT 2424
@@ -11,15 +12,22 @@ void *handle_udp_data(void *obj) {
     return 0;
 }
 
-UDP::UDP(bool server_mode, int port) : sock(-1), server_mode(server_mode), thread(0), mutex(0), client_mutex(0), nbWaitingData(0) {
+void *handle_send_data(void *obj) {
+    static_cast<UDP*>(obj)->sendData();
+    return 0;
+}
+
+UDP::UDP(Camera *player, int id, bool server_mode) : sock(-1), id(id), server_mode(server_mode), thread(0), send_thread(0), mutex(0), client_mutex(0),
+    nbWaitingData(0) {
     waitingData.reserve(1000);
     memset(&server, 0, sizeof(server));
     if (server_mode) {
         this->port = PORT;
     } else {
-        this->port = port;
+        this->port = 0;
     }
     memset(&server, 0, sizeof(server));
+    this->player = player;
 }
 
 UDP::~UDP() {
@@ -27,8 +35,12 @@ UDP::~UDP() {
         close(sock);
     if (thread)
         delete thread;
+    if (send_thread)
+        delete send_thread;
     if (mutex)
         delete mutex;
+    if (client_mutex)
+        delete client_mutex;
 }
 
 bool UDP::start(const char *server_addr) {
@@ -53,12 +65,15 @@ bool UDP::start(const char *server_addr) {
         //s_client.sin_family = AF_INET;
         //s_client.sin_port = htons(port);
         Vector3D t;
-        this->send(t, 0.f, 0.f);
+        float tmp = 0.f;
+        this->send(t, tmp);
     }
     client_mutex = new HandleMutex;
     mutex = new HandleMutex;
     thread = new HandleThread(handle_udp_data, static_cast<void*>(this));
     thread->start();
+    send_thread = new HandleThread(handle_send_data, static_cast<void*>(this));
+    send_thread->start();
     return true;
 }
 
@@ -128,8 +143,8 @@ void UDP::addClient(int id, struct sockaddr_in data) {
     client_mutex->unlock();
 }
 
-void UDP::send(Vector3D &pos, float theta, float phi, int id) {
-    character_data d{id, (int)(theta * 10), (int)(phi * 10), (int)(pos.x() * 10), (int)(pos.y() * 10), (int)(pos.z() * 10)};
+void UDP::send(Vector3D &pos, float &theta, int id) {
+    character_data d{id, (int)(pos.x() * 10), (int)(pos.y() * 10), (int)(pos.z() * 10), (int)(theta * 10)};
 
     if (server_mode) {
         client_mutex->lock();
@@ -140,5 +155,14 @@ void UDP::send(Vector3D &pos, float theta, float phi, int id) {
         client_mutex->unlock();
     } else {
         sendto(sock, &d, sizeof(d), 0, (sockaddr*)&server, sizeof(server));
+    }
+}
+
+void UDP::sendData() {
+    for (;;) {
+        usleep(1000000 / 60); // one send every 1/60 second
+        player->lock();
+        this->send(player->getPosition(), player->getTheta(), id);
+        player->unlock();
     }
 }

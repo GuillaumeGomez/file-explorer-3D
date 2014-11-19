@@ -112,6 +112,10 @@ void Camera::mouseMoveEvent(int x, int y)
       return;
     }
   m_theta -= m_oldX * m_sensivity;
+  if (m_theta > 360.f)
+      m_theta -= 360.f;
+  if (m_theta < -360.f)
+      m_theta += 360.f;
   m_phi -= m_oldY * m_sensivity;
   //vectorsFromAngles();
   m_oldX = x;
@@ -315,4 +319,16 @@ void  Camera::setCharacter(myGLWidget *w)
   if (!w)
     return;
   //m_character->setRotation(Rotation());
+}
+
+void Camera::lock() {
+    m_mutex->lock();
+}
+
+void Camera::unlock() {
+    m_mutex->unlock();
+}
+
+float &Camera::getTheta() {
+    return m_theta;
 }

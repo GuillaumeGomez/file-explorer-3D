@@ -128,7 +128,7 @@ MyWindow::~MyWindow()
 }
 
 void MyWindow::startServers() {
-    m_udp = new UDP;
+    m_udp = new UDP(this->m_camera);
     if (!m_udp->start()) {
         delete m_udp;
         m_udp = 0;
@@ -368,41 +368,45 @@ void  MyWindow::update()
   } while (loop > 1);
   m_camera->update();
   if (m_tcp) {
-      if (!m_udp) {
-          m_tcp->getMutex()->lock();
-          if (m_tcp->getPortNumber() > 0) {
-              m_udp = new UDP(false, m_tcp->getPortNumber());
+      m_tcp->getMutex()->lock();
+      if (!m_tcp->isConnected()) {
+          delete m_tcp;
+          m_tcp = 0;
+          if (m_udp)
+              delete m_udp;
+          m_udp = 0;
+      } else {
+        if (!m_udp) {
+              m_udp = new UDP(this->m_camera, m_tcp->getId(), false);
               m_udp->start(m_tcp->getAddr());
           }
-          m_tcp->getMutex()->unlock();
-      }
-      if (m_udp) {
-          m_tcp->getMutex()->lock();
-          auto &pendings = m_tcp->getPendingClients();
+          if (m_udp) {
+              auto &pendings = m_tcp->getPendingClients();
 
-          for (auto it = pendings.begin(); it != pendings.end(); ++it) {
-              //myGLWidget *m = new Object::Model(Vector3D(), Rotation(), "models/Cartoon Girl/girl-cartoon.obj", 5.f);
-              myGLWidget *m = new Object::Model(Vector3D(), Rotation(), "models/bob/spongebob_bind.obj", 4.f);
+              for (auto it = pendings.begin(); it != pendings.end(); ++it) {
+                  //myGLWidget *m = new Object::Model(Vector3D(), Rotation(), "models/Cartoon Girl/girl-cartoon.obj", 5.f);
+                  myGLWidget *m = new Object::Model(Vector3D(), Rotation(), "models/bob/spongebob_bind.obj", 4.f);
 
-              m->initializeGL();
-              m_players.push_back(player{(*it).id, m});
-              m_udp->addClient((*it).id, (*it).data);
-          }
-          pendings.clear();
-          m_tcp->getMutex()->unlock();
-          m_udp->getMutex()->lock();
-          if (m_udp->getNbWaitingData() > 0) {
-              auto moves = m_udp->getData();
-              int i = m_udp->getNbWaitingData();
-
-              for (auto it = moves.begin(); i > 0 && it != moves.end(); --i, ++it) {
-                  this->setPlayerPos((*it).id, (*it).x, (*it).y, (*it).z);
+                  m->initializeGL();
+                  m_players.push_back(player{(*it).id, m});
+                  m_udp->addClient((*it).id, (*it).data);
               }
-              m_udp->resetData();
+              pendings.clear();
+              m_udp->getMutex()->lock();
+              if (m_udp->getNbWaitingData() > 0) {
+                  auto moves = m_udp->getData();
+                  int i = m_udp->getNbWaitingData();
+
+                  for (auto it = moves.begin(); i > 0 && it != moves.end(); --i, ++it) {
+                      this->setPlayerPos((*it).id, (*it).x, (*it).y, (*it).z, (*it).rot_x);
+                  }
+                  m_udp->resetData();
+              }
+              m_udp->getMutex()->unlock();
           }
-          m_udp->getMutex()->unlock();
-          m_udp->send(m_camera->getPosition(), 0., 0., m_tcp->getId());
       }
+      if (m_tcp)
+          m_tcp->getMutex()->unlock();
   }
   if (tmp != 0.f) {
       switch (m_mode) {
@@ -442,16 +446,18 @@ void  MyWindow::update()
   //glDisable(GL_COLOR_MATERIAL);
 }
 
-void MyWindow::setPlayerPos(int id, int x, int y, int z) {
+void MyWindow::setPlayerPos(int id, int x, int y, int z, int rot_x) {
     for (auto it = m_players.begin(); it != m_players.end(); ++it) {
         if ((*it).id == id) {
-            float f_x = x, f_y = y, f_z = z;
+            float f_x = x, f_y = y, f_z = z, f_rx = rot_x;
 
             f_x /= 10.f;
             f_y /= 10.f;
             f_z /= 10.f;
+            f_rx /= 10.f;
             Vector3D v(f_x, f_y, f_z);
             (*it).obj->setPosition(v);
+            (*it).obj->rotation().x() = f_rx / 360.f;
             return;
         }
     }

@@ -74,7 +74,7 @@ public:
   void        takeScreenshot(std::string filename = "");
   bool        connectToServer(const char *addr);
   void        startServers();
-  void        setPlayerPos(int id, int x, int y, int z);
+  void        setPlayerPos(int id, int x, int y, int z, int rot_x);
 
   Vector3D const  &getPlayerPosition() const;
 

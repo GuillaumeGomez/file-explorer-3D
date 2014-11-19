@@ -17,14 +17,14 @@
 
 class HandleThread;
 class HandleMutex;
+class Camera;
 
 typedef struct {
     int32_t id;
-    int32_t theta;
-    int32_t phi;
     int32_t x;
     int32_t y;
     int32_t z;
+    int32_t rot_x;
 } character_data;
 
 typedef struct {
@@ -35,7 +35,7 @@ typedef struct {
 
 class UDP {
 public:
-    UDP(bool server_mode = true, int port = 0);
+    UDP(Camera *player, int id = 0, bool server_mode = true);
     ~UDP();
     bool start(const char *server_addr = NULL);
     const std::string &getAddr() const;
@@ -46,15 +46,18 @@ public:
     unsigned int getNbWaitingData();
     void resetData();
     bool isServer();
-    void send(Vector3D &pos, float theta, float phi, int id = 0);
+    void send(Vector3D &pos, float &theta, int id = 0);
     void addClient(int id, struct sockaddr_in data);
     std::vector<client> &getClients();
     void pushNewData(character_data *buf);
+    void sendData();
 
 private:
     int sock;
+    int id;
     bool server_mode;
     HandleThread *thread;
+    HandleThread *send_thread;
     HandleMutex *mutex;
     HandleMutex *client_mutex;
     unsigned int nbWaitingData;
@@ -63,6 +66,7 @@ private:
     std::vector<client> clients;
     struct sockaddr_in server;
     int port;
+    Camera *player;
 };
 
 #endif
