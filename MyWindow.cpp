@@ -385,7 +385,7 @@ void  MyWindow::update()
 
               for (auto it = pendings.begin(); it != pendings.end(); ++it) {
                   //myGLWidget *m = new Object::Model(Vector3D(), Rotation(), "models/Cartoon Girl/girl-cartoon.obj", 5.f);
-                  myGLWidget *m = new Object::Model(Vector3D(), Rotation(), "models/bob/spongebob_bind.obj", 4.f);
+                  myGLWidget *m = new Object::Model(Vector3D(), Rotation(0.f, 0.f, 1.f), "models/bob/spongebob_bind.obj", 4.f);
 
                   m->initializeGL();
                   m_players.push_back(player{(*it).id, m});
@@ -457,7 +457,7 @@ void MyWindow::setPlayerPos(int id, int x, int y, int z, int rot_x) {
             f_rx /= 10.f;
             Vector3D v(f_x, f_y, f_z);
             (*it).obj->setPosition(v);
-            (*it).obj->rotation().x() = f_rx / 360.f;
+            (*it).obj->rotation().rotation() = f_rx;
             return;
         }
     }
