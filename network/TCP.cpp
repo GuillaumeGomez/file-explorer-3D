@@ -1,10 +1,12 @@
 #include "TCP.hpp"
 #include "../Utils/HandleThread.hpp"
 #include "../Utils/HandleMutex.hpp"
-#include <sys/select.h>
 #include <sys/time.h>
 #include <cstring>
 #include <stdint.h>
+#ifndef WIN32
+#include <sys/select.h>
+#endif
 
 #define PORT 2425
 
@@ -39,6 +41,9 @@ void *handle_tcp_data(void *obj) {
 
 TCP::TCP(bool server_mode) : sock(-1), server_mode(server_mode), thread(0), mutex(0) {
     id = 0;
+#ifdef WIN32
+    start_network();
+#endif
 }
 
 TCP::~TCP() {
@@ -63,13 +68,21 @@ bool TCP::start(const char *addr) {
         this->addr = addr;
         if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
             perror("socket");
+#ifdef WIN32
+            closesocket(sock);
+#else
             ::close(sock);
+#endif
             return false;
         }
 
         sin.sin_addr.s_addr = inet_addr(addr);
         if (connect(sock, (struct sockaddr *)&sin, sizeof(sockaddr_in)) < 0) {
+#ifdef WIN32
+            closesocket(sock);
+#else
             ::close(sock);
+#endif
             sock = -1;
             perror("connect");
             return false;
@@ -77,21 +90,33 @@ bool TCP::start(const char *addr) {
         std::cout << "connected to server !" << std::endl;
     } else {
         if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+#ifdef WIN32
+            closesocket(sock);
+#else
             ::close(sock);
+#endif
             perror("socket");
             return false;
         }
 
         sin.sin_addr.s_addr = htonl(INADDR_ANY);
         if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) != 0) {
+#ifdef WIN32
+            closesocket(sock);
+#else
             ::close(sock);
+#endif
             sock = -1;
             perror("bind");
             return false;
         }
 
         if (listen(sock, 10) != 0) {
+#ifdef WIN32
+            closesocket(sock);
+#else
             ::close(sock);
+#endif
             sock = -1;
             perror("listen");
             return false;
@@ -148,7 +173,7 @@ void TCP::accept_new_client() {
 }
 
 void TCP::send(int fd, void *data, size_t len) {
-    ::send(fd, data, len, 0);
+    ::send(fd, (const char*)data, len, 0);
 }
 
 void TCP::sendToEveryone(void *data, size_t len, int except) {
@@ -156,7 +181,7 @@ void TCP::sendToEveryone(void *data, size_t len, int except) {
         return;
     for (auto it = clients.begin(); it != clients.end(); ++it) {
         if ((*it) != except) {
-            ::send((*it), data, len, 0);
+            ::send((*it), (const char*)data, len, 0);
         }
     }
 }
@@ -170,17 +195,33 @@ void TCP::close() {
         mutex->lock();
     if (server_mode) {
         for (auto it : clients) {
+#ifdef WIN32
+            closesocket(it);
+#else
             ::close(it);
+#endif
         }
         for (auto it : pending_clients) {
+#ifdef WIN32
+            closesocket(it.id);
+#else
             ::close(it.id);
+#endif
         }
         for (auto it : quit_clients) {
+#ifdef WIN32
+            closesocket(it);
+#else
             ::close(it);
+#endif
         }
     }
     if (sock > -1)
-        ::close(sock);
+#ifdef WIN32
+            closesocket(sock);
+#else
+            ::close(sock);
+#endif
     sock = -1;
     if (mutex)
         mutex->unlock();
@@ -197,7 +238,7 @@ void TCP::loop() {
             max = sock;
             FD_ZERO(&readfs);
             FD_SET(sock, &readfs);
-            for (std::vector<int>::iterator it = clients.begin(); it != clients.end(); ++it) {
+            for (auto it = clients.begin(); it != clients.end(); ++it) {
                 FD_SET(*it, &readfs);
                 if (*it > max)
                     max = *it;
@@ -217,7 +258,11 @@ void TCP::loop() {
                         if (FD_ISSET(client, &readfs)) {
                             if (!getFullData(client, head_data, sizeof(head_data))) {
                                 std::cout << "Client disconnected !" << std::endl;
+#ifdef WIN32
+                                closesocket(client);
+#else
                                 ::close(client);
+#endif
                                 clients.erase(clients.begin() + it);
                                 it -= 1;
                                 // send to all clients that this one is now disconnected
@@ -235,7 +280,11 @@ void TCP::loop() {
                                 memcpy(head_data + 1, &tmp, sizeof(tmp));
                                 if (::send(client, head_data, sizeof(head_data), 0) < 1) {
                                     std::cout << "Client disconnected !" << std::endl;
+#ifdef WIN32
+                                    closesocket(client);
+#else
                                     ::close(client);
+#endif
                                     clients.erase(clients.begin() + it);
                                     it -= 1;
                                     // send to all clients that this one is now disconnected
@@ -327,7 +376,7 @@ std::vector<client> &TCP::getPendingClients() {
     return pending_clients;
 }
 
-std::vector<int> &TCP::getQuitClients() {
+std::vector<SOCKET> &TCP::getQuitClients() {
     return quit_clients;
 }
 

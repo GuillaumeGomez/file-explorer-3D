@@ -3,6 +3,14 @@ file-explorer-3D
 
 It is a file explorer in 3D, made with SDL2 and platform independant.
 
+##RUN IT
+
+You'll need the following libraries to be installed :
+ * SDL2
+ * SDL2_image
+ * SDL2_ttf
+ * assimp
+
 ##License
 
     Copyright (c) 2014 Guillaume Gomez

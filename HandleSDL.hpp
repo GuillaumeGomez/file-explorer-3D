@@ -67,7 +67,7 @@ private:
   int                   screenWidth;
   int                   mouse_x;
   int                   mouse_y;
-  FPSmanager    manager;
+  //FPSmanager    manager;
   //SDL_Surface   *screen;
   SDL_Window    *screen;
   Uint32        sdl_flags;

@@ -95,8 +95,8 @@ HandleSDL::HandleSDL(const std::string &winName, MyWindow *win, unsigned int ant
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, m_anti_ali);
 
-  SDL_initFramerate(&manager);
-  SDL_setFramerate(&manager, FPS);
+  //SDL_initFramerate(&manager);
+  //SDL_setFramerate(&manager, FPS);
   //SDL_EnableKeyRepeat(10, 10);
   //desactivation du key repeat
   //SDL_EnableKeyRepeat(0, 0);
@@ -529,7 +529,7 @@ void  HandleSDL::switchScreenMode()
 void  HandleSDL::updateScreen()
 {
   SDL_GL_SwapWindow(screen);
-  SDL_framerateDelay(&manager);
+  //SDL_framerateDelay(&manager);
 }
 
 bool  HandleSDL::displayErrorMessage(const char *title, const char *msg)

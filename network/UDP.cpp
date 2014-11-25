@@ -9,11 +9,6 @@
 
 #ifdef WIN32
 #include <cstdlib>
-#include <windows.h>
-
-typedef int socklen_t;
-typedef SOCKADDR_IN sockaddr_in;
-typedef SOCKADDR sockaddr;
 
 void end_network() {
     WSACleanup();
@@ -23,6 +18,7 @@ void start_network() {
     static bool has_been_init(false);
 
     if (!has_been_init) {
+        has_been_init = true;
         WSADATA WSAData;
         WSAStartup(MAKEWORD(2,2), &WSAData);
         atexit(end_network);
@@ -51,6 +47,9 @@ UDP::UDP(Camera *player, int id, bool server_mode) : sock(-1), id(id), server_mo
     }
     memset(&server, 0, sizeof(server));
     this->player = player;
+#ifdef WIN32
+    start_network();
+#endif
 }
 
 UDP::~UDP() {
@@ -119,7 +118,7 @@ void UDP::listenClients() {
     character_data buf;
 
     for (;;) {
-        recvlen = recvfrom(this->sock, &buf, sizeof(buf), 0, (struct sockaddr *)&remaddr, &addrlen);
+        recvlen = recvfrom(this->sock, (char*)&buf, sizeof(buf), 0, (struct sockaddr *)&remaddr, &addrlen);
         if (recvlen == sizeof(buf) && (buf.id || !server_mode)) {
             this->pushNewData(&buf);
             if (server_mode) {
@@ -127,7 +126,7 @@ void UDP::listenClients() {
                 for (std::vector<client>::iterator it = clients.begin(); it != clients.end(); ++it) {
                     if (buf.id != (*it).id) {
                         if ((*it).ok)
-                            sendto(sock, &(*it).data, sizeof((*it).data), 0, (sockaddr*)&buf, sizeof(buf));
+                            sendto(sock, (char*)&(*it).data, sizeof((*it).data), 0, (sockaddr*)&buf, sizeof(buf));
                     } else if (!(*it).ok) {
                         memcpy(&(*it).data, &remaddr, sizeof(remaddr));
                         (*it).ok = true;
@@ -177,11 +176,11 @@ void UDP::send(Vector3D &pos, float &theta, int id) {
         client_mutex->lock();
         for (std::vector<client>::iterator it = clients.begin(); it != clients.end(); ++it) {
             if ((*it).id != id && (*it).ok)
-                sendto(sock, &d, sizeof(d), 0, (sockaddr*)&(*it).data, sizeof((*it).data));
+                sendto(sock, (char*)&d, sizeof(d), 0, (sockaddr*)&(*it).data, sizeof((*it).data));
         }
         client_mutex->unlock();
     } else {
-        sendto(sock, &d, sizeof(d), 0, (sockaddr*)&server, sizeof(server));
+        sendto(sock, (char*)&d, sizeof(d), 0, (sockaddr*)&server, sizeof(server));
     }
 }
 

@@ -16,15 +16,15 @@ unix {
 
 win32 {
     INCLUDEPATH += ./assimp/include/
-    INCLUDEPATH += Bullet/include/
+    #INCLUDEPATH += Bullet/include/
     CONFIG += c++11
     DEFINES += WIN32
     DEFINES += GLEW_STATIC _USE_MATH_DEFINES
-    DEFINES += USE_PHYSICS
+    #DEFINES += USE_PHYSICS
 
     LIBS += -L./SDL2/ \
             -L./assimp/ \
-            -L./Bullet/lib/ \
+            #-L./Bullet/lib/ \
             -L./ \
             -lwinmm \
             -lmingw32 \
@@ -36,13 +36,14 @@ win32 {
             -luuid \
             -lSDL2main \
             -lSDL2 \
-            -lSDL2_gfx \
+            #-lSDL2_gfx \
             -lSDL2_ttf \
             -lSDL2_image \
             -lopengl32 \
             -lglu32 \
             -lassimp \
-            -lBullet \
+            #-lBullet \
+            -lws2_32
 
     SOURCES +=  glew.c \
 }
