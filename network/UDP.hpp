@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+#ifdef WIN32
+#include <winsock2.h>
+#else
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -12,6 +15,9 @@
 #include <stdint.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+typedef int SOCKET;
+#endif
 
 #include "../objects/Vector3D.hpp"
 
@@ -53,7 +59,7 @@ public:
     void sendData();
 
 private:
-    int sock;
+    SOCKET sock;
     int id;
     bool server_mode;
     HandleThread *thread;

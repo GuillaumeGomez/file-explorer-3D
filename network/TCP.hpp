@@ -27,15 +27,15 @@ public:
     void close();
 
 private:
-    int sock;
+    SOCKET sock;
     bool server_mode;
     HandleThread *thread;
     HandleMutex *mutex;
     std::string addr;
     int id;
-    std::vector<int> clients;
+    std::vector<SOCKET> clients;
     std::vector<client> pending_clients;
-    std::vector<int> quit_clients;
+    std::vector<SOCKET> quit_clients;
 };
 
 #endif

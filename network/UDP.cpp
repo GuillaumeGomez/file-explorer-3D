@@ -7,6 +7,29 @@
 
 #define PORT 2424
 
+#ifdef WIN32
+#include <cstdlib>
+#include <windows.h>
+
+typedef int socklen_t;
+typedef SOCKADDR_IN sockaddr_in;
+typedef SOCKADDR sockaddr;
+
+void end_network() {
+    WSACleanup();
+}
+
+void start_network() {
+    static bool has_been_init(false);
+
+    if (!has_been_init) {
+        WSADATA WSAData;
+        WSAStartup(MAKEWORD(2,2), &WSAData);
+        atexit(end_network);
+    }
+}
+#endif
+
 void *handle_udp_data(void *obj) {
     static_cast<UDP*>(obj)->listenClients();
     return 0;
@@ -32,7 +55,11 @@ UDP::UDP(Camera *player, int id, bool server_mode) : sock(-1), id(id), server_mo
 
 UDP::~UDP() {
     if (sock != -1)
+#ifdef WIN32
+        closesocket(sock);
+#else
         close(sock);
+#endif
     if (thread)
         delete thread;
     if (send_thread)
@@ -160,7 +187,11 @@ void UDP::send(Vector3D &pos, float &theta, int id) {
 
 void UDP::sendData() {
     for (;;) {
+#ifdef WIN32
+        Sleep(1000 / 60);
+#else
         usleep(1000000 / 60); // one send every 1/60 second
+#endif
         player->lock();
         this->send(player->getPosition(), player->getTheta(), id);
         player->unlock();

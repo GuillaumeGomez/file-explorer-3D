@@ -1,12 +1,6 @@
 #include "TCP.hpp"
 #include "../Utils/HandleThread.hpp"
 #include "../Utils/HandleMutex.hpp"
-#include <iostream>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
 #include <sys/select.h>
 #include <sys/time.h>
 #include <cstring>
@@ -18,7 +12,6 @@
 #define QUIT_CLIENT 2
 #define SET_ID 0
 #define WATCHDOG 4
-
 
 typedef struct {
     char type;
@@ -217,9 +210,8 @@ void TCP::loop() {
                     this->accept_new_client();
                 } else {
                     char head_data[5];
-                    int quit(-1);
 
-                    for (int it = 0; it < clients.size(); ++it) {
+                    for (unsigned int it = 0; it < clients.size(); ++it) {
                         int client = clients[it];
 
                         if (FD_ISSET(client, &readfs)) {
@@ -245,7 +237,6 @@ void TCP::loop() {
                                     std::cout << "Client disconnected !" << std::endl;
                                     ::close(client);
                                     clients.erase(clients.begin() + it);
-                                    quit = client;
                                     it -= 1;
                                     // send to all clients that this one is now disconnected
                                     char deco[5 + sizeof(int)] = {QUIT_CLIENT, 0};
