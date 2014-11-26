@@ -97,6 +97,7 @@ SOURCES += main.cpp \
     Utils/PerlinNoise.cpp \
     network/TCP.cpp \
     network/UDP.cpp \
+    Utils/FrameHandler.cpp
 
 HEADERS += \
     HandleSDL.hpp \
@@ -149,3 +150,4 @@ HEADERS += \
     Utils/PerlinNoise.hpp \
     network/TCP.hpp \
     network/UDP.hpp \
+    Utils/FrameHandler.hpp

@@ -68,7 +68,6 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
         m_camera = new Camera;
 
         m_key = new KeyHandler;
-        m_fps = new HandleFpsCount;
 
         m_fbo = new FrameBuffer(sdl->width(), sdl->height());
         m_fbo->load();
@@ -97,8 +96,6 @@ MyWindow::~MyWindow()
         delete this->m_tcp;
     if (this->m_udp)
         delete this->m_udp;
-    if (this->m_fps)
-        delete this->m_fps;
     if (this->m_camera)
         delete this->m_camera;
     if (m_tetris)
@@ -356,7 +353,6 @@ void  MyWindow::update()
     this->clearScreen();
 
     float tmp = sdl->getElapsedTime();
-    float fps = this->m_fps->getFpsCount();
 
     int loop = tmp / m_key->getInterval();
 
@@ -429,10 +425,15 @@ void  MyWindow::update()
                 (*it)->update(tmp);
 
             if (this->m_printInfo) {
+                static bool print_fps(true);
+
                 static_cast<Object::Text*>(m_displayList[0])->setText("x : " + Utility::toString<float>(m_camera->getPosition().x()));
                 static_cast<Object::Text*>(m_displayList[1])->setText("y : " + Utility::toString<float>(m_camera->getPosition().y()));
                 static_cast<Object::Text*>(m_displayList[2])->setText("z : " + Utility::toString<float>(m_camera->getPosition().z()));
-                static_cast<Object::Text*>(m_displayList[3])->setText("fps : " + Utility::toString<float>(fps));
+                if (print_fps)
+                    static_cast<Object::Text*>(m_displayList[3])->setText("frame time : " + Utility::toString<float>(m_fps / 1000.f)
+                                                                          + " s (= " + Utility::toString<float>(1.f / (m_fps / 1000.f)) + " fps)");
+                print_fps = !print_fps;
             }
 
             m_camera->look();
@@ -586,7 +587,7 @@ void  MyWindow::start()
         m_end = sdl->handleEvents();
         this->update();
         this->paintGL();
-        sdl->updateScreen();
+        m_fps = float(sdl->updateScreen());
     }
 }
 

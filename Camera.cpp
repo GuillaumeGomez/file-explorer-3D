@@ -30,226 +30,226 @@ glm::vec3 Camera::m_target(-1.f, -1.f, -1.f);
 glm::vec3 Camera::m_up(0.f, 1.f, 0.f);
 
 Camera::Camera()
-  : m_speed(.6f), m_sensivity(0.1f), m_phi(24.f), m_theta(60.f), m_position(0.f, 1.f, -15.f),
-    m_win(0), m_oldX(0), m_oldY(0), m_y(m_position.y()), tmpSpeed(1.f), m_skybox(0)
+    : m_speed(.6f), m_sensivity(0.1f), m_phi(24.f), m_theta(60.f), m_position(0.f, 1.f, -15.f),
+      m_win(0), m_oldX(0), m_oldY(0), m_y(m_position.y()), tmpSpeed(1.f), m_skybox(0)
 {
-  m_mutex = new HandleMutex;
-  vectorsFromAngles();
+    m_mutex = new HandleMutex;
+    vectorsFromAngles();
 }
 
 Camera::~Camera()
 {
-  if (m_skybox)
-    delete m_skybox;
-  if (m_mutex)
-    delete m_mutex;
-  /*if (m_character)
+    if (m_skybox)
+        delete m_skybox;
+    if (m_mutex)
+        delete m_mutex;
+    /*if (m_character)
     delete m_character;*/
 }
 
 float const &Camera::getDistanceView()
 {
-  return distanceView;
+    return distanceView;
 }
 
 void Camera::resize(int w, int h)
 {
-  MyMutexLocker l(m_mutex);
+    MyMutexLocker l(m_mutex);
 
-  (void)l;
-  if (h == 0)
-    h = 1;
-  m_ratio = (float)w / (float)h;
-  m_curX = w / 2;
-  m_curY = h / 2;
-  m_oldX = m_curX;
-  m_oldY = m_curY;
-  glViewport(0, 0, w, h);
-  m_proj = glm::perspective(70.f, m_ratio, 0.1f, distanceView);
-  m_2Dproj = glm::ortho(0, w, h, 0);
+    (void)l;
+    if (h == 0)
+        h = 1;
+    m_ratio = (float)w / (float)h;
+    m_curX = w / 2;
+    m_curY = h / 2;
+    m_oldX = m_curX;
+    m_oldY = m_curY;
+    glViewport(0, 0, w, h);
+    m_proj = glm::perspective(70.f, m_ratio, 0.1f, distanceView);
+    m_2Dproj = glm::ortho(0, w, h, 0);
 }
 
 void  Camera::lookAt()
 {
-  m_view = glm::lookAt(glm::vec3(m_position.x(), m_position.y(), m_position.z()),
-                       m_target, m_up);
+    m_view = glm::lookAt(glm::vec3(m_position.x(), m_position.y(), m_position.z()),
+                         m_target, m_up);
 }
 
 void Camera::look()
 {
-  MyMutexLocker l(m_mutex);
+    MyMutexLocker l(m_mutex);
 
-  (void)l;
-  //m_proj = glm::perspective(70.f, m_ratio, 0.1f, distanceView);
+    (void)l;
+    //m_proj = glm::perspective(70.f, m_ratio, 0.1f, distanceView);
 
-  this->lookAt();
+    this->lookAt();
 
-  if (m_skybox)
-    m_skybox->paintGL(m_phi, m_theta);
-  /*if (m_character)
+    if (m_skybox)
+        m_skybox->paintGL(m_phi, m_theta);
+    /*if (m_character)
     m_character->paintGL(m_view, m_proj);*/
 }
 
 void  Camera::update()
 {
-  vectorsFromAngles();
+    vectorsFromAngles();
 }
 
 void Camera::mouseMoveEvent(int x, int y)
 {
-  MyMutexLocker l(m_mutex);
+    MyMutexLocker l(m_mutex);
 
-  (void)l;
-  //m_oldX = (m_oldX - x);
-  //m_oldY = (y - m_oldY);
-  m_oldX = -x;
-  m_oldY = y;
-  if (m_oldX > 100 || m_oldX < -100 ||
-      m_oldY > 100 || m_oldY < -100)
+    (void)l;
+    //m_oldX = (m_oldX - x);
+    //m_oldY = (y - m_oldY);
+    m_oldX = -x;
+    m_oldY = y;
+    if (m_oldX > 100 || m_oldX < -100 ||
+            m_oldY > 100 || m_oldY < -100)
     {
-      m_oldX = x;
-      m_oldY = y;
-      return;
+        m_oldX = x;
+        m_oldY = y;
+        return;
     }
-  m_theta -= m_oldX * m_sensivity;
-  if (m_theta > 360.f)
-      m_theta -= 360.f;
-  if (m_theta < -360.f)
-      m_theta += 360.f;
-  m_phi -= m_oldY * m_sensivity;
-  //vectorsFromAngles();
-  m_oldX = x;
-  m_oldY = y;
+    m_theta -= m_oldX * m_sensivity;
+    if (m_theta > 360.f)
+        m_theta -= 360.f;
+    else if (m_theta < -360.f)
+        m_theta += 360.f;
+    m_phi -= m_oldY * m_sensivity;
+    //vectorsFromAngles();
+    m_oldX = x;
+    m_oldY = y;
 
-  if (m_phi > 89.f)
-    m_phi = 89.f;
-  else if (m_phi < -89.f)
-    m_phi = -89.f;
-  tmp1 = m_phi * M_PI / 180.f;
-  tmp2 = m_theta * M_PI / 180.f;
+    if (m_phi > 89.f)
+        m_phi = 89.f;
+    else if (m_phi < -89.f)
+        m_phi = -89.f;
+    tmp1 = m_phi * M_PI / 180.f;
+    tmp2 = m_theta * M_PI / 180.f;
 }
 
 void Camera::keyPressEvent(int ev)
 {
-  MyMutexLocker l(m_mutex);
+    MyMutexLocker l(m_mutex);
 
-  (void)l;
-  switch (ev)
+    (void)l;
+    switch (ev)
     {
     case SDLK_a:
-      m_position = m_position + (m_left * m_speed * tmpSpeed);
-      m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
-      break;
+        m_position = m_position + (m_left * m_speed * tmpSpeed);
+        m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
+        break;
     case SDLK_d:
-      m_position = m_position - (m_left * m_speed * tmpSpeed);
-      m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
-      break;
+        m_position = m_position - (m_left * m_speed * tmpSpeed);
+        m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
+        break;
     case SDLK_w:
-      m_position += (m_forward * m_speed * tmpSpeed);
-      m_position.setY(m_y);
-      break;
+        m_position += (m_forward * m_speed * tmpSpeed);
+        m_position.setY(m_y);
+        break;
     case SDLK_s:
-      m_position -= (m_forward * m_speed * tmpSpeed);
-      m_position.setY(m_y);
-      break;
+        m_position -= (m_forward * m_speed * tmpSpeed);
+        m_position.setY(m_y);
+        break;
     case SDLK_SPACE:
-      m_y += (m_speed * tmpSpeed);
-      m_position.setY(m_y);
-      break;
+        m_y += (m_speed * tmpSpeed);
+        m_position.setY(m_y);
+        break;
     case SDLK_LCTRL:
-      m_y -= (m_speed * tmpSpeed);
-      m_position.setY(m_y);
-      break;
+        m_y -= (m_speed * tmpSpeed);
+        m_position.setY(m_y);
+        break;
     case SDLK_LSHIFT:
-      if (tmpSpeed < 3.f)
-        tmpSpeed = 3.f;
-      break;
+        if (tmpSpeed < 3.f)
+            tmpSpeed = 3.f;
+        break;
     default:
-      return;
+        return;
     }
-  vectorsFromAngles(false);
+    vectorsFromAngles(false);
 }
 
 void Camera::keyReleaseEvent(int e)
 {
-  MyMutexLocker l(m_mutex);
+    MyMutexLocker l(m_mutex);
 
-  (void)l;
-  switch (e)
+    (void)l;
+    switch (e)
     {
     case SDLK_LSHIFT: //42
-      if (tmpSpeed > 1.f)
-        tmpSpeed = 1.f;
-      break;
+        if (tmpSpeed > 1.f)
+            tmpSpeed = 1.f;
+        break;
     }
 }
 
 void Camera::setSpeed(float s)
 {
-  MyMutexLocker l(m_mutex);
+    MyMutexLocker l(m_mutex);
 
-  (void)l;
-  m_speed = s;
+    (void)l;
+    m_speed = s;
 }
 
 const float &Camera::speed() const
 {
-  return m_speed;
+    return m_speed;
 }
 
 void Camera::setsensivity(float s)
 {
-  MyMutexLocker l(m_mutex);
+    MyMutexLocker l(m_mutex);
 
-  (void)l;
-  m_sensivity = s;
+    (void)l;
+    m_sensivity = s;
 }
 
 void Camera::setPosition(const Vector3D &position)
 {
-  MyMutexLocker l(m_mutex);
+    MyMutexLocker l(m_mutex);
 
-  (void)l;
-  m_position = position;
-  m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
+    (void)l;
+    m_position = position;
+    m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
 }
 
 void  Camera::vectorsFromAngles(bool phiChanged)
 {
-  if (phiChanged) {
-      if (m_phi > 89.f)
-        m_phi = 89.f;
-      else if (m_phi < -89.f)
-        m_phi = -89.f;
-      tmp1 = m_phi * M_PI / 180.f;
-      tmp2 = m_theta * M_PI / 180.f;
+    if (phiChanged) {
+        if (m_phi > 89.f)
+            m_phi = 89.f;
+        else if (m_phi < -89.f)
+            m_phi = -89.f;
+        tmp1 = m_phi * M_PI / 180.f;
+        tmp2 = m_theta * M_PI / 180.f;
     }
-  r_temp = cosf(tmp1);
-  m_forward.setY(tmp1);
-  m_forward.setX(r_temp * cosf(tmp2));
-  m_forward.setZ(r_temp * sinf(tmp2));
-  //m_forward.setY(0.f);
+    r_temp = cosf(tmp1);
+    m_forward.setY(tmp1);
+    m_forward.setX(r_temp * cosf(tmp2));
+    m_forward.setZ(r_temp * sinf(tmp2));
+    //m_forward.setY(0.f);
 
-  /*m_left = Vector3D::crossProduct(m_up, m_forward);
+    /*m_left = Vector3D::crossProduct(m_up, m_forward);
   m_left.normalize();*/
-  m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
+    m_target = glm::vec3(m_position.x(), m_position.y(), m_position.z()) + glm::vec3(m_forward.x(), m_forward.y(), m_forward.z());
 
-  float _tmp1 = 45.f * M_PI / 180.f;
-  float _tmp2 = m_theta * M_PI / 180.f;
-  r_temp = cosf(_tmp1);
-  m_forward.setY(_tmp1);
-  m_forward.setX(r_temp * cosf(_tmp2));
-  m_forward.setZ(r_temp * sinf(_tmp2));
-  //m_forward.setY(0.f);
+    float _tmp1 = 45.f * M_PI / 180.f;
+    float _tmp2 = m_theta * M_PI / 180.f;
+    r_temp = cosf(_tmp1);
+    m_forward.setY(_tmp1);
+    m_forward.setX(r_temp * cosf(_tmp2));
+    m_forward.setZ(r_temp * sinf(_tmp2));
+    //m_forward.setY(0.f);
 
-  m_left = Vector3D::crossProduct(Vector3D(m_up.x, m_up.y, m_up.z), m_forward);
-  m_left.normalize();
+    m_left = Vector3D::crossProduct(Vector3D(m_up.x, m_up.y, m_up.z), m_forward);
+    m_left.normalize();
 
-  m_vecPos.x = m_position.x();
-  m_vecPos.y = m_position.y();
-  m_vecPos.z = m_position.z();
+    m_vecPos.x = m_position.x();
+    m_vecPos.y = m_position.y();
+    m_vecPos.z = m_position.z();
 
-  /*if (m_character) {
+    /*if (m_character) {
       //m_character->setPosition(m_target);
       m_character->setRotation(Rotation(1.f, 0.f, m_theta));
     }*/
@@ -257,68 +257,68 @@ void  Camera::vectorsFromAngles(bool phiChanged)
 
 Vector3D &Camera::getPosition()
 {
-  return m_position;
+    return m_position;
 }
 
 glm::vec3 &Camera::getVecPosition()
 {
-  return m_vecPos;
+    return m_vecPos;
 }
 
 void  Camera::setView(MyWindow *v)
 {
-  if (!m_skybox){
-      m_skybox = new SkyBox;
-      m_skybox->initializeGL();
+    if (!m_skybox){
+        m_skybox = new SkyBox;
+        m_skybox->initializeGL();
     }
-  resize(v->getLib()->width(), v->getLib()->height());
+    resize(v->getLib()->width(), v->getLib()->height());
 }
 
 int Camera::mouseX() const
 {
-  return m_oldX;
+    return m_oldX;
 }
 
 int Camera::mouseY() const
 {
-  return m_oldY;
+    return m_oldY;
 }
 
 glm::mat4 const &Camera::getViewMatrix()
 {
-  return m_view;
+    return m_view;
 }
 
 glm::mat4 const &Camera::getProjectionMatrix()
 {
-  return m_proj;
+    return m_proj;
 }
 
 glm::mat4 const &Camera::get2DProjectionMatrix()
 {
-  return m_2Dproj;
+    return m_2Dproj;
 }
 
 float const &Camera::getRatio()
 {
-  return m_ratio;
+    return m_ratio;
 }
 
 glm::vec3 &Camera::getTarget()
 {
-  return m_target;
+    return m_target;
 }
 
 glm::vec3 &Camera::getUpVector()
 {
-  return m_up;
+    return m_up;
 }
 
 void  Camera::setCharacter(myGLWidget *w)
 {
-  if (!w)
-    return;
-  //m_character->setRotation(Rotation());
+    if (!w)
+        return;
+    //m_character->setRotation(Rotation());
 }
 
 void Camera::lock() {

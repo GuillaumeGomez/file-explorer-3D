@@ -170,7 +170,7 @@ void UDP::addClient(int id, struct sockaddr_in data) {
 }
 
 void UDP::send(Vector3D &pos, float &theta, int id) {
-    character_data d{id, (int)(pos.x() * 10.f), (int)(pos.y() * 10.f), (int)(pos.z() * 10.f), (int)((theta - 90.f) * 10.f)};
+    character_data d{id, (int)(pos.x() * 10.f), (int)(pos.y() * 10.f), (int)(pos.z() * 10.f), (int)((theta) * 10.f)};
 
     if (server_mode) {
         client_mutex->lock();

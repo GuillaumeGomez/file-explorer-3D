@@ -11,6 +11,7 @@
 #include "Texture.hpp"
 
 class MyWindow;
+class FrameHandler;
 
 #define FPS 40
 #define MOUSE_MARGIN  100
@@ -22,7 +23,7 @@ public:
   virtual ~HandleSDL();
   bool  handleEvents();
   void  switchScreenMode();
-  void  updateScreen();
+  Uint32 updateScreen();
   virtual float  getElapsedTime();
   virtual GLuint  loadTexture(std::string const &s, bool useMipMap = true, GLuint *width = 0, GLuint *height = 0);
   virtual GLuint  loadTexture(const char *s, bool useMipMap = true, GLuint *width = 0, GLuint *height = 0);
@@ -67,7 +68,7 @@ private:
   int                   screenWidth;
   int                   mouse_x;
   int                   mouse_y;
-  //FPSmanager    manager;
+  FrameHandler          *manager;
   //SDL_Surface   *screen;
   SDL_Window    *screen;
   Uint32        sdl_flags;
