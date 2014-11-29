@@ -24,37 +24,37 @@ struct AnimationNode;
 class Animator
 {
 public:
-  //----------------------------------------------------------------------------
-  /** Constructor for a given scene.
+    //----------------------------------------------------------------------------
+    /** Constructor for a given scene.
   *
   * The object keeps a reference to the scene during its lifetime, but
   * ownership stays at the caller.
   * @param pScene The scene to animate.
   * @param pAnimIndex Index of the animation to play.
   */
-  Animator(const aiScene* pScene, unsigned int pAnimIndex);
-  Animator(const aiScene* pScene, unsigned int pAnimIndex, float from, float to);
-  ~Animator();
+    Animator(const aiScene* pScene, unsigned int pAnimIndex);
+    Animator(const aiScene* pScene, unsigned int pAnimIndex, unsigned int from, unsigned int to);
+    ~Animator();
 
-  //----------------------------------------------------------------------------
-  /** Sets the animation to use for playback. This also recreates the internal
+    //----------------------------------------------------------------------------
+    /** Sets the animation to use for playback. This also recreates the internal
   * mapping structures, which might take a few cycles.
   * @param uAnimationIndex Index of the animation in the scene's animation array
   */
-  void SetAnimationIndex(unsigned int uAnimationIndex);
-  unsigned int  getAnimationIndex() const;
+    void SetAnimationIndex(unsigned int uAnimationIndex);
+    unsigned int  getAnimationIndex() const;
 
-  //----------------------------------------------------------------------------
-  /** Calculates the node transformations for the scene. Call this to get
+    //----------------------------------------------------------------------------
+    /** Calculates the node transformations for the scene. Call this to get
   * up-to-date results before calling one of the getters.
   * Evaluates the animation tracks for a given time stamp. The calculated pose can be retrieved as a
   * array of transformation matrices afterwards by calling GetTransformations().
   * @param lElapsedTime Elapsed time since animation start in ms.
   */
-  void UpdateAnimation(float lElapsedTime, double dTicksPerSecond);
+    void UpdateAnimation(float lElapsedTime, double dTicksPerSecond);
 
-  //----------------------------------------------------------------------------
-  /** Calculates the bone matrices for the given mesh.
+    //----------------------------------------------------------------------------
+    /** Calculates the bone matrices for the given mesh.
   *
   * Each bone matrix transforms from mesh space in bind pose to mesh space in
   * skinned pose, it does not contain the mesh's world matrix. Thus the usual
@@ -69,10 +69,10 @@ public:
   * @return A reference to a vector of bone matrices. Stays stable till the
   *   next call to GetBoneMatrices();
   */
-  const std::vector<aiMatrix4x4>& GetBoneMatrices(const aiNode* pNode, unsigned int pMeshIndex = 0);
+    const std::vector<aiMatrix4x4>& GetBoneMatrices(const aiNode* pNode, unsigned int pMeshIndex = 0);
 
-  // ----------------------------------------------------------------------------
-  /** Retrieves the most recent global transformation matrix for the given node.
+    // ----------------------------------------------------------------------------
+    /** Retrieves the most recent global transformation matrix for the given node.
   *
   * The returned matrix is in world space, which is the same coordinate space
   * as the transformation of the scene's root node. If the node is not animated,
@@ -84,121 +84,125 @@ public:
   * @return A reference to the node's most recently calculated global
   *   transformation matrix.
   */
-  const aiMatrix4x4& GetGlobalTransform(const aiNode* node) const;
+    const aiMatrix4x4& GetGlobalTransform(const aiNode* node) const;
 
+    bool more_than_one;
 private:
-  /** Recursively creates an internal node structure matching the
+    /** Recursively creates an internal node structure matching the
   *  current scene and animation.
   */
-  AnimationNode* CreateNodeTree(aiNode* pNode, AnimationNode* pParent);
+    AnimationNode* CreateNodeTree(aiNode* pNode, AnimationNode* pParent);
 
-  /** Calculates the global transformation matrix for the given internal node */
-  void CalculateGlobalTransform(AnimationNode* pInternalNode);
+    /** Calculates the global transformation matrix for the given internal node */
+    void CalculateGlobalTransform(AnimationNode* pInternalNode);
 
-  /** Recursively updates the internal node transformations from the
+    /** Recursively updates the internal node transformations from the
   *  given matrix array
   */
-  void UpdateTransforms(AnimationNode* pNode, const std::vector<aiMatrix4x4>& vTransforms);
+    void UpdateTransforms(AnimationNode* pNode, const std::vector<aiMatrix4x4>& vTransforms);
 
-  /** Name to node map to quickly find nodes by their name */
-  typedef std::map<const aiNode*, AnimationNode*> NodeMap;
-  NodeMap m_mapNodesByName;
+    /** Name to node map to quickly find nodes by their name */
+    typedef std::map<const aiNode*, AnimationNode*> NodeMap;
+    NodeMap m_mapNodesByName;
 
-  /** Name to node map to quickly find nodes for given bones by their name */
-  typedef std::map<const char*, const aiNode*> BoneMap;
-  BoneMap m_mapBoneNodesByName;
+    /** Name to node map to quickly find nodes for given bones by their name */
+    typedef std::map<const char*, const aiNode*> BoneMap;
+    BoneMap m_mapBoneNodesByName;
 
-  /** At which frame the last evaluation happened for each channel.
+    /** At which frame the last evaluation happened for each channel.
   * Useful to quickly find the corresponding frame for slightly increased time stamps
   */
-  double m_dLastTime;
-  glm::uvec3* m_pLastFramePosition;
+    double m_dLastTime;
+    glm::uvec3* m_pLastFramePosition;
 
-  /** Array to return transformations results inside. */
-  std::vector<aiMatrix4x4> m_vTransforms;
+    /** Array to return transformations results inside. */
+    std::vector<aiMatrix4x4> m_vTransforms;
 
-  /** Identity matrix to return a reference to in case of error */
-  aiMatrix4x4 m_mIdentityMatrix;
+    /** Identity matrix to return a reference to in case of error */
+    aiMatrix4x4 m_mIdentityMatrix;
 
-  const aiScene* m_pScene;
-  AnimationNode* m_pRootNode;
-  unsigned int m_uCurrentAnimationIndex;
-  const aiAnimation* m_pCurrentAnimation;
-  float m_from, m_to;
-  double m_duration;
+    const aiScene* m_pScene;
+    AnimationNode* m_pRootNode;
+    unsigned int m_uCurrentAnimationIndex;
+    const aiAnimation* m_pCurrentAnimation;
+    unsigned int m_from;
+    unsigned int m_duration;
 };
 
 struct Mesh {
-  Mesh() {
-    m_pVertices = NULL;
-    m_pNormals = NULL;
-    m_pColors = NULL;
-    m_pTexCoords = NULL;
-    m_pWeights = NULL;
-    m_pBoneIndices = NULL;
-    m_pIndices = NULL;
-    m_iMaterialIndex = -1;
-    m_iNumFaces = 0;
-    m_iNumVertices = 0;
-    m_iNumBones = 0;
-    m_uTexture = -1;
-  }
+    Mesh() {
+        m_pVertices = NULL;
+        m_pNormals = NULL;
+        m_pColors = NULL;
+        m_pTexCoords = NULL;
+        m_pWeights = NULL;
+        m_pBoneIndices = NULL;
+        m_pIndices = NULL;
+        m_iMaterialIndex = -1;
+        m_iNumFaces = 0;
+        m_iNumVertices = 0;
+        m_iNumBones = 0;
+        m_uTexture = -1;
+    }
 
-  ~Mesh() {
-    delete[] m_pVertices;
-    m_pVertices = NULL;
+    ~Mesh() {
+        delete[] m_pVertices;
+        m_pVertices = NULL;
 
-    delete[] m_pNormals;
-    m_pNormals = NULL;
+        delete[] m_pNormals;
+        m_pNormals = NULL;
 
-    delete[] m_pColors;
-    m_pColors = NULL;
+        delete[] m_pColors;
+        m_pColors = NULL;
 
-    delete[] m_pTexCoords;
-    m_pTexCoords = NULL;
+        delete[] m_pTexCoords;
+        m_pTexCoords = NULL;
 
-    delete[] m_pBoneIndices;
-    m_pBoneIndices = NULL;
+        delete[] m_pBoneIndices;
+        m_pBoneIndices = NULL;
 
-    delete[] m_pWeights;
-    m_pWeights = NULL;
+        delete[] m_pWeights;
+        m_pWeights = NULL;
 
-    delete[] m_pIndices;
-    m_pIndices = NULL;
-  }
+        delete[] m_pIndices;
+        m_pIndices = NULL;
+    }
 
-  glm::vec4* m_pVertices;
-  glm::vec3* m_pNormals;
-  glm::vec4* m_pColors;
-  glm::vec2* m_pTexCoords;
-  glm::vec4* m_pWeights;
-  glm::vec4* m_pBoneIndices;
-  int* m_pIndices;
-  int m_iMaterialIndex;
-  int m_iNumFaces;
-  int m_iNumVertices;
-  int m_iNumBones;
-  unsigned int m_uTexture;
+    glm::vec4* m_pVertices;
+    glm::vec3* m_pNormals;
+    glm::vec4* m_pColors;
+    glm::vec2* m_pTexCoords;
+    glm::vec4* m_pWeights;
+    glm::vec4* m_pBoneIndices;
+    int* m_pIndices;
+    int m_iMaterialIndex;
+    int m_iNumFaces;
+    int m_iNumVertices;
+    int m_iNumBones;
+    unsigned int m_uTexture;
 };
 
 struct aiPropertyStore;
 
 namespace Object {
-  class Model : public myGLWidget {
-  public:
+class Model : public myGLWidget {
+public:
     Model(Vector3D, Rotation, const char *sModelPath, float height);
     virtual ~Model();
 
     void  initializeGL();
     void  paintGL(const glm::mat4 &view_matrix, const glm::mat4 &proj_matrix);
-    bool  cutAnimation(const char *animationName, const char *cutAnimationName, float from, float to);
+    bool  cutAnimation(const char *animationName, const char *cutAnimationName, unsigned int from, unsigned int to);
     bool  setCurrentAnimation(const char *animationName);
+    bool  playOnce(const char *animationName);
+    bool  playOnceThen(const char *animationName, const char *nextAnimationName);
     const char *getCurrentAnimationName() const;
     void  play();
     void  pause();
     void  update(const float &);
+    bool  isPlaying();
 
-  private:
+private:
     void  DrawMesh(unsigned int uIndex);
     void  RenderNode(aiNode* pNode);
 
@@ -225,7 +229,9 @@ namespace Object {
     std::vector<Texture*> m_vTextures;
     Animator* m_pAnimator;
     std::map<std::string, Animator*>  m_animations;
-  };
+    bool play_once;
+    std::string nextAnimationName;
+};
 }
 
 #endif // ANIMATEDMODEL_HPP

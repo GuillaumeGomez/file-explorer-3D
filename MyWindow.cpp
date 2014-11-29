@@ -84,6 +84,15 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
         HandleError::showError(err.what());
         throw MyException("Bad alloc");
     }
+    // For test purpose
+    Object::Model *m = new Object::Model(Vector3D(2.f, 20.f, 9.f), Rotation(-90.f, 0.f, 0.f, 1.f), "models/stormtrooper.fbx", 2.f);
+
+    m->initializeGL();
+    m->cutAnimation(m->getCurrentAnimationName(), "BeginRun", 0, 35);
+    m->cutAnimation(m->getCurrentAnimationName(), "Run", 35, 54);
+    m->cutAnimation(m->getCurrentAnimationName(), "Stop", 80, 119);
+    m->playOnceThen("BeginRun", "Run");
+    objectList.push_back(m);
 }
 
 MyWindow::~MyWindow()
@@ -380,10 +389,13 @@ void  MyWindow::update()
                 auto &pendings = m_tcp->getPendingClients();
 
                 for (auto it = pendings.begin(); it != pendings.end(); ++it) {
-                    //myGLWidget *m = new Object::Model(Vector3D(), Rotation(), "models/Cartoon Girl/girl-cartoon.obj", 5.f);
-                    myGLWidget *m = new Object::Model(Vector3D(), Rotation(0.f, 0.f, 1.f), "models/bob/spongebob_bind.obj", 4.f);
+                    Object::Model *m = new Object::Model(Vector3D(), Rotation(-90.f, 0.f, 1.f, 1.f), "models/stormtrooper.fbx", 2.f);
 
                     m->initializeGL();
+                    m->cutAnimation(m->getCurrentAnimationName(), "BeginRun", 0, 35);
+                    m->cutAnimation(m->getCurrentAnimationName(), "Run", 35, 54);
+                    m->cutAnimation(m->getCurrentAnimationName(), "Stop", 80, 119);
+                    m->pause();
                     m_players.push_back(player{(*it).id, m});
                     m_udp->addClient((*it).id, (*it).data);
                 }
@@ -457,6 +469,12 @@ void MyWindow::setPlayerPos(int id, int x, int y, int z, int rot_x) {
             f_z /= 10.f;
             f_rx /= 10.f;
             Vector3D v(f_x, f_y, f_z);
+
+            if (v == (*it).obj->getPosition()) {
+                (*it).obj->playOnce("Stop");
+            } else if (!(*it).obj->isPlaying()) {
+                (*it).obj->playOnceThen("BeginRun", "Run");
+            }
             (*it).obj->setPosition(v);
             (*it).obj->rotation().rotation() = f_rx;
             return;

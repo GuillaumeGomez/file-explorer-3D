@@ -21,6 +21,7 @@ class FrameBuffer;
 class Tetris;
 class UDP;
 class TCP;
+class Model;
 #ifdef USE_PHYSICS
 class HandlePhysics;
 #endif
@@ -38,7 +39,7 @@ class Model;
 
 typedef struct {
     int id;
-    myGLWidget *obj;
+    Object::Model *obj;
 } player;
 
 class MyWindow
