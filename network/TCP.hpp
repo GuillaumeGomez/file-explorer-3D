@@ -20,7 +20,7 @@ public:
     HandleMutex *getMutex();
     void sendToEveryone(void *data, size_t len, int except = -1);
     std::vector<SOCKET> &getQuitClients();
-    void send(int fd, void *data, size_t len);
+    int send(int fd, void *data, size_t len);
     const char *getAddr();
     int getId();
     bool isConnected();

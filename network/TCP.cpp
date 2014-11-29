@@ -148,7 +148,7 @@ void TCP::accept_new_client() {
     // send id to new client
     memcpy(ak + 1 + sizeof(int32_t), &cli, sizeof(cli));
     memcpy(ak + 1, &tmp, sizeof(tmp));
-    ::send(cli, ak, sizeof(ak), 0);
+    this->send(cli, &ak, sizeof(ak));
 
     // send new client's id to everyone
     ak[0] = NEW_CLIENT;
@@ -158,11 +158,11 @@ void TCP::accept_new_client() {
     // send all clients' id to new one
     for (auto it = clients.begin(); it != clients.end(); ++it) {
         memcpy(ak + 1 + sizeof(int32_t), &(*it), sizeof(*it));
-        ::send(cli, ak, sizeof(ak), 0);
+        this->send(cli, &ak, sizeof(ak));
     }
     tmp = 0;
     memcpy(ak + 1 + sizeof(int32_t), &tmp, sizeof(tmp));
-    ::send(cli, ak, sizeof(ak), 0);
+    this->send(cli, &ak, sizeof(ak));
 
     // add new client to pending list
     mutex->lock();
@@ -172,8 +172,17 @@ void TCP::accept_new_client() {
     std::cout << "new client !" << std::endl;
 }
 
-void TCP::send(int fd, void *data, size_t len) {
-    ::send(fd, (const char*)data, len, 0);
+int TCP::send(int fd, void *data, size_t len) {
+    size_t sent = 0;
+    size_t tmp;
+    char *c_data = (char*)data;
+
+    while (sent < len) {
+        if ((tmp = ::send(fd, c_data + sent, len - sent, 0)) < 1)
+            return 0;
+        sent += tmp;
+    }
+    return 1;
 }
 
 void TCP::sendToEveryone(void *data, size_t len, int except) {
@@ -181,7 +190,7 @@ void TCP::sendToEveryone(void *data, size_t len, int except) {
         return;
     for (auto it = clients.begin(); it != clients.end(); ++it) {
         if ((*it) != except) {
-            ::send((*it), (const char*)data, len, 0);
+            this->send((*it), data, len);
         }
     }
 }
@@ -272,13 +281,13 @@ void TCP::loop() {
                                 memcpy(deco + 1, &tmp, sizeof(tmp));
                                 memcpy(deco + 5, &client, sizeof(client));
                                 for (auto tmp2 = clients.begin(); tmp2 != clients.end(); ++tmp2) {
-                                    ::send(*tmp2, deco, sizeof(deco), 0);
+                                    this->send(*tmp2, deco, sizeof(deco));
                                 }
                             } else {
                                 head_data[0] = WATCHDOG;
                                 int tmp = 0;
                                 memcpy(head_data + 1, &tmp, sizeof(tmp));
-                                if (::send(client, head_data, sizeof(head_data), 0) < 1) {
+                                if (this->send(client, head_data, sizeof(head_data)) < 1) {
                                     std::cout << "Client disconnected !" << std::endl;
 #ifdef WIN32
                                     closesocket(client);
@@ -294,7 +303,7 @@ void TCP::loop() {
                                     memcpy(deco + 1, &tmp, sizeof(tmp));
                                     memcpy(deco + 5, &client, sizeof(client));
                                     for (auto tmp2 = clients.begin(); tmp2 != clients.end(); ++tmp2) {
-                                        ::send(*tmp2, deco, sizeof(deco), 0);
+                                        this->send(*tmp2, deco, sizeof(deco));
                                     }
                                 }
                             }
