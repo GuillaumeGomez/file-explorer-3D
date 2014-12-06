@@ -1,6 +1,7 @@
 #include "Point.hpp"
 #include "shaders/ShaderHandler.hpp"
 #include "HandleError.hpp"
+#include "Rotation.hpp"
 
 using namespace Object;
 

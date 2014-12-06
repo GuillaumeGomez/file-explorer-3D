@@ -7,6 +7,7 @@
 #include "Wall.hpp"
 #include "GraphicFile.hpp"
 #include <cmath>
+#include "Rotation.hpp"
 
 #include <string>
 
@@ -161,7 +162,7 @@ void  Room::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
     //glLoadIdentity();
     glPushMatrix();
     glTranslatef(m_pos.x(), m_pos.y(), m_pos.z());
-    glRotatef(m_rot.rotation() + 180.f, m_rot.x(), m_rot.y() + 1.f, 0.0f);
+    //glRotatef(m_rot.rotation() + 180.f, m_rot.x(), m_rot.y() + 1.f, 0.0f);
     //glCallList(m_glObject);
 
     Vector3D  v(getMainWindow()->getPlayerPosition());
@@ -211,7 +212,7 @@ void  Room::pick(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 {
     glPushMatrix();
     glTranslatef(m_pos.x(), m_pos.y(), m_pos.z());
-    glRotatef(m_rot.rotation() + 180.f, m_rot.x(), m_rot.y() + 1.f, 0.0f);
+    //glRotatef(m_rot.rotation() + 180.f, m_rot.x(), m_rot.y() + 1.f, 0.0f);
     for (std::vector<myGLWidget*>::iterator it = files.begin(); it != files.end(); ++it){
         (*it)->setSelected(false);
         (*it)->pick(view_matrix, proj_matrix);

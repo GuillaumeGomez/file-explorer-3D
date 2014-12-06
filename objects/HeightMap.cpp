@@ -5,6 +5,8 @@
 #include "../String_utils.hpp"
 #include "../Utils/PerlinNoise.hpp"
 
+#include "Rotation.hpp"
+
 using namespace Object;
 
 void  HeightMap::generateRandomHeightMap()

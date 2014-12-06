@@ -1,4 +1,5 @@
 #include "Menu.hpp"
+#include "Rotation.hpp"
 
 Menu::Menu() : myGLWidget(Vector3D(), Rotation())
 {

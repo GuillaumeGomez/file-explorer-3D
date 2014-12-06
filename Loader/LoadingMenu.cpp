@@ -6,6 +6,7 @@
 #include "../Camera.hpp"
 #include "../objects/Text.hpp"
 #include <iostream>
+#include "Rotation.hpp"
 
 using namespace std;
 

@@ -11,6 +11,8 @@
 #include "../glm/gtc/matrix_transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
 
+#include "Rotation.hpp"
+
 using namespace Object;
 
 void    Button::createButton(std::string &t, Color &c, float &width, float &height, float &font_size)

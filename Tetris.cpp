@@ -6,6 +6,7 @@
 #include "../shaders/ShaderHandler.hpp"
 
 #include "HandleSDL.hpp"
+#include "Rotation.hpp"
 
 //add module class inherited by tetris and 2048
 /*class Module : public myGLWidget
