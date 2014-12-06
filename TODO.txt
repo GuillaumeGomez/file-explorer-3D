@@ -29,3 +29,7 @@ MODEL CLASS FEATURES
 TETRIS CLASS FEATURES
 
 - split sprites into textures (1 sprite for 1 texture), it will solve the texture issue definitely
+
+ROTATION
+
+- remove possibility to directly modify angles and set back setX and all the stuff (because setX will modify y angle and vice-versa)
