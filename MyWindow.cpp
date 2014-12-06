@@ -85,7 +85,7 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
         throw MyException("Bad alloc");
     }
     // For test purpose
-    Object::Model *m = new Object::Model(Vector3D(2.f, 20.f, 9.f), Rotation(-90.f, 0.f, 0.f, 1.f), "models/stormtrooper.fbx", 2.f);
+    Object::Model *m = new Object::Model(Vector3D(2.f, 20.f, 9.f), Rotation(45.f, 0.f, -90.f), "models/stormtrooper.fbx", 2.f);
 
     m->initializeGL();
     m->cutAnimation(m->getCurrentAnimationName(), "BeginRun", 0, 35);
@@ -389,7 +389,7 @@ void  MyWindow::update()
                 auto &pendings = m_tcp->getPendingClients();
 
                 for (auto it = pendings.begin(); it != pendings.end(); ++it) {
-                    Object::Model *m = new Object::Model(Vector3D(), Rotation(-90.f, 0.f, 1.f, 1.f), "models/stormtrooper.fbx", 2.f);
+                    Object::Model *m = new Object::Model(Vector3D(), Rotation(0.f, 0.f, -90.f), "models/stormtrooper.fbx", 2.f);
 
                     m->initializeGL();
                     m->cutAnimation(m->getCurrentAnimationName(), "BeginRun", 0, 35);
@@ -476,7 +476,7 @@ void MyWindow::setPlayerPos(int id, int x, int y, int z, int rot_x) {
                 (*it).obj->playOnceThen("BeginRun", "Run");
             }
             (*it).obj->setPosition(v);
-            (*it).obj->rotation().rotation() = f_rx;
+            (*it).obj->rotation().y() = f_rx;
             return;
         }
     }

@@ -4,6 +4,7 @@
 #include "../String_utils.hpp"
 #include "../Camera.hpp"
 #include <GL/glew.h>
+#include "Rotation.hpp"
 
 #include <map>
 #include <string>

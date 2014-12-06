@@ -1,6 +1,7 @@
 #include "Line.hpp"
 #include "../HandleError.hpp"
 #include "../shaders/ShaderHandler.hpp"
+#include "Rotation.hpp"
 
 using namespace Object;
 

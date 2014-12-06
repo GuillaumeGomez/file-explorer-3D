@@ -196,8 +196,14 @@ void  Plane::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 
       glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
 
-      if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
-        tmp = glm::rotate(tmp, m_rot.rotation(), glm::vec3(m_rot.x(), m_rot.y(), m_rot.z()));
+      //if (m_rot.rotation() != 0.f && (m_rot.x() != 0.f || m_rot.y() != 0.f || m_rot.z() != 0.f))
+      //  tmp = glm::rotate(tmp, m_rot.rotation(), glm::vec3(m_rot.x(), m_rot.y(), m_rot.z()));
+      if (m_rot.y() != 0.f)
+          tmp = glm::rotate(tmp, m_rot.y(), glm::vec3(0.f, 1.f, 0.f));
+      if (m_rot.x() != 0.f)
+          tmp = glm::rotate(tmp, m_rot.x(), glm::vec3(1.f, 0.f, 0.f));
+      if (m_rot.z() != 0.f)
+          tmp = glm::rotate(tmp, m_rot.z(), glm::vec3(0.f, 0.f, 1.f));
       glUniformMatrix4fv(m_uniLoc_modelView, 1, GL_FALSE, glm::value_ptr(tmp));
     } else {
       glUniform2fv(m_uniloc_pos, 1, m_pos.getDatas());

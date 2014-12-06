@@ -1,72 +1,53 @@
 #include "Rotation.hpp"
 
-Rotation::Rotation(float rot, float speed, float x, float y, float z)
-  : m_rotation(rot), m_acSpeed(speed), m_rotX(y), m_rotY(x), m_rotZ(z)
+Rotation::Rotation(float rot_x, float speed_x, float rot_y, float speed_y, float rot_z, float speed_z)
+    : m_rotX(rot_y), m_speedX(speed_y), m_rotY(rot_x), m_speedY(speed_x), m_rotZ(rot_z), m_speedZ(speed_z)
 {
 }
 
 Rotation::Rotation(Rotation const &r)
-  : m_rotation(r.m_rotation), m_acSpeed(r.m_acSpeed), m_rotX(r.m_rotX), m_rotY(r.m_rotY), m_rotZ(r.m_rotZ)
+    : m_rotX(r.m_rotX), m_speedX(r.m_speedX), m_rotY(r.m_rotY), m_speedY(r.m_speedY), m_rotZ(r.m_rotZ), m_speedZ(r.m_speedZ)
 {
-}
-
-float &Rotation::speed()
-{
-  return m_acSpeed;
-}
-
-void Rotation::setSpeed(float s)
-{
-  m_acSpeed = s;
-}
-
-float &Rotation::rotation()
-{
-  return m_rotation;
-}
-
-void  Rotation::setRotation(float s)
-{
-  m_rotation = s;
 }
 
 float &Rotation::x()
 {
-  return m_rotX;
+    return m_rotX;
 }
 
 float &Rotation::y()
 {
-  return m_rotY;
+    return m_rotY;
 }
 
 float &Rotation::z()
 {
-  return m_rotZ;
+    return m_rotZ;
 }
 
-void  Rotation::setRotX(float s)
+float &Rotation::speedX()
 {
-  //vecteur up oblige...
-  m_rotY = s;
+    return m_speedX;
 }
 
-void  Rotation::setRotY(float s)
+float &Rotation::speedY()
 {
-  m_rotX = s;
+    return m_speedY;
 }
 
-void  Rotation::setRotZ(float s)
+float &Rotation::speedZ()
 {
-  m_rotZ = s;
+    return m_speedZ;
 }
 
 Vector3D  Rotation::toVector3D() const
 {
-  return Vector3D(m_rotX, m_rotY, m_rotZ);
+    return Vector3D(m_rotX, m_rotY, m_rotZ);
 }
 
 void    Rotation::update(float const &e)
 {
-    m_rotation += (m_acSpeed * e);
+    m_rotX += (m_speedX * e);
+    m_rotY += (m_speedY * e);
+    m_rotZ += (m_speedZ * e);
 }

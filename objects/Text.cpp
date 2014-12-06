@@ -8,6 +8,8 @@
 #include "../glm/gtc/matrix_transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
 
+#include "Rotation.hpp"
+
 using namespace Object;
 
 Text::Text(string text, Color c, float x, float y, float font_size, OBJECT_ALIGN align)

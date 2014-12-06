@@ -6,28 +6,25 @@
 class Rotation
 {
 public:
-  Rotation(float rot = 0.f, float speed = 0.f, float x = 0.f, float y = 0.f, float z = 0.f);
+  Rotation(float rot_x = 0.f, float speed_x = 0.f, float rot_y = 0.f, float speed_y = 0.f, float rot_z = 0.f, float speed_z = 0.f);
   Rotation(Rotation const&);
   virtual ~Rotation(){}
-  float &rotation();
-  void  setRotation(float);
-  float &speed();
-  void  setSpeed(float s);
   float &x();
   float &y();
   float &z();
-  void  setRotX(float);
-  void  setRotY(float);
-  void  setRotZ(float);
+  float &speedX();
+  float &speedY();
+  float &speedZ();
   Vector3D  toVector3D() const;
   void  update(const float &);
 
 private:
-  float m_rotation;
-  float m_acSpeed;
   float m_rotX;
+  float m_speedX;
   float m_rotY;
+  float m_speedY;
   float m_rotZ;
+  float m_speedZ;
 };
 
 #endif // ROTATION_HPP
