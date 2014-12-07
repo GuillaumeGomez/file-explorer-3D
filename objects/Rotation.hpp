@@ -9,12 +9,18 @@ public:
     Rotation(float rot_x = 0.f, float speed_x = 0.f, float rot_y = 0.f, float speed_y = 0.f, float rot_z = 0.f, float speed_z = 0.f);
     Rotation(Rotation const&);
     virtual ~Rotation(){}
-    float &x();
-    float &y();
-    float &z();
-    float &speedX();
-    float &speedY();
-    float &speedZ();
+    float x();
+    float y();
+    float z();
+    void setX(float);
+    void setY(float);
+    void setZ(float);
+    float speedX();
+    float speedY();
+    float speedZ();
+    void setSpeedX(float);
+    void setSpeedY(float);
+    void setSpeedZ(float);
     Vector3D  toVector3D() const;
     void  update(const float &);
 

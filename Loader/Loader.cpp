@@ -42,7 +42,7 @@ Loader::Loader(MyWindow *w) : m_win(w)
     objList.push_back(ObjectFactory::createNewObject<Sphere, Vector3D, Rotation, const char*, float>(Vector3D(0.f, 70.f, 100.f), Rotation(0.f, 4.f, 0.f, 4.f), "textures/burn.jpg", 20.f));
     objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, const char*, float>(Vector3D(-60.f, 10.f, 100.f), Rotation(45.f), "textures/grass.jpg", 10.f));
     objList.push_back(ObjectFactory::createNewObject<Cube, Vector3D, Rotation, const char*, float>(Vector3D(0.f, 10.f, 100.f), Rotation(45.f, 7.f, 45.f), "textures/box.jpg", 20.f));
-    objList.push_back(ObjectFactory::createNewObject<Rectangle, Vector3D, Rotation, const char*, float, float, float>(Vector3D(-4.f, -3.f, -4.f), Rotation(170.f, 0.f, 170.f), "textures/grass.jpg", 2.f, 3.f, 1.f));
+    objList.push_back(ObjectFactory::createNewObject<Rectangle, Vector3D, Rotation, const char*, float, float, float>(Vector3D(-4.f, -3.f, -4.f), Rotation(140.f, 1.f, 140.f, 0.f, 130.f, 4.f), "textures/grass.jpg", 2.f, 3.f, 1.f));
     objList.push_back(ObjectFactory::createNewObject<Line, Vector3D, Vector3D, Color>(Vector3D(2.f, 2.f, 9.f), Vector3D(0.f, -70.f, 100.f), WHITE));
     objList.push_back(ObjectFactory::createNewObject<Object::Model, Vector3D, Rotation, const char*, float>(Vector3D(0.f, 0.f, 10.f), Rotation(), "models/Wolf/Wolf.obj", 3.f));
     objList.push_back(ObjectFactory::createNewObject<Object::Model, Vector3D, Rotation, const char*, float>(Vector3D(2.f, 0.f, 9.f), Rotation(), "models/bob/spongebob_bind.obj", 4.f));

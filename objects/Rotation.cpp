@@ -10,34 +10,68 @@ Rotation::Rotation(Rotation const &r)
 {
 }
 
-float &Rotation::x()
+float Rotation::x()
 {
     return m_rotX;
 }
 
-float &Rotation::y()
+float Rotation::y()
 {
     return m_rotY;
 }
 
-float &Rotation::z()
+float Rotation::z()
 {
     return m_rotZ;
 }
 
-float &Rotation::speedX()
+void Rotation::setX(float x)
+{
+    // up vector
+    m_rotY = x;
+}
+
+void Rotation::setY(float y)
+{
+    // up vector
+    m_rotX = y;
+}
+
+void Rotation::setZ(float z)
+{
+    m_rotZ = z;
+}
+
+float Rotation::speedX()
 {
     return m_speedX;
 }
 
-float &Rotation::speedY()
+float Rotation::speedY()
 {
     return m_speedY;
 }
 
-float &Rotation::speedZ()
+float Rotation::speedZ()
 {
     return m_speedZ;
+}
+
+void Rotation::setSpeedX(float x)
+{
+    // up vector
+    m_speedY = x;
+}
+
+void Rotation::setSpeedY(float y)
+{
+    // up vector
+    m_speedX = y;
+}
+
+void Rotation::setSpeedZ(float z)
+{
+    m_speedZ = z;
 }
 
 Vector3D  Rotation::toVector3D() const

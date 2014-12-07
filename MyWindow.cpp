@@ -476,7 +476,7 @@ void MyWindow::setPlayerPos(int id, int x, int y, int z, int rot_x) {
                 (*it).obj->playOnceThen("BeginRun", "Run");
             }
             (*it).obj->setPosition(v);
-            (*it).obj->rotation().y() = f_rx;
+            (*it).obj->rotation().setX(f_rx);
             return;
         }
     }

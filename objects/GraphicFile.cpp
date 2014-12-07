@@ -21,8 +21,8 @@ GraphicFile::GraphicFile(Vector3D v, Rotation r, Color c, const char *fileName)
         throw MyException("GraphicFile: File name can't be empty");
 
     tmpRotation = m_rot;
-    tmpRotation.speedX() = FILE_ROTATION;
-    tmpRotation.x() = 1.f;
+    tmpRotation.setSpeedX(FILE_ROTATION);
+    tmpRotation.setX(1.f);
     m_className = "GraphicFile";
 }
 
@@ -33,8 +33,8 @@ GraphicFile::GraphicFile(Vector3D v, Rotation r, Color c, std::string fileName)
         throw MyException("GraphicFile: File name can't be empty");
 
     tmpRotation = m_rot;
-    tmpRotation.speedX() = FILE_ROTATION;
-    tmpRotation.x() = 1.f;
+    tmpRotation.setSpeedX(FILE_ROTATION);
+    tmpRotation.setX(1.f);
     m_className = "GraphicFile";
 }
 
@@ -219,15 +219,15 @@ void  GraphicFile::paintGL(const glm::mat4& view_matrix, const glm::mat4& proj_m
     if (!isSelected()){
         if (tmpRotation.x() > m_rot.x()){
             if (tmpRotation.x() > 360.f)
-                tmpRotation.x() = int(tmpRotation.x()) % 360;
-            tmpRotation.speedX() = -40.f;
+                tmpRotation.setX(int(tmpRotation.x()) % 360);
+            tmpRotation.setSpeedX(-40.f);
         }
         else {
-            tmpRotation.x() = m_rot.x();
-            tmpRotation.speedX() = 0.f;
+            tmpRotation.setX(m_rot.x());
+            tmpRotation.setSpeedX(0.f);
         }
     } else {
-        tmpRotation.speedX() = FILE_ROTATION;
+        tmpRotation.setSpeedX(FILE_ROTATION);
     }
     glm::mat4 tmp = glm::translate(view_matrix, glm::vec3(m_pos.x(), m_pos.y(), m_pos.z()));
 
