@@ -8,11 +8,13 @@ class Directory
 {
 public:
     Directory(const char*);
+    Directory(std::string);
     ~Directory();
     const char                      *getPath() const;
     size_t                          objectsNumber() const;
     std::vector<std::string> const  &getFileList() const;
     std::vector<std::string> const  &getDirectoryList() const;
+    static std::string              getCurrentDirName();
 
 private:
     std::string                 m_path;

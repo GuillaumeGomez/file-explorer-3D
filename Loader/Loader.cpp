@@ -16,6 +16,7 @@
 #include "../Utils/Directory.hpp"
 #include "../objects/HeightMap.hpp"
 #include "../objects/Rotation.hpp"
+#include "../objects/Room.hpp"
 
 #include <iostream>
 #include <string>
@@ -50,6 +51,8 @@ Loader::Loader(MyWindow *w) : m_win(w)
     objList.push_back(ObjectFactory::createNewPauseObject<Button, const char*, Color, Color, Vector3D>("Test", RED, BLUE, Vector3D(-0.25f, -0.1f), 0.5f, 0.2f));
     objList.push_back(ObjectFactory::createNewObject<HeightMap, Vector3D, int, int, float>(Vector3D(-2090.f, -10.f, 5.f), 200, 200, 10.f));
     objList.push_back(ObjectFactory::createNewObject<HeightMap, Vector3D, std::string, float>(Vector3D(-100.f, -10.f, 5.f), "textures/heightmap/description.bmp", 10.f));
+
+    objList.push_back(ObjectFactory::createNewObject<Room, Vector3D, Rotation, std::string>(Vector3D(0.f, 0.f, -40.f), Rotation(), Directory::getCurrentDirName()));
 
     //objList.push_back(ObjectFactory::createNewObject<Object::Model, Vector3D, Rotation, const char*, float>(Vector3D(2.f, 20.f, 9.f), Rotation(-90.f, 0.f, 0.f, 1.f), "models/stormtrooper.fbx", 2.f));
 
