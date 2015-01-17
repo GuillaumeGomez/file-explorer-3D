@@ -84,15 +84,6 @@ MyWindow::MyWindow(std::string winName, int antiali, int fps)
         HandleError::showError(err.what());
         throw MyException("Bad alloc");
     }
-    // For test purpose
-    Object::Model *m = new Object::Model(Vector3D(2.f, 20.f, 9.f), Rotation(45.f, 0.f, -90.f), "models/stormtrooper.fbx", 2.f);
-
-    m->initializeGL();
-    m->cutAnimation(m->getCurrentAnimationName(), "BeginRun", 0, 35);
-    m->cutAnimation(m->getCurrentAnimationName(), "Run", 35, 54);
-    m->cutAnimation(m->getCurrentAnimationName(), "Stop", 80, 119);
-    m->playOnceThen("BeginRun", "Run");
-    objectList.push_back(m);
 }
 
 MyWindow::~MyWindow()
@@ -598,6 +589,16 @@ void  MyWindow::start()
     m_end = false;
 
     this->initializeGL();
+    // For test purpose
+    /*Object::Model *m = new Object::Model(Vector3D(2.f, 20.f, 9.f), Rotation(45.f, 0.f, -90.f), "models/stormtrooper.fbx", 2.f);
+
+    m->initializeGL();
+    m->cutAnimation(m->getCurrentAnimationName(), "BeginRun", 0, 35);
+    m->cutAnimation(m->getCurrentAnimationName(), "Run", 35, 54);
+    m->cutAnimation(m->getCurrentAnimationName(), "Stop", 80, 119);
+    m->playOnceThen("BeginRun", "Run");
+    objectList.push_back(m);*/
+
     m_camera->setView(this);
 
     while (!m_end)
