@@ -78,12 +78,12 @@ std::vector<std::string> const  &Directory::getDirectoryList() const
 std::string Directory::getCurrentDirName() {
 #ifdef WIN32
     DWORD cwdsz = GetCurrentDirectory(0, 0); // determine size needed
-    char *cwd = new char[cwdsz];
+    WCHAR *cwd = new WCHAR[cwdsz];
 
     if (GetCurrentDirectory(cwdsz, cwd) == 0) {
         throw "Error";
     }
-    std::string ret = cwd;
+    std::string ret = Utils::wstring2string(cwd);
     delete[] cwd;
     return ret;
 #else
