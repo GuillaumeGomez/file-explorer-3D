@@ -1,0 +1,18 @@
+﻿Build started 25/11/2014 23:41:54.
+     1>Project "C:\Users\User\My Projects\file-explorer-3D\file-explorer-3D\SDL2\SDL2_gfx-1.0.1\SDL2_gfx.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\SDL\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D DLL_EXPORT /D USE_MMX /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Win32\Debug\\" /Fd"Win32\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt SDL2_framerate.c SDL2_gfxPrimitives.c SDL2_rotozoom.c SDL2_imageFilter.c
+         SDL2_imageFilter.c
+     1>c:\users\user\my projects\file-explorer-3d\file-explorer-3d\sdl2\sdl2_gfx-1.0.1\sdl2_imagefilter.c(45): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         SDL2_rotozoom.c
+     1>c:\users\user\my projects\file-explorer-3d\file-explorer-3d\sdl2\sdl2_gfx-1.0.1\sdl2_rotozoom.h(44): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         SDL2_gfxPrimitives.c
+     1>c:\users\user\my projects\file-explorer-3d\file-explorer-3d\sdl2\sdl2_gfx-1.0.1\sdl2_gfxprimitives.h(38): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         SDL2_framerate.c
+     1>c:\users\user\my projects\file-explorer-3d\file-explorer-3d\sdl2\sdl2_gfx-1.0.1\sdl2_framerate.h(40): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         Generating Code...
+     1>Done Building Project "C:\Users\User\My Projects\file-explorer-3D\file-explorer-3D\SDL2\SDL2_gfx-1.0.1\SDL2_gfx.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.05

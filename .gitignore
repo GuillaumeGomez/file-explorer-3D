@@ -260,3 +260,5 @@ debug/SphereTriangleDetector.o
 *.o
 .fuse_hidden*
 My_World_SDL.pro.user*
+Makefile.Debug
+Makefile.Release
